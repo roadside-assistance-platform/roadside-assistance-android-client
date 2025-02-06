@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: com.kmpalette:kmpalette-core-android-debug:3.1.0@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/508cc21c093600b535bc456e963ee36a/transformed/kmpalette-core-debug/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/508cc21c093600b535bc456e963ee36a/transformed/kmpalette-core-debug/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.kmpalette/kmpalette-core-android-debug/3.1.0/aae538cda430e0f97f4dd4750288007a8d7473de/kmpalette-core-android-debug-3.1.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.kmpalette/kmpalette-core-android-debug/3.1.0/6825f067202bc7539e16a822c0d7c8646a17dd30/kmpalette-core-android-debug-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

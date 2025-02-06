@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: com.materialkolor:material-kolor-android:2.0.0@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/c2412534f9d7542deb0d733bd6d9db31/transformed/material-kolor-release/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/c2412534f9d7542deb0d733bd6d9db31/transformed/material-kolor-release/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.materialkolor/material-kolor-android/2.0.0/15ad8225b5abdad64cbefbb064668f4aaee999e3/material-kolor-android-2.0.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.materialkolor/material-kolor-android/2.0.0/dec3bf651c9a762265b644338af2e018f712b47a/material-kolor-android-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

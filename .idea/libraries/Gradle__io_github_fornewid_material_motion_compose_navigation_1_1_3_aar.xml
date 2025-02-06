@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: io.github.fornewid:material-motion-compose-navigation:1.1.3@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/f9be51603813daad47ea6ec526006131/transformed/material-motion-compose-navigation-1.1.3/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/f9be51603813daad47ea6ec526006131/transformed/material-motion-compose-navigation-1.1.3/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.fornewid/material-motion-compose-navigation/1.1.3/c22301d21190da7b820270e06a552eb6328823ef/material-motion-compose-navigation-1.1.3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.fornewid/material-motion-compose-navigation/1.1.3/69259c348f6ead3beffda4189dbea5d17d07779a/material-motion-compose-navigation-1.1.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
