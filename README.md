@@ -21,6 +21,7 @@ The Roadside Assistance Client App provides a user-friendly interface for reques
 
 -   Platform: Android (Jetpack Compose)
 -   Programming Language: Kotlin
+-   Design Language: Material 3 (Material You)
 -   State Management Library: ViewModel
 -   Dependency Injection Library: Koin
 -   Networking Library: Retrofit
