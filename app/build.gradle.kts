@@ -88,4 +88,5 @@ dependencies {
     implementation(libs.play.services.location)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.bundles.ktor)
+    testImplementation(libs.truth)
 }
