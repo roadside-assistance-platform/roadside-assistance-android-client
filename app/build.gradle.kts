@@ -20,6 +20,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "endpoint")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -37,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -82,4 +86,6 @@ dependencies {
     implementation(libs.mapbox.android)
     implementation(libs.mapbox.maps.compose)
     implementation(libs.play.services.location)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+    implementation(libs.bundles.ktor)
 }
