@@ -21,7 +21,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "endpoint")
+            buildConfigField("String", "BASE_URL", "\"endpoint\"")
         }
         release {
             isMinifyEnabled = false

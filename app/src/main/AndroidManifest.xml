@@ -26,8 +26,9 @@
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="33">
         <activity
-            android:name=".main.presentation.MainActivity"
+            android:name=".auth.presentation.AuthActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.RoadsideAssistanceClient">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,6 +36,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".main.presentation.MainActivity" />
     </application>
 
 </manifest>
