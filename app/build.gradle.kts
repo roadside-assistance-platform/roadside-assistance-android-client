@@ -89,4 +89,5 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.bundles.ktor)
     testImplementation(libs.truth)
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.7.8")
 }

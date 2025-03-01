@@ -29,26 +29,9 @@ internal fun AppTheme(
             "dark" -> true
             else -> isSystemInDarkTheme()
         }
-    val colorTheme by datastore.colorTheme.collectAsState(initial = "green")
     val dynamicColor = datastore.dynamicColors.collectAsState(initial = false).value && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-    val lightColors =
-        when (colorTheme) {
-            "blue" -> BlueColors.lightScheme
-            "green" -> GreenColors.lightScheme
-            "red" -> RedColors.lightScheme
-            "orange" -> OrangeColors.lightScheme
-            "purple" -> PurpleColors.lightScheme
-            else -> BlueColors.lightScheme
-        }
-    val darkColors =
-        when (colorTheme) {
-            "blue" -> BlueColors.darkScheme
-            "green" -> GreenColors.darkScheme
-            "red" -> RedColors.darkScheme
-            "orange" -> OrangeColors.darkScheme
-            "purple" -> PurpleColors.darkScheme
-            else -> BlueColors.darkScheme
-        }
+    val lightColors = lightScheme
+    val darkColors = darkScheme
     val colorScheme =
         when {
             seedColor != null -> rememberDynamicColorScheme(seedColor = seedColor, isDark, extraDark)
@@ -67,7 +50,7 @@ internal fun AppTheme(
         tertiary = colorScheme.tertiary,
         animate = true,
         withAmoled = extraDark,
-        typography = rubikTypography(MaterialTheme.typography),
+        typography = interTypography(MaterialTheme.typography),
         content = content
     )
 }

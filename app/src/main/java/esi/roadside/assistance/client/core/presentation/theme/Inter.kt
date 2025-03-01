@@ -9,10 +9,10 @@ import androidx.compose.ui.text.font.FontWeight
 import esi.roadside.assistance.client.R
 
 @OptIn(ExperimentalTextApi::class)
-val Rubik =
+val Inter =
     FontFamily(
         Font(
-            R.font.rubik,
+            R.font.inter,
             FontWeight.Normal,
             variationSettings =
                 FontVariation.Settings(
@@ -20,7 +20,7 @@ val Rubik =
                 ),
         ),
         Font(
-            R.font.rubik,
+            R.font.inter,
             FontWeight.SemiBold,
             variationSettings =
                 FontVariation.Settings(
@@ -28,7 +28,7 @@ val Rubik =
                 ),
         ),
         Font(
-            R.font.rubik,
+            R.font.inter,
             FontWeight.Medium,
             variationSettings =
                 FontVariation.Settings(
@@ -36,7 +36,7 @@ val Rubik =
                 ),
         ),
         Font(
-            R.font.rubik,
+            R.font.inter,
             FontWeight.Bold,
             variationSettings =
                 FontVariation.Settings(
@@ -44,7 +44,7 @@ val Rubik =
                 ),
         ),
         Font(
-            R.font.rubik,
+            R.font.inter,
             FontWeight.ExtraBold,
             variationSettings =
                 FontVariation.Settings(
@@ -52,7 +52,7 @@ val Rubik =
                 ),
         ),
         Font(
-            R.font.rubik,
+            R.font.inter,
             FontWeight.Black,
             variationSettings =
                 FontVariation.Settings(
@@ -60,7 +60,7 @@ val Rubik =
                 ),
         ),
         Font(
-            R.font.rubik,
+            R.font.inter,
             FontWeight.Light,
             variationSettings =
                 FontVariation.Settings(
@@ -68,7 +68,7 @@ val Rubik =
                 ),
         ),
         Font(
-            R.font.rubik,
+            R.font.inter,
             FontWeight.ExtraLight,
             variationSettings =
                 FontVariation.Settings(
@@ -76,7 +76,7 @@ val Rubik =
                 ),
         ),
         Font(
-            R.font.rubik,
+            R.font.inter,
             FontWeight.Thin,
             variationSettings =
                 FontVariation.Settings(
@@ -85,66 +85,66 @@ val Rubik =
         ),
     )
 
-fun rubikTypography(typography: Typography) =
+fun interTypography(typography: Typography) =
     Typography(
         displayLarge =
             typography.displayLarge.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         displayMedium =
             typography.displayMedium.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         displaySmall =
             typography.displaySmall.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         headlineLarge =
             typography.headlineLarge.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         headlineMedium =
             typography.headlineMedium.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         headlineSmall =
             typography.headlineSmall.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         titleLarge =
             typography.titleLarge.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         titleMedium =
             typography.titleMedium.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         titleSmall =
             typography.titleSmall.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         bodyLarge =
             typography.bodyLarge.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         bodyMedium =
             typography.bodyMedium.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         bodySmall =
             typography.bodySmall.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         labelLarge =
             typography.labelLarge.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         labelMedium =
             typography.labelMedium.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
         labelSmall =
             typography.labelSmall.copy(
-                fontFamily = Rubik,
+                fontFamily = Inter,
             ),
     )
