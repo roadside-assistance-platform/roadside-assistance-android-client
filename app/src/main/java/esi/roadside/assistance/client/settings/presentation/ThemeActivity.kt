@@ -68,8 +68,6 @@ class ThemeActivity : ComponentActivity() {
             val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
             val context = LocalContext.current
             val isDark by dataStore.isDark().collectAsState(initial = false)
-            val colorTheme by dataStore.colorTheme.collectAsState(initial = "green")
-            var colorThemeDialogShown by remember { mutableStateOf(false) }
             val dynamicColorsChecked by dataStore.dynamicColors.collectAsState(initial = true)
             val extraDarkChecked by dataStore.extraDark.collectAsState(initial = true)
             val theme by dataStore.theme.collectAsState(initial = "system")
@@ -159,28 +157,6 @@ class ThemeActivity : ComponentActivity() {
                                 }
                             },
                         )
-                        settingsItem(
-                            Icons.TwoTone.Palette,
-                            R.string.color_palette,
-                            colors.toMap()[colorTheme]!!,
-                            onClick = { colorThemeDialogShown = true },
-                            visible = (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) or !dynamicColorsChecked,
-                        )
-                    }
-                }
-                Dialog(
-                    visible = colorThemeDialogShown,
-                    onDismissRequest = { colorThemeDialogShown = false },
-                    title = stringResource(R.string.color_palette),
-                    centerTitle = true,
-                    okListener = { colorThemeDialogShown = false },
-                ) {
-                    LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                        settingsRadioItems(
-                            colors,
-                            colors.map { it.first }.indexOf(colorTheme),
-                            { scope.launch { dataStore.saveSettings(colorTheme = colors.map { it.first }[it]) } },
-                        ) { Text(stringResource(it.second)) }
                     }
                 }
             }
