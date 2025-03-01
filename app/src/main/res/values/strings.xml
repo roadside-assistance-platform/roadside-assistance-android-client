@@ -177,4 +177,15 @@
         <item quantity="zero">no items</item>
         <item quantity="other">%d items</item>
     </plurals>
+
+<!--    Welcome screen texts-->
+    <string name="welcome_1_title">Hi and welcome to Depan.Go!</string>
+    <string name="welcome_2_title">Rescue is just one click away!</string>
+    <string name="welcome_3_title">Reliable and affordable!</string>
+    <string name="welcome_4_title">Join us!</string>
+    <string name="welcome_1_des">Discover Algeria’s premier roadside assistance app!</string>
+    <string name="welcome_2_des">get the help whenever u need it , ur safety is our priority</string>
+    <string name="welcome_3_des">Trusted service providers and great prices !</string>
+    <string name="welcome_4_des"> and get back on the road quickly!</string>
+
 </resources>
