@@ -1,4 +1,4 @@
-package esi.roadside.assistance.client.main.data.dto
+package esi.roadside.assistance.client.core.data.dto
 
 import esi.roadside.assistance.client.main.domain.models.CommentModel
 import kotlinx.serialization.Serializable
