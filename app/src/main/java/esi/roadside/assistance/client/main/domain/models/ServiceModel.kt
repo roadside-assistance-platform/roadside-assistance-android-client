@@ -1,7 +1,7 @@
 package esi.roadside.assistance.client.main.domain.models
 
 import esi.roadside.assistance.client.core.domain.Category
-import esi.roadside.assistance.client.main.data.dto.Service
+import esi.roadside.assistance.client.core.data.dto.Service
 import java.time.ZonedDateTime
 import java.util.Date
 

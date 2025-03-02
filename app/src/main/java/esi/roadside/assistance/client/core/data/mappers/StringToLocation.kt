@@ -1,4 +1,4 @@
-package esi.roadside.assistance.client.main.data.mappers
+package esi.roadside.assistance.client.core.data.mappers
 
 import esi.roadside.assistance.client.main.domain.models.LocationModel
 

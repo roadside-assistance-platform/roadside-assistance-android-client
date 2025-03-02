@@ -1,6 +1,6 @@
 package esi.roadside.assistance.client.main.domain.models
 
-import esi.roadside.assistance.client.main.data.mappers.toLocation
+import esi.roadside.assistance.client.core.data.mappers.toLocation
 
 data class LocationModel(
     val latitude: Double,

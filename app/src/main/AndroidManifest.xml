@@ -26,7 +26,7 @@
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="33">
         <activity
-            android:name=".auth.presentation.AuthActivity"
+            android:name=".auth.presentation.WelcomeActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme.RoadsideAssistanceClient">

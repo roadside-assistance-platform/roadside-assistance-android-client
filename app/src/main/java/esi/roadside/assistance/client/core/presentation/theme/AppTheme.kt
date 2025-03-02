@@ -54,3 +54,43 @@ internal fun AppTheme(
         content = content
     )
 }
+
+
+@Composable
+internal fun PreviewAppTheme(
+    seedColor: Color? = null,
+    content: @Composable() () -> Unit,
+) {
+    val datastore = SettingsDataStore(LocalContext.current)
+    val theme by datastore.theme.collectAsState(initial = "system")
+    val extraDark by datastore.extraDark.collectAsState(initial = false)
+    val isDark =
+        when (theme) {
+            "light" -> false
+            "dark" -> true
+            else -> isSystemInDarkTheme()
+        }
+    val dynamicColor = datastore.dynamicColors.collectAsState(initial = false).value && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val lightColors = lightScheme
+    val darkColors = darkScheme
+    val colorScheme =
+        when {
+            seedColor != null -> rememberDynamicColorScheme(seedColor = seedColor, isDark, extraDark)
+            dynamicColor && isDark -> {
+                dynamicDarkColorScheme(LocalContext.current)
+            }
+            dynamicColor && !isDark -> {
+                dynamicLightColorScheme(LocalContext.current)
+            }
+            isDark -> darkColors
+            else -> lightColors
+        }
+    DynamicMaterialTheme(
+        primary = colorScheme.primary,
+        secondary = colorScheme.secondary,
+        tertiary = colorScheme.tertiary,
+        animate = true,
+        withAmoled = extraDark,
+        content = content
+    )
+}

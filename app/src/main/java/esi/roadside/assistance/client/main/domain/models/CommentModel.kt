@@ -1,6 +1,6 @@
 package esi.roadside.assistance.client.main.domain.models
 
-import esi.roadside.assistance.client.main.data.dto.Comment
+import esi.roadside.assistance.client.core.data.dto.Comment
 import java.time.ZonedDateTime
 import java.util.Date
 
