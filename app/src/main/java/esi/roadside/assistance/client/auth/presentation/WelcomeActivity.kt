@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -15,7 +14,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginScreen
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordScreen
@@ -41,7 +39,7 @@ class WelcomeActivity : ComponentActivity() {
             SetSystemBarColors(settingsDataStore)
             val lifecycleOwner = LocalLifecycleOwner.current.lifecycle
             val navController = rememberNavController()
-            val viewModel = getViewModel<WelcomeViewModel>()
+            val viewModel = getViewModel<AuthViewModel>()
             val loginUiState by viewModel.loginUiState.collectAsState()
             val signupUiState by viewModel.signupUiState.collectAsState()
             val resetPasswordUiState by viewModel.resetPasswordUiState.collectAsState()

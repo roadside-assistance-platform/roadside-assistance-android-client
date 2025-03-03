@@ -3,7 +3,11 @@ package esi.roadside.assistance.client.auth.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import esi.roadside.assistance.client.auth.domain.models.LoginRequest
-import esi.roadside.assistance.client.auth.domain.repository.AuthRepo
+import esi.roadside.assistance.client.auth.domain.models.SignupRequest
+import esi.roadside.assistance.client.auth.domain.use_case.GoogleLogin
+import esi.roadside.assistance.client.auth.domain.use_case.Login
+import esi.roadside.assistance.client.auth.domain.use_case.ResetPassword
+import esi.roadside.assistance.client.auth.domain.use_case.SignUp
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginUiState
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordUiState
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupUiState
@@ -14,8 +18,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class WelcomeViewModel(
-    val repo: AuthRepo
+class AuthViewModel(
+    private val loginUseCase: Login,
+    private val signUpUseCase: SignUp,
+    private val resetPasswordUseCase: ResetPassword,
+    private val googleLoginUseCase: GoogleLogin,
 ): ViewModel() {
     private val _loginUiState = MutableStateFlow(LoginUiState())
     val loginUiState = _loginUiState.asStateFlow()
@@ -35,24 +42,39 @@ class WelcomeViewModel(
                 sendEvent(Navigate(NavRoutes.Signup))
             }
             is Action.GoToGoogleLogin -> {
-                // Go to google login screen
+                viewModelScope.launch {
+                    googleLoginUseCase()
+                }
             }
             is Action.GoToForgotPassword -> {
                 sendEvent(Navigate(NavRoutes.ForgotPassword))
             }
             is Action.Login -> {
                 viewModelScope.launch {
-                    repo.login(LoginRequest(
+                    loginUseCase(LoginRequest(
                         email = _loginUiState.value.email,
                         password = _loginUiState.value.password
                     ))
                 }
             }
             is Action.Signup -> {
-                // Signup
+                viewModelScope.launch {
+                    signUpUseCase(
+                        SignupRequest(
+                            fullName = _signupUiState.value.fullName,
+                            email = _signupUiState.value.email,
+                            password = _signupUiState.value.password,
+                            confirmPassword = _signupUiState.value.confirmPassword,
+                            phoneNumber = _signupUiState.value.phoneNumber,
+                            image = _signupUiState.value.image
+                        )
+                    )
+                }
             }
             is Action.Send -> {
-                // Send
+                viewModelScope.launch {
+                    resetPasswordUseCase(_resetPasswordUiState.value.email)
+                }
             }
             is Action.SetResetPasswordEmail -> {
                 _resetPasswordUiState.update {
@@ -60,7 +82,9 @@ class WelcomeViewModel(
                 }
             }
             is Action.SetCode -> {
-                // Set code
+                _resetPasswordUiState.update {
+                    it.copy(code = action.code)
+                }
             }
             is Action.SetLoginEmail -> {
                 _loginUiState.update {

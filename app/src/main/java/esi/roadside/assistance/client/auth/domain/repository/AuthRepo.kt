@@ -7,7 +7,8 @@ import esi.roadside.assistance.client.core.domain.util.NetworkError
 import esi.roadside.assistance.client.core.domain.util.Result
 
 interface AuthRepo {
-    suspend fun login(request: LoginRequest): Result<ClientModel,NetworkError>
-    suspend fun signup(request: SignupRequest): Result<ClientModel,NetworkError>
-    suspend fun resetPassword(email: String): Result<ClientModel,NetworkError>
+    suspend fun login(request: LoginRequest): Result<ClientModel, NetworkError>
+    suspend fun signup(request: SignupRequest): Result<ClientModel, NetworkError>
+    suspend fun resetPassword(email: String): Result<ClientModel, NetworkError>
+    suspend fun googleLogin(): Result<ClientModel,NetworkError>
 }

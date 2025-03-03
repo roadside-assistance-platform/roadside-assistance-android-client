@@ -24,4 +24,8 @@ class AuthRepoImpl(
         TODO("Not yet implemented")
     }
 
+    override suspend fun googleLogin(): Result<ClientModel, NetworkError> {
+        TODO("Not yet implemented")
+    }
+
 }
