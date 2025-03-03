@@ -1,6 +1,7 @@
-package esi.roadside.assistance.client.main.domain.models
+package esi.roadside.assistance.client.core.domain.model
 
 import esi.roadside.assistance.client.core.data.dto.Client
+import esi.roadside.assistance.client.main.domain.models.ServiceModel
 import java.time.ZonedDateTime
 
 data class ClientModel(
