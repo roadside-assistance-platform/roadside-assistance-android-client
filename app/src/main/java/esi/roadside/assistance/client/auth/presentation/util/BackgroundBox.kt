@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -17,11 +18,15 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import esi.roadside.assistance.client.core.presentation.util.isDark
 
 @Composable
 fun BackgroundBox(
@@ -36,7 +41,8 @@ fun BackgroundBox(
             },
             Modifier
                 .align(Alignment.TopStart)
-                .statusBarsPadding(),
+                .statusBarsPadding()
+                .offset(12.dp, 12.dp),
             colors = IconButtonDefaults.iconButtonColors(
                 contentColor = MaterialTheme.colorScheme.onSurface
             )
@@ -46,9 +52,10 @@ fun BackgroundBox(
     },
     content: @Composable BoxScope.() -> Unit
 ) {
+    val isDark by isDark().collectAsState(false)
+    val colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer).takeIf { isDark }
     Surface(modifier = modifier.fillMaxSize()) {
         Box(Modifier.fillMaxSize().navigationBarsPadding()) {
-            navigationButton()
             Image(
                 painter = painterResource(id = resource),
                 contentDescription = null,
@@ -56,8 +63,9 @@ fun BackgroundBox(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.TopCenter),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer)
+                colorFilter = colorFilter
             )
+            navigationButton()
             content()
         }
     }
