@@ -17,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,6 +35,7 @@ fun BackgroundBox(
     resource: Int,
     modifier: Modifier = Modifier,
     navigationButton: @Composable BoxScope.() -> Unit = {
+        val isDark by isDark().collectAsState(false)
         val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
         IconButton(
             {
@@ -44,7 +46,8 @@ fun BackgroundBox(
                 .statusBarsPadding()
                 .offset(12.dp, 12.dp),
             colors = IconButtonDefaults.iconButtonColors(
-                contentColor = MaterialTheme.colorScheme.onSurface
+                contentColor = if (isDark) MaterialTheme.colorScheme.onSurface
+                    else MaterialTheme.colorScheme.surface
             )
         ) {
             Icon(Icons.AutoMirrored.Default.ArrowBack, null)

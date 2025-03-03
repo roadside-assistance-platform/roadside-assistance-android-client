@@ -133,6 +133,21 @@ class AuthViewModel(
                     it.copy(verifyEmailCode = action.code)
                 }
             }
+            Action.ToggleLoginPasswordHidden -> {
+                _loginUiState.update {
+                    it.copy(passwordHidden = !it.passwordHidden)
+                }
+            }
+            Action.ToggleSignupConfirmPasswordHidden -> {
+                _signupUiState.update {
+                    it.copy(confirmPasswordHidden = !it.confirmPasswordHidden)
+                }
+            }
+            Action.ToggleSignupPasswordHidden -> {
+                _signupUiState.update {
+                    it.copy(passwordHidden = !it.passwordHidden)
+                }
+            }
         }
     }
 }

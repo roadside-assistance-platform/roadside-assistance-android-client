@@ -13,7 +13,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -26,6 +25,8 @@ import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.Action
 import esi.roadside.assistance.client.auth.presentation.util.MyScreen
 import esi.roadside.assistance.client.auth.presentation.util.TermsAndPolicy
+import esi.roadside.assistance.client.core.presentation.components.MyTextField
+import esi.roadside.assistance.client.core.presentation.components.PasswordTextField
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 
 @Composable
@@ -46,43 +47,28 @@ fun LoginScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            OutlinedTextField(
+            MyTextField(
                 uiState.email,
                 {
                     onAction(Action.SetLoginEmail(it))
                 },
-                Modifier.fillMaxWidth(),
-                label = {
-                    Text(stringResource(R.string.email))
-                },
-                placeholder = {
-                    Text(stringResource(R.string.email_placeholder))
-                },
+                label = stringResource(R.string.email),
+                placeholder = stringResource(R.string.email_placeholder),
                 isError = uiState.emailError,
-                supportingText = if (!uiState.emailError) null else {
-                    {
-                        Text(stringResource(R.string.invalid_email))
-                    }
-                }
+                supportingText = stringResource(R.string.invalid_email).takeIf { uiState.emailError },
             )
-            OutlinedTextField(
+            PasswordTextField(
                 uiState.password,
                 {
                     onAction(Action.SetLoginPassword(it))
                 },
-                Modifier.fillMaxWidth(),
-                label = {
-                    Text(stringResource(R.string.password))
+                uiState.passwordHidden,
+                {
+                    onAction(Action.ToggleLoginPasswordHidden)
                 },
-                placeholder = {
-                    Text(stringResource(R.string.email_placeholder))
-                },
-                isError = uiState.passwordError,
-                supportingText = if (!uiState.passwordError) null else {
-                    {
-                        Text(stringResource(R.string.incorrect_password))
-                    }
-                }
+                label = stringResource(R.string.password),
+                placeholder = stringResource(R.string.password_placeholder),
+                supportingText = stringResource(R.string.incorrect_password).takeIf { uiState.passwordError },
             )
             Row(
                 Modifier.fillMaxWidth(),

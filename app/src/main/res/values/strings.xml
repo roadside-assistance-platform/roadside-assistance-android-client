@@ -208,6 +208,8 @@
     <string name="verify_email_text">Our service providers will be contacting you through your phone number</string>
     <string name="verification_code">Verification code</string>
     <string name="enter_the_code">Enter the code</string>
+    <string name="password_placeholder">Enter your password</string>
+    <string name="invalid_phone_number">Invalid phone number</string>
     <plurals name="item_s">
         <item quantity="one">1 item</item>
         <item quantity="zero">no items</item>
