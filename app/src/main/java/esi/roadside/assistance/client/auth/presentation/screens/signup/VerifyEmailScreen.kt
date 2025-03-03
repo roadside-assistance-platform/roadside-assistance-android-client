@@ -28,6 +28,7 @@ import esi.roadside.assistance.client.auth.presentation.Action
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginUiState
 import esi.roadside.assistance.client.auth.presentation.util.MyScreen
 import esi.roadside.assistance.client.auth.presentation.util.TermsAndPolicy
+import esi.roadside.assistance.client.core.presentation.components.MyTextField
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 
 @Composable
@@ -48,24 +49,15 @@ fun VerifyEmailScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            OutlinedTextField(
+            MyTextField(
                 uiState.verifyEmailCode,
                 {
                     onAction(Action.SetVerifyEmailCode(it))
                 },
-                Modifier.fillMaxWidth(),
-                label = {
-                    Text(stringResource(R.string.verification_code))
-                },
-                placeholder = {
-                    Text(stringResource(R.string.enter_the_code))
-                },
+                label = stringResource(R.string.verification_code),
+                placeholder = stringResource(R.string.enter_the_code),
                 isError = uiState.verifyEmailCodeError,
-                supportingText = if (!uiState.verifyEmailCodeError) null else {
-                    {
-                        Text(stringResource(R.string.incorrect_code))
-                    }
-                }
+                supportingText = stringResource(R.string.incorrect_code).takeIf { uiState.verifyEmailCodeError }
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(R.string.didn_t_receive_anything))

@@ -29,7 +29,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -47,6 +46,8 @@ import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.Action
 import esi.roadside.assistance.client.auth.presentation.util.BackgroundBox
 import esi.roadside.assistance.client.auth.presentation.util.TermsAndPolicy
+import esi.roadside.assistance.client.core.presentation.components.MyTextField
+import esi.roadside.assistance.client.core.presentation.components.PasswordTextField
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 import esi.roadside.assistance.client.core.presentation.theme.lightScheme
 
@@ -94,7 +95,7 @@ fun SignupScreen(
                 Spacer(Modifier.height(18.dp))
                 Box(
                     Modifier
-                        .size(120.dp)
+                        .size(140.dp)
                         .clip(MaterialTheme.shapes.extraLarge)
                         .background(MaterialTheme.colorScheme.surfaceVariant)
                         .clickable {
@@ -119,7 +120,7 @@ fun SignupScreen(
                             { onAction(Action.SetSignupImage(null)) },
                             Modifier
                                 .align(Alignment.BottomEnd)
-                                .offset((-16).dp, (-16).dp)
+                                .offset((-8).dp, (-8).dp)
                         ) {
                             Icon(Icons.Default.Delete, null)
                         }
@@ -135,94 +136,59 @@ fun SignupScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                OutlinedTextField(
+                MyTextField(
                     uiState.fullName,
                     {
                         onAction(Action.SetSignupFullName(it))
                     },
-                    Modifier.fillMaxWidth(),
-                    label = {
-                        Text(stringResource(R.string.full_name))
-                    },
-                    placeholder = {
-                        Text(stringResource(R.string.full_name_placeholder))
-                    },
+                    label = stringResource(R.string.full_name),
+                    placeholder = stringResource(R.string.full_name_placeholder),
                 )
-                OutlinedTextField(
+                MyTextField(
                     uiState.phoneNumber,
                     {
                         onAction(Action.SetSignupPhoneNumber(it))
                     },
-                    Modifier.fillMaxWidth(),
-                    label = {
-                        Text(stringResource(R.string.phone_number))
-                    },
-                    placeholder = {
-                        Text(stringResource(R.string.phone_number_placeholder))
-                    },
+                    label = stringResource(R.string.phone_number),
+                    placeholder = stringResource(R.string.phone_number_placeholder),
                     isError = uiState.phoneNumberError,
-                    supportingText = if (!uiState.phoneNumberError) null else {
-                        {
-                            Text(stringResource(R.string.invalid_email))
-                        }
-                    }
+                    supportingText = stringResource(R.string.invalid_phone_number).takeIf { uiState.phoneNumberError }
                 )
-                OutlinedTextField(
+                MyTextField(
                     uiState.email,
                     {
                         onAction(Action.SetSignupEmail(it))
                     },
-                    Modifier.fillMaxWidth(),
-                    label = {
-                        Text(stringResource(R.string.email))
-                    },
-                    placeholder = {
-                        Text(stringResource(R.string.email_placeholder))
-                    },
+                    label = stringResource(R.string.email),
+                    placeholder = stringResource(R.string.email_placeholder),
                     isError = uiState.emailError,
-                    supportingText = if (!uiState.emailError) null else {
-                        {
-                            Text(stringResource(R.string.invalid_email))
-                        }
-                    }
+                    supportingText = stringResource(R.string.invalid_email).takeIf { uiState.emailError }
                 )
-                OutlinedTextField(
+                PasswordTextField(
                     uiState.password,
                     {
                         onAction(Action.SetSignupPassword(it))
                     },
-                    Modifier.fillMaxWidth(),
-                    label = {
-                        Text(stringResource(R.string.password))
-                    },
-                    placeholder = {
-                        Text(stringResource(R.string.email_placeholder))
-                    },
-                    isError = uiState.passwordError,
-                    supportingText = if (!uiState.passwordError) null else {
-                        {
-                            Text(stringResource(R.string.incorrect_password))
-                        }
-                    }
-                )
-                OutlinedTextField(
-                    uiState.password,
+                    uiState.passwordHidden,
                     {
-                        onAction(Action.SetSignupPassword(it))
-                    },
-                    Modifier.fillMaxWidth(),
-                    label = {
-                        Text(stringResource(R.string.confirm_password))
-                    },
-                    placeholder = {
-                        Text(stringResource(R.string.confirm_password_placeholder))
+                        onAction(Action.ToggleSignupPasswordHidden)
                     },
                     isError = uiState.passwordError,
-                    supportingText = if (!uiState.passwordError) null else {
-                        {
-                            Text(stringResource(R.string.incorrect_password))
-                        }
-                    }
+                    supportingText = stringResource(R.string.incorrect_password).takeIf { uiState.passwordError }
+                )
+                PasswordTextField(
+                    uiState.confirmPassword,
+                    {
+                        onAction(Action.SetSignupConfirmPassword(it))
+                    },
+                    uiState.confirmPasswordHidden,
+                    {
+                        onAction(Action.ToggleSignupConfirmPasswordHidden)
+                    },
+                    isError = uiState.confirmPasswordError,
+                    label = stringResource(R.string.confirm_password),
+                    placeholder = stringResource(R.string.confirm_password_placeholder),
+                    supportingText = stringResource(R.string.incorrect_password).takeIf { uiState.confirmPasswordError }
                 )
                 Button({ onAction(Action.Signup) }, Modifier.fillMaxWidth().padding(top = 16.dp)) {
                     Text(stringResource(R.string.continue_text))

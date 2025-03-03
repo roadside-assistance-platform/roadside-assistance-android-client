@@ -5,6 +5,9 @@ import android.net.Uri
 sealed interface Action {
     data class SetLoginEmail(val email: String): Action
     data class SetLoginPassword(val password: String): Action
+    data object ToggleLoginPasswordHidden: Action
+    data object ToggleSignupPasswordHidden: Action
+    data object ToggleSignupConfirmPasswordHidden: Action
 
     data class SetSignupFullName(val fullName: String): Action
     data class SetSignupPhoneNumber(val phoneNumber: String): Action
