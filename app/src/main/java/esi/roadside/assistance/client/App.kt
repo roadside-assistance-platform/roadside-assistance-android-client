@@ -1,7 +1,8 @@
 package esi.roadside.assistance.client
 
 import android.app.Application
-import esi.roadside.assistance.client.core.di.appModule
+import esi.roadside.assistance.client.auth.di.authModule
+import esi.roadside.assistance.client.core.di.coreModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -10,7 +11,7 @@ class App: Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(appModule)
+            modules(coreModule, authModule)
         }
     }
 }

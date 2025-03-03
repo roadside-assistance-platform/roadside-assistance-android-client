@@ -1,6 +1,6 @@
 package esi.roadside.assistance.client.core.data.dto
 
-import esi.roadside.assistance.client.main.domain.models.ClientModel
+import esi.roadside.assistance.client.core.domain.model.ClientModel
 import kotlinx.serialization.Serializable
 import java.time.Instant
 import java.time.ZoneId
