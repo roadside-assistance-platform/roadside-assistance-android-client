@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -27,17 +25,14 @@ fun NavigationScreen(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val currentNavRoute by remember {
-        derivedStateOf {
-            currentRoute?.let { route ->
-                Routes
-                    .entries
-                    .firstOrNull {
-                        it.route.javaClass.kotlin.qualifiedName?.contains(route) == true
-                    }
-            } ?: Routes.HOME
-        }
-    }
+    val currentNavRoute =
+        currentRoute?.let { route ->
+            Routes
+                .entries
+                .firstOrNull {
+                    it.route.javaClass.kotlin.qualifiedName?.contains(route) == true
+                }
+        } ?: Routes.HOME
     Scaffold(
         modifier = modifier,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
