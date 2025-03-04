@@ -1,4 +1,4 @@
-package esi.roadside.assistance.client.auth.presentation.util
+package esi.roadside.assistance.client.core.presentation.util
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

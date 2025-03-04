@@ -1,4 +1,4 @@
-package esi.roadside.assistance.client.auth.presentation.util
+package esi.roadside.assistance.client.core.presentation.util
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

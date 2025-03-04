@@ -11,8 +11,8 @@ import esi.roadside.assistance.client.auth.domain.use_case.SignUp
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginUiState
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordUiState
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupUiState
-import esi.roadside.assistance.client.auth.presentation.util.Event.*
-import esi.roadside.assistance.client.auth.presentation.util.sendEvent
+import esi.roadside.assistance.client.core.presentation.util.Event.*
+import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -36,10 +36,10 @@ class AuthViewModel(
     fun onAction(action: Action) {
         when(action) {
             is Action.GoToLogin -> {
-                sendEvent(Navigate(NavRoutes.Login))
+                sendEvent(AuthNavigate(NavRoutes.Login))
             }
             is Action.GoToSignup -> {
-                sendEvent(Navigate(NavRoutes.Signup))
+                sendEvent(AuthNavigate(NavRoutes.Signup))
             }
             is Action.GoToGoogleLogin -> {
                 viewModelScope.launch {
@@ -47,15 +47,16 @@ class AuthViewModel(
                 }
             }
             is Action.GoToForgotPassword -> {
-                sendEvent(Navigate(NavRoutes.ForgotPassword))
+                sendEvent(AuthNavigate(NavRoutes.ForgotPassword))
             }
             is Action.Login -> {
-                viewModelScope.launch {
-                    loginUseCase(LoginRequest(
-                        email = _loginUiState.value.email,
-                        password = _loginUiState.value.password
-                    ))
-                }
+//                viewModelScope.launch {
+//                    loginUseCase(LoginRequest(
+//                        email = _loginUiState.value.email,
+//                        password = _loginUiState.value.password
+//                    ))
+//                }
+                sendEvent(LaunchMainActivity)
             }
             is Action.Signup -> {
                 viewModelScope.launch {
