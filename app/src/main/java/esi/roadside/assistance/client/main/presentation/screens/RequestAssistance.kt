@@ -28,7 +28,6 @@ import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 @Composable
 fun RequestAssistance(
     modifier: Modifier = Modifier,
-    onFieldClick: (Field) -> Unit,
     onSubmitClick: (Field, String) -> Unit,
     navHostController: NavHostController
 ) {
@@ -93,7 +92,6 @@ fun RequestAssistance(
                         OutlinedButton(
                             onClick = {
                                 selectedField = if (selectedField == field) null else field
-                                onFieldClick(selectedField ?: field)
                             },
                             colors = ButtonDefaults.outlinedButtonColors(
                                 containerColor = if (selectedField == field) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.surface,
@@ -152,7 +150,6 @@ fun RequestAssistance(
 private fun PreviewRequestAssistance() {
     PreviewAppTheme {
         RequestAssistance(
-            onFieldClick = {},
             onSubmitClick = {
                     _, _ ->
             },
