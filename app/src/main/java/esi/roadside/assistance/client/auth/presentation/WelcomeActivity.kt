@@ -1,17 +1,14 @@
 package esi.roadside.assistance.client.auth.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,11 +17,13 @@ import esi.roadside.assistance.client.auth.presentation.screens.reset_password.R
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupScreen
 import esi.roadside.assistance.client.auth.presentation.screens.signup.VerifyEmailScreen
 import esi.roadside.assistance.client.auth.presentation.screens.welcome.GetStartedScreen
-import esi.roadside.assistance.client.auth.presentation.util.Event
-import esi.roadside.assistance.client.auth.presentation.util.EventBus
+import esi.roadside.assistance.client.core.presentation.util.Event
+import esi.roadside.assistance.client.core.presentation.util.EventBus
 import esi.roadside.assistance.client.core.data.SettingsDataStore
 import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
+import esi.roadside.assistance.client.core.util.composables.CollectEvents
+import esi.roadside.assistance.client.main.presentation.MainActivity
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import soup.compose.material.motion.animation.materialFadeThroughIn
@@ -37,20 +36,18 @@ class WelcomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SetSystemBarColors(settingsDataStore)
-            val lifecycleOwner = LocalLifecycleOwner.current.lifecycle
             val navController = rememberNavController()
             val viewModel = getViewModel<AuthViewModel>()
             val loginUiState by viewModel.loginUiState.collectAsState()
             val signupUiState by viewModel.signupUiState.collectAsState()
             val resetPasswordUiState by viewModel.resetPasswordUiState.collectAsState()
-            LaunchedEffect(key1 = lifecycleOwner) {
-                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    EventBus.events.collect { event ->
-                        when (event) {
-                            is Event.Navigate -> {
-                                navController.navigate(event.route)
-                            }
-                        }
+            CollectEvents { event ->
+                when (event) {
+                    is Event.AuthNavigate -> {
+                        navController.navigate(event.route)
+                    }
+                    Event.LaunchMainActivity -> {
+                        startActivity(Intent(this, MainActivity::class.java))
                     }
                 }
             }
