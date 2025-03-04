@@ -210,6 +210,8 @@
     <string name="enter_the_code">Enter the code</string>
     <string name="password_placeholder">Enter your password</string>
     <string name="invalid_phone_number">Invalid phone number</string>
+    <string name="profile">Profile</string>
+    <string name="request_service">Request Service</string>
     <plurals name="item_s">
         <item quantity="one">1 item</item>
         <item quantity="zero">no items</item>
