@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             AppTheme {
-                NavigationScreen(navController, onAction = mainViewModel::onAction)
+                NavigationScreen(navController, mainViewModel, onAction = mainViewModel::onAction)
             }
         }
     }

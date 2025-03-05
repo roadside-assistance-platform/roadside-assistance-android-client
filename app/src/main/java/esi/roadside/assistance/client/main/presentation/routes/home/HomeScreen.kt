@@ -1,16 +1,21 @@
 package esi.roadside.assistance.client.main.presentation.routes.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,11 +47,13 @@ import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.plugin.viewport.data.FollowPuckViewportStateOptions
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.main.presentation.Action
-import esi.roadside.assistance.client.main.presentation.Routes
+import soup.compose.material.motion.animation.materialSharedAxisZIn
+import soup.compose.material.motion.animation.materialSharedAxisZOut
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    uiState: HomeUiState,
     onAction: (Action) -> Unit
 ) {
     var point by remember { mutableStateOf<Point?>(null) }
@@ -59,6 +66,7 @@ fun HomeScreen(
         }
     }
     Scaffold(
+        modifier = modifier,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         floatingActionButton = {
             Column(
@@ -79,81 +87,88 @@ fun HomeScreen(
                 ) {
                     Icon(Icons.Default.LocationOn, null)
                 }
-                ExtendedFloatingActionButton(
-                    onClick = {
-                        onAction(Action.RequestService)
-                    },
-                    icon = { Icon(Icons.Outlined.Edit, null) },
-                    text = { Text(stringResource(R.string.request_service)) }
-                )
+                AnimatedVisibility(
+                    uiState.location != null,
+                    enter = materialSharedAxisZIn(true),
+                    exit = materialSharedAxisZOut(true)
+                ) {
+                    ExtendedFloatingActionButton(
+                        onClick = {
+                            onAction(Action.RequestService)
+                        },
+                        icon = { Icon(Icons.Outlined.Edit, null) },
+                        text = { Text(stringResource(R.string.request_service)) }
+                    )
+                }
             }
         }
     ) {
-        MapboxMap(
-            modifier
-                .fillMaxSize()
-                .padding(it),
-            mapViewportState = state,
-            compass = {
-                Compass(
-                    modifier = Modifier.statusBarsPadding(),
-                    alignment = Alignment.TopEnd
-                )
-            },
-            scaleBar = {
-                ScaleBar(
-                    modifier = Modifier.navigationBarsPadding(),
-                    alignment = Alignment.BottomStart
-                )
-            },
-            onMapLongClickListener = object : OnMapLongClickListener {
-                override fun onMapLongClick(newPoint: Point): Boolean {
-                    point = newPoint
-                    onAction(Action.SetLocation(newPoint))
-                    state.easeTo(
-                        CameraOptions
-                            .Builder()
-                            .zoom(state.cameraState?.zoom ?: 2.0)
-                            .center(newPoint)
-                            .pitch(0.0)
-                            .bearing(0.0)
-                            .build()
+        Box(Modifier.fillMaxSize().padding(it)) {
+            MapboxMap(
+                modifier = Modifier.fillMaxSize(),
+                mapViewportState = state,
+                compass = {
+                    Compass(
+                        modifier = Modifier.statusBarsPadding(),
+                        alignment = Alignment.TopEnd
                     )
-                    return true
-                }
-            },
-            logo = {
-                Logo(
-                    modifier = Modifier.statusBarsPadding(),
-                    alignment = Alignment.TopStart
-                )
-            }
-        ) {
-            point?.let {
-                CircleAnnotation(point = it) {
-                    interactionsState.onClicked {
-                        onAction(Action.SetLocation(it.point))
+                },
+                scaleBar = {
+                    ScaleBar(
+                        modifier = Modifier.navigationBarsPadding(),
+                        alignment = Alignment.BottomStart
+                    )
+                },
+                onMapLongClickListener = object : OnMapLongClickListener {
+                    override fun onMapLongClick(newPoint: Point): Boolean {
+                        point = newPoint
+                        onAction(Action.SetLocation(newPoint))
                         state.easeTo(
                             CameraOptions
                                 .Builder()
                                 .zoom(state.cameraState?.zoom ?: 2.0)
-                                .center(it.point)
+                                .center(newPoint)
                                 .pitch(0.0)
                                 .bearing(0.0)
                                 .build()
                         )
-                        true
+                        return true
                     }
-                    circleRadius = 10.0
-                    circleColor = Color.Red
-                    circleStrokeWidth = 5.0
-                    circleStrokeColor = Color.White
+                },
+                logo = {}
+            ) {
+                point?.let {
+                    CircleAnnotation(point = it) {
+                        interactionsState.onClicked {
+                            onAction(Action.SetLocation(it.point))
+                            state.easeTo(
+                                CameraOptions
+                                    .Builder()
+                                    .zoom(state.cameraState?.zoom ?: 2.0)
+                                    .center(it.point)
+                                    .pitch(0.0)
+                                    .bearing(0.0)
+                                    .build()
+                            )
+                            true
+                        }
+                        circleRadius = 10.0
+                        circleColor = Color.Red
+                        circleStrokeWidth = 5.0
+                        circleStrokeColor = Color.White
+                    }
+                }
+                MapEffect(Unit) { mapView ->
+                    followLocation(state, mapView) {
+                        if (it != null) onAction(Action.SetLocation(it))
+                    }
                 }
             }
-            MapEffect(Unit) { mapView ->
-                followLocation(state, mapView) {
-                    if (it != null) onAction(Action.SetLocation(it))
-                }
+            FilledIconButton(
+                { onAction(Action.OpenNotifications) },
+                Modifier.align(Alignment.TopEnd).statusBarsPadding().offset((-24).dp)
+            ) {
+                Icon(Icons.Default.Notifications, null)
             }
         }
     }
