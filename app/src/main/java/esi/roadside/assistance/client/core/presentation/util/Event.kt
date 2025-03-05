@@ -4,5 +4,6 @@ import esi.roadside.assistance.client.auth.presentation.NavRoutes
 
 sealed interface Event {
     data class AuthNavigate(val route: NavRoutes): Event
+    data object ImageUploadError: Event
     data object LaunchMainActivity: Event
 }

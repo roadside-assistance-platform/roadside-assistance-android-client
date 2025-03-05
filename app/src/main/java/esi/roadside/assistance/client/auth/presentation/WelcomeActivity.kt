@@ -2,6 +2,7 @@ package esi.roadside.assistance.client.auth.presentation
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,6 +49,13 @@ class WelcomeActivity : ComponentActivity() {
                     }
                     Event.LaunchMainActivity -> {
                         startActivity(Intent(this, MainActivity::class.java))
+                    }
+                    Event.ImageUploadError -> {
+                        Toast.makeText(
+                            this,
+                            "Error occurred when uploading your image",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }

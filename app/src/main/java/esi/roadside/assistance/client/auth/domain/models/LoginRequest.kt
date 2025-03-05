@@ -1,6 +1,6 @@
 package esi.roadside.assistance.client.auth.domain.models
 
 data class LoginRequest(
-    val email: String,
+    val username: String,
     val password: String
 )
