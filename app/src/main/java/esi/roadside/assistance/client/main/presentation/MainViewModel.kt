@@ -15,9 +15,10 @@ class MainViewModel: ViewModel() {
             Action.RequestService -> TODO()
             is Action.SetLocation -> {
                 _homeUiState.update {
-                    it.copy(location = it.location)
+                    it.copy(location = action.location)
                 }
             }
+            Action.OpenNotifications -> TODO()
         }
     }
 }
