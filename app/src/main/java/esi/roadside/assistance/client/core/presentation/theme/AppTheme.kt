@@ -49,6 +49,7 @@ internal fun AppTheme(
         secondary = colorScheme.secondary,
         tertiary = colorScheme.tertiary,
         animate = true,
+        useDarkTheme = isDark,
         withAmoled = extraDark,
         typography = interTypography(MaterialTheme.typography),
         content = content

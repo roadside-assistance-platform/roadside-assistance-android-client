@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -20,6 +21,7 @@ import soup.compose.material.motion.animation.materialFadeThroughOut
 @Composable
 fun NavigationScreen(
     navController: NavHostController,
+    mainViewModel: MainViewModel,
     modifier: Modifier = Modifier,
     onAction: (Action) -> Unit,
 ) {
@@ -33,6 +35,7 @@ fun NavigationScreen(
                     it.route.javaClass.kotlin.qualifiedName?.contains(route) == true
                 }
         } ?: Routes.HOME
+    val homeUiState by mainViewModel.homeUiState.collectAsState()
     Scaffold(
         modifier = modifier,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -46,7 +49,7 @@ fun NavigationScreen(
             modifier = Modifier.fillMaxSize().padding(it),
         ) {
             composable<NavRoutes.Home> {
-                HomeScreen(onAction = onAction)
+                HomeScreen(uiState = homeUiState, onAction = onAction)
             }
             composable<NavRoutes.Profile> {
                 ProfileScreen()
