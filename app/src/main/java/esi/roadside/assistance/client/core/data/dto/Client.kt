@@ -12,7 +12,7 @@ data class Client(
     val email: String,
     val password: String,
     val phone: String,
-    val photo: ByteArray,
+    val photo: String,
     val services: List<Service>,
     val createdAt: Long,
     val updatedAt: Long
