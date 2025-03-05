@@ -10,7 +10,7 @@ data class ClientModel(
     val email: String,
     val password: String,
     val phone: String,
-    val photo: ByteArray,
+    val photo: String,
     val services: List<ServiceModel>,
     val createdAt: ZonedDateTime,
     val updatedAt: ZonedDateTime
