@@ -90,7 +90,10 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.bundles.ktor)
     testImplementation(libs.truth)
-    implementation("com.cloudinary:cloudinary-android:3.0.2")
-    implementation("com.cloudinary:cloudinary-android-download:3.0.2")
-    implementation("com.cloudinary:kotlin-url-gen:1.7.0")
+    implementation(libs.cloudinary.android)
+    implementation(libs.cloudinary.android.download)
+    implementation(libs.kotlin.url.gen)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 }
