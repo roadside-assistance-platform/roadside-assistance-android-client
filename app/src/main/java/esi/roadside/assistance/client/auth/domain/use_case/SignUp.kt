@@ -8,5 +8,5 @@ import esi.roadside.assistance.client.core.domain.util.Result
 
 class SignUp(private val authRepo: AuthRepo) {
     suspend operator fun invoke(signupRequest: SignupRequest): Result<ClientModel, NetworkError> =
-        authRepo.signup(signupRequest)
+        authRepo.signup(signupRequest.copy(role = "client"))
 }
