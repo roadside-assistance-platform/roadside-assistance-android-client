@@ -67,7 +67,7 @@ class AuthViewModel(
                 viewModelScope.launch {
                     signUpUseCase(
                         SignupRequest(
-                            username = _signupUiState.value.email,
+                            email = _signupUiState.value.email,
                             password = _signupUiState.value.password
                         )
                     ).onSuccess { client ->
