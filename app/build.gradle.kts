@@ -23,6 +23,8 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "BASE_URL", "\"http://localhost:8080/\"")
+            buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://your-cloudamqp-url\"")
+
         }
         release {
             isMinifyEnabled = false
@@ -92,8 +94,9 @@ dependencies {
     testImplementation(libs.truth)
     implementation(libs.cloudinary.android)
     implementation(libs.cloudinary.android.download)
-    implementation(libs.kotlin.url.gen)
+    //implementation(libs.kotlin.url.gen)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+    implementation(libs.amqp.client)
 }

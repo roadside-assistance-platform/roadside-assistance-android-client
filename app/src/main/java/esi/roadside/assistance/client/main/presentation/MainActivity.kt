@@ -11,6 +11,7 @@ import esi.roadside.assistance.client.core.presentation.theme.AppTheme
 import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.util.composables.CollectEvents
 import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
+import esi.roadside.assistance.client.main.util.CollectNotifications
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import kotlin.getValue
@@ -43,6 +44,9 @@ class MainActivity : ComponentActivity() {
                 when(it) {
                     else -> Unit
                 }
+            }
+            CollectNotifications {
+                // TODO: Handle notification
             }
             AppTheme {
                 NavigationScreen(navController, mainViewModel, onAction = mainViewModel::onAction)
