@@ -2,6 +2,7 @@ package esi.roadside.assistance.client.auth.data
 
 import esi.roadside.assistance.client.auth.domain.models.LoginRequest
 import esi.roadside.assistance.client.auth.domain.models.SignupRequest
+import esi.roadside.assistance.client.auth.domain.models.UpdateRequest
 import esi.roadside.assistance.client.auth.domain.repository.AuthRepo
 import esi.roadside.assistance.client.core.domain.model.ClientModel
 import esi.roadside.assistance.client.core.domain.util.NetworkError
@@ -21,6 +22,10 @@ class AuthRepoImpl(
     }
 
     override suspend fun resetPassword(email: String): Result<ClientModel, NetworkError> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun update(request: UpdateRequest): Result<ClientModel, NetworkError> {
         TODO("Not yet implemented")
     }
 
