@@ -8,7 +8,6 @@ import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import esi.roadside.assistance.client.core.data.SettingsDataStore
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
-import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.util.composables.CollectEvents
 import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
 import esi.roadside.assistance.client.main.util.CollectNotifications
@@ -46,7 +45,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             CollectNotifications {
-                // TODO: Handle notification
+                // Handle notification
             }
             AppTheme {
                 NavigationScreen(navController, mainViewModel, onAction = mainViewModel::onAction)
