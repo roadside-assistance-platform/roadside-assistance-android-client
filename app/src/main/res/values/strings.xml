@@ -210,11 +210,48 @@
     <string name="enter_the_code">Enter the code</string>
     <string name="password_placeholder">Enter your password</string>
     <string name="invalid_phone_number">Invalid phone number</string>
-    <string name="profile">Profile</string>
-    <string name="request_service">Request Service</string>
+    <string name="request_a_service">Request a service</string>
+    <string name="request_assistance">Request assistance</string>
+    <string name="request_assistance_des">"Your request will be send to a nearby provider "</string>
+    <string name="selecte_the_field">Select the field of your issue</string>
+    <string name="unkown">I don’t know</string>
+    <string name="mechanic">mechanic</string>
+    <string name="electrician">electrician</string>
+    <string name="towing">towing</string>
+    <string name="fuel">fuel</string>
+    <string name="des_issue">describe the issue</string>
     <plurals name="item_s">
         <item quantity="one">1 item</item>
         <item quantity="zero">no items</item>
         <item quantity="other">%d items</item>
     </plurals>
+
+    <!--    Hints-->
+    <string name="hint_request_ass">ex: “ strange noise” , “car wont’ start”....etc</string>
+    <string name="submit_req">Submit request</string>
+    <string name="notifications">Notifications</string>
+
+    <string name="warning">Warning!</string>
+    <string name="dear">Dear</string>
+    <string name="warning_des">We noticed that your recent activity violates our Terms of Use
+
+  Please review our guidelines and ensure compliance in the future. Repeated violations may result in account suspension.
+
+  Thank you for your understanding.
+
+  </string>
+    <string name="accepted">Accepted!</string>
+    <string name="accepted_by_1">Your assistance request has been accepted by</string>
+    <string name="accepted_by_2">They will contact you shortly via phone number
+
+ If you do not receive a call, you can report this provider for false acceptance.
+
+  Thank you for using Depan.Go!</string>
+    <string name="no_notifications">No notifications yet!\n</string>
+    <string name="profile">Profile</string>
+    <string name="email_adress">Email address</string>
+    <string name="client_name">Client Name</string>
+    <string name="save_changes">SaveChanges\n</string>
+    <string name="request_service">Request service</string>
+    <string name="empty" />
 </resources>
