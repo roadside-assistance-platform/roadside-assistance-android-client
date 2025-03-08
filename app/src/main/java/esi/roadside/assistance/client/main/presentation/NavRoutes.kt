@@ -8,6 +8,15 @@ sealed class NavRoutes {
     data object Home : NavRoutes()
 
     @Serializable
+    data object RequestAssistance : NavRoutes()
+
+    @Serializable
+    data object Notifications : NavRoutes()
+
+    @Serializable
+    data class Notification(val id: String) : NavRoutes()
+
+    @Serializable
     data object Profile : NavRoutes()
 
     @Serializable

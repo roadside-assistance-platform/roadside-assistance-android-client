@@ -47,14 +47,15 @@ import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.plugin.viewport.data.FollowPuckViewportStateOptions
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.main.presentation.Action
+import esi.roadside.assistance.client.main.presentation.NavRoutes
 import soup.compose.material.motion.animation.materialSharedAxisZIn
 import soup.compose.material.motion.animation.materialSharedAxisZOut
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
     uiState: HomeUiState,
-    onAction: (Action) -> Unit
+    onAction: (Action) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var point by remember { mutableStateOf<Point?>(null) }
     val state = rememberMapViewportState {
@@ -94,7 +95,7 @@ fun HomeScreen(
                 ) {
                     ExtendedFloatingActionButton(
                         onClick = {
-                            onAction(Action.RequestService)
+                            onAction(Action.Navigate(NavRoutes.RequestAssistance))
                         },
                         icon = { Icon(Icons.Outlined.Edit, null) },
                         text = { Text(stringResource(R.string.request_service)) }
@@ -163,12 +164,6 @@ fun HomeScreen(
                         if (it != null) onAction(Action.SetLocation(it))
                     }
                 }
-            }
-            FilledIconButton(
-                { onAction(Action.OpenNotifications) },
-                Modifier.align(Alignment.TopEnd).statusBarsPadding().offset((-24).dp)
-            ) {
-                Icon(Icons.Default.Notifications, null)
             }
         }
     }
