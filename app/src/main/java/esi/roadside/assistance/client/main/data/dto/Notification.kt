@@ -7,7 +7,10 @@ data class Notification(
     val id: String,
     val title: String,
     val text: String,
+    val isWarning: Boolean,
+    val image: String?,
     val createdAt: LocalDateTime
 ) {
-    fun toNotificationModel(): NotificationModel = NotificationModel(id, title, text, createdAt)
+    fun toNotificationModel(): NotificationModel =
+        NotificationModel(id, title, text, isWarning, image, createdAt)
 }

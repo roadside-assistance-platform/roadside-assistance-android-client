@@ -19,7 +19,6 @@ import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupScr
 import esi.roadside.assistance.client.auth.presentation.screens.signup.VerifyEmailScreen
 import esi.roadside.assistance.client.auth.presentation.screens.welcome.GetStartedScreen
 import esi.roadside.assistance.client.core.presentation.util.Event
-import esi.roadside.assistance.client.core.presentation.util.EventBus
 import esi.roadside.assistance.client.core.data.SettingsDataStore
 import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
@@ -57,6 +56,7 @@ class WelcomeActivity : ComponentActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                    else -> Unit
                 }
             }
             AppTheme {

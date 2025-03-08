@@ -1,9 +1,14 @@
 package esi.roadside.assistance.client.main.presentation
 
 import com.mapbox.geojson.Point
+import esi.roadside.assistance.client.main.domain.Categories
 
 sealed interface Action {
-        data object RequestService: Action
+        data class Navigate(val route: NavRoutes): Action
         data class SetLocation(val location: Point?): Action
-        data object OpenNotifications: Action
+        data class SelectCategory(val category: Categories): Action
+        data class SetDescription(val description: String): Action
+        data object SubmitRequest: Action
+        data object EnableProfileEditing: Action
+        data object ConfirmProfileEditing: Action
 }
