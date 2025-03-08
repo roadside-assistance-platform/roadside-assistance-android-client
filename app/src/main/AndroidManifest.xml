@@ -30,6 +30,7 @@
             android:name=".auth.presentation.WelcomeActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:noHistory="true"
             android:theme="@style/Theme.RoadsideAssistanceClient">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
