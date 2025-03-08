@@ -17,4 +17,5 @@ data class SignupUiState(
     val image: Uri? = null,
     val verifyEmailCode: String = "",
     val verifyEmailCodeError: Boolean = false,
+    val uploadProgress: Float = 0f
 )

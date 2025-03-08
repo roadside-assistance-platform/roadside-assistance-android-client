@@ -2,15 +2,18 @@ package esi.roadside.assistance.client.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import esi.roadside.assistance.client.auth.domain.models.LoginRequest
 import esi.roadside.assistance.client.auth.domain.models.SignupRequest
+import esi.roadside.assistance.client.auth.domain.models.UpdateRequest
+import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
 import esi.roadside.assistance.client.auth.domain.use_case.GoogleLogin
 import esi.roadside.assistance.client.auth.domain.use_case.Login
 import esi.roadside.assistance.client.auth.domain.use_case.ResetPassword
 import esi.roadside.assistance.client.auth.domain.use_case.SignUp
+import esi.roadside.assistance.client.auth.domain.use_case.Update
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginUiState
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordUiState
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupUiState
+import esi.roadside.assistance.client.core.domain.util.onSuccess
 import esi.roadside.assistance.client.core.presentation.util.Event.*
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +22,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
+    private val cloudinaryUseCase: Cloudinary,
     private val loginUseCase: Login,
     private val signUpUseCase: SignUp,
+    private val updateUseCase: Update,
     private val resetPasswordUseCase: ResetPassword,
     private val googleLoginUseCase: GoogleLogin,
 ): ViewModel() {
@@ -62,14 +67,34 @@ class AuthViewModel(
                 viewModelScope.launch {
                     signUpUseCase(
                         SignupRequest(
-                            fullName = _signupUiState.value.fullName,
                             email = _signupUiState.value.email,
-                            password = _signupUiState.value.password,
-                            confirmPassword = _signupUiState.value.confirmPassword,
-                            phoneNumber = _signupUiState.value.phoneNumber,
-                            image = _signupUiState.value.image
+                            password = _signupUiState.value.password
                         )
-                    )
+                    ).onSuccess { client ->
+                        var url: String? = null
+                        _signupUiState.value.image?.let {
+                            cloudinaryUseCase(
+                                it,
+                                { url = it },
+                                { progress ->
+                                    _signupUiState.update {
+                                        it.copy(uploadProgress = progress)
+                                    }
+                                },
+                                {
+                                    sendEvent(ImageUploadError)
+                                }
+                            )
+                        }
+                        updateUseCase(
+                            UpdateRequest(
+                                id = client.id,
+                                fullName = _signupUiState.value.fullName,
+                                phoneNumber = _signupUiState.value.phoneNumber,
+                                photo = url
+                            )
+                        )
+                    }
                 }
             }
             is Action.Send -> {

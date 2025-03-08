@@ -22,14 +22,18 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"endpoint\"")
+            buildConfigField("String", "BASE_URL", "\"http://localhost:8080/\"")
+            buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://your-cloudamqp-url\"")
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
+            buildConfigField("String", "BASE_URL", "\"http://localhost:8080/\"")
+            buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://your-cloudamqp-url\"")
         }
     }
     compileOptions {
@@ -90,4 +94,11 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.bundles.ktor)
     testImplementation(libs.truth)
+    implementation(libs.cloudinary.android)
+    implementation(libs.cloudinary.android.download)
+    //implementation(libs.kotlin.url.gen)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+    implementation(libs.amqp.client)
 }

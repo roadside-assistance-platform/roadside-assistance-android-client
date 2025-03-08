@@ -2,6 +2,7 @@ package esi.roadside.assistance.client.auth.presentation
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +19,6 @@ import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupScr
 import esi.roadside.assistance.client.auth.presentation.screens.signup.VerifyEmailScreen
 import esi.roadside.assistance.client.auth.presentation.screens.welcome.GetStartedScreen
 import esi.roadside.assistance.client.core.presentation.util.Event
-import esi.roadside.assistance.client.core.presentation.util.EventBus
 import esi.roadside.assistance.client.core.data.SettingsDataStore
 import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
@@ -49,6 +49,14 @@ class WelcomeActivity : ComponentActivity() {
                     Event.LaunchMainActivity -> {
                         startActivity(Intent(this, MainActivity::class.java))
                     }
+                    Event.ImageUploadError -> {
+                        Toast.makeText(
+                            this,
+                            "Error occurred when uploading your image",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    else -> Unit
                 }
             }
             AppTheme {

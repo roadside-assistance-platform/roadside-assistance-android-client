@@ -8,9 +8,10 @@ import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import esi.roadside.assistance.client.core.data.SettingsDataStore
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
-import esi.roadside.assistance.client.core.presentation.util.Event
+import esi.roadside.assistance.client.core.presentation.util.Event.MainNavigate
 import esi.roadside.assistance.client.core.util.composables.CollectEvents
 import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
+import esi.roadside.assistance.client.main.util.CollectNotifications
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import kotlin.getValue
@@ -41,8 +42,12 @@ class MainActivity : ComponentActivity() {
             val mainViewModel = get<MainViewModel>()
             CollectEvents {
                 when(it) {
+                    is MainNavigate -> navController.navigate(it.route)
                     else -> Unit
                 }
+            }
+            CollectNotifications {
+                // Handle notification
             }
             AppTheme {
                 NavigationScreen(navController, mainViewModel, onAction = mainViewModel::onAction)
