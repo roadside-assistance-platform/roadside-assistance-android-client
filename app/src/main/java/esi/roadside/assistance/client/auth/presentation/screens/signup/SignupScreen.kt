@@ -45,6 +45,7 @@ fun SignupScreen(
         Column(
             Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 48.dp)
                 .padding(top = 12.dp)
         ) {
@@ -75,11 +76,7 @@ fun SignupScreen(
                 }
             }
             Column(
-                Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .imePadding()
-                    .verticalScroll(rememberScrollState()),
+                Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

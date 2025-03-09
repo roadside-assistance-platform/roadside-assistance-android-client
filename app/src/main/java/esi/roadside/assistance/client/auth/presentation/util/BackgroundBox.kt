@@ -58,7 +58,7 @@ fun BackgroundBox(
     val isDark by isDark().collectAsState(false)
     val colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer).takeIf { isDark }
     Surface(modifier = modifier.fillMaxSize()) {
-        Box(Modifier.fillMaxSize().navigationBarsPadding()) {
+        Box(Modifier.fillMaxSize()) {
             Image(
                 painter = painterResource(id = resource),
                 contentDescription = null,

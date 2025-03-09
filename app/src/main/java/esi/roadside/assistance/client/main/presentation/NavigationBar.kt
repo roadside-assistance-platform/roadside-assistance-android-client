@@ -1,5 +1,8 @@
 package esi.roadside.assistance.client.main.presentation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -15,7 +18,8 @@ import androidx.navigation.NavHostController
 fun NavigationBar(
     navController: NavHostController,
     route: Routes,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    badge: @Composable (BoxScope.(Routes) -> Unit) = {}
 ) {
     NavigationBar(modifier) {
         Routes.entries.forEachIndexed { index, screen ->
@@ -23,7 +27,11 @@ fun NavigationBar(
                 selected = screen == route,
                 alwaysShowLabel = false,
                 icon = {
-                    Icon(screen.icon, null)
+                    BadgedBox({
+                        badge(screen)
+                    }) {
+                        Icon(screen.icon, null)
+                    }
                 },
                 label = {
                     Text(
