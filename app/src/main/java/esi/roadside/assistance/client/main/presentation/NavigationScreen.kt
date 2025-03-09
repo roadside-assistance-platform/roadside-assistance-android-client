@@ -1,9 +1,13 @@
 package esi.roadside.assistance.client.main.presentation
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Badge
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -12,6 +16,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import esi.roadside.assistance.client.core.util.intUpDownTransSpec
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeScreen
 import esi.roadside.assistance.client.main.presentation.routes.home.request.RequestAssistance
 import esi.roadside.assistance.client.main.presentation.routes.notifications.NotificationDetails
@@ -46,7 +51,25 @@ fun NavigationScreen(
     Scaffold(
         modifier = modifier,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        bottomBar = { NavigationBar(navController, currentNavRoute) }
+        bottomBar = {
+            NavigationBar(navController, currentNavRoute) {
+                AnimatedVisibility(
+                    (it == Routes.NOTIFICATIONS) and notifications.isNotEmpty(),
+                    enter = materialFadeThroughIn(),
+                    exit = materialFadeThroughOut()
+                ) {
+                    Badge {
+                        AnimatedContent(
+                            notifications.size,
+                            label = "",
+                            transitionSpec = intUpDownTransSpec
+                        ) {
+                            Text("$it")
+                        }
+                    }
+                }
+            }
+        }
     ) {
         NavHost(
             navController = navController,
