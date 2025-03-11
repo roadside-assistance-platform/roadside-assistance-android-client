@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Phone
@@ -78,7 +79,11 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            ProfilePicturePicker(state.client.picture) {
+            ProfilePicturePicker(
+                state.client.picture,
+                icon = Icons.Default.Person,
+                enabled = state.enableEditing,
+            ) {
 
             }
             InformationCard(

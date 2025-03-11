@@ -10,10 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 
 @Composable
 fun LargeSettingsGroup(
     items: List<LargeSettingsItem>,
+    navHostController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     Column(modifier.padding(horizontal = 8.dp)) {
@@ -27,6 +29,7 @@ fun LargeSettingsGroup(
             if (index != 0) Spacer(Modifier.height(4.dp))
             LargeSettingsItem(
                 item,
+                navHostController,
                 Modifier.clip(
                     RoundedCornerShape(
                         topStart = topShape.topStart,

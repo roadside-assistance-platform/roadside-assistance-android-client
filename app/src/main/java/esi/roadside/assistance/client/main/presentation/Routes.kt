@@ -9,8 +9,8 @@ import esi.roadside.assistance.client.R
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class Routes(val route: NavRoutes, val title: Int, val icon: ImageVector) {
-    HOME(NavRoutes.Home, R.string.home, Icons.Default.Home),
-    NOTIFICATIONS(NavRoutes.Notifications, R.string.notifications, Icons.Default.Notifications),
+    HOME(NavRoutes.Map, R.string.home, Icons.Default.Home),
+    NOTIFICATIONS(NavRoutes.NotificationsList, R.string.notifications, Icons.Default.Notifications),
     PROFILE(NavRoutes.Profile, R.string.profile, Icons.Default.Person),
-    SETTINGS(NavRoutes.Settings, R.string.settings, Icons.Default.Settings)
+    SETTINGS(NavRoutes.SettingsList, R.string.settings, Icons.Default.Settings)
 }
