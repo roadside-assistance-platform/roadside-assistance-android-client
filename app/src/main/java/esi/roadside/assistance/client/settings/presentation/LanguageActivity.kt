@@ -44,16 +44,6 @@ import org.koin.android.ext.android.inject
 
 class LanguageActivity : ComponentActivity() {
     private val dataStore by inject<SettingsDataStore>()
-    private val languages =
-        mapOf(
-            "system" to R.string.follow_system,
-            "en" to R.string.english,
-            "fr" to R.string.french,
-            "ar" to R.string.arabic,
-            "es" to R.string.spanish,
-            "it" to R.string.italian,
-            "in" to R.string.hindi,
-        )
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,69 +51,8 @@ class LanguageActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             SetSystemBarColors(dataStore)
-            val listState = rememberLazyListState()
-            val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-            val language by dataStore.language.collectAsState(initial = "system")
-            var selectedLanguage by remember { mutableStateOf("") }
-            val scope = rememberCoroutineScope()
             AppTheme {
-                Scaffold(
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .nestedScroll(scrollBehavior.nestedScrollConnection),
-                    topBar = {
-                        LargeTopAppBar(
-                            title = {
-                                Text(
-                                    stringResource(id = R.string.language),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
-                            },
-                            navigationIcon = {
-                                IconButton(onClick = { finish() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
-                                }
-                            },
-                            scrollBehavior = scrollBehavior,
-                        )
-                    },
-                ) { paddingValues ->
-                    LazyColumn(
-                        modifier = Modifier.fillMaxWidth(),
-                        state = listState,
-                        contentPadding = paddingValues,
-                    ) {
-                        settingsRadioItems(
-                            languages.toList(),
-                            languages.map { it.key }.indexOf(language),
-                            {
-                                selectedLanguage = languages.keys.elementAt(it)
-                                scope.launch {
-                                    dataStore.saveSettings(language = languages.keys.elementAt(it))
-                                    findActivity()?.runOnUiThread {
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                            getSystemService(LocaleManager::class.java)
-                                                .applicationLocales =
-                                                LocaleList.forLanguageTags(
-                                                    if (selectedLanguage == "system") {
-                                                        LocaleManagerCompat.getSystemLocales(this@LanguageActivity)[0]!!.language
-                                                    } else {
-                                                        selectedLanguage
-                                                    }
-                                                )
-                                        } else {
-                                            AppCompatDelegate.setApplicationLocales(
-                                                LocaleListCompat.forLanguageTags(selectedLanguage),
-                                            )
-                                        }
-                                    }
-                                }
-                            },
-                        ) { Text(stringResource(it.second)) }
-                    }
-                }
+
             }
         }
     }

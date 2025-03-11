@@ -21,16 +21,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import esi.roadside.assistance.client.auth.presentation.Action
 
 @Composable
 fun ProfilePicturePicker(
     image: Uri?,
     modifier: Modifier = Modifier,
-    onImageChange: (Uri?) -> Unit,
+    icon: ImageVector = Icons.Default.AddAPhoto,
+    enabled: Boolean = true,
+    onImageChange: (Uri?) -> Unit
 ) {
     val photoPicker =
         rememberLauncherForActivityResult(
@@ -44,13 +46,13 @@ fun ProfilePicturePicker(
             .size(140.dp)
             .clip(MaterialTheme.shapes.extraLarge)
             .background(MaterialTheme.colorScheme.surfaceVariant)
-            .clickable {
+            .clickable(enabled = enabled) {
                 photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             },
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            Icons.Default.AddAPhoto,
+            icon,
             null,
             Modifier.size(48.dp),
             MaterialTheme.colorScheme.onSurface,

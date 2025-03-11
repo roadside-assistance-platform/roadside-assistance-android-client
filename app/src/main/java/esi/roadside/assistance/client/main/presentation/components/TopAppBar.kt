@@ -70,8 +70,8 @@ fun TopAppBar(
 ) {
     val colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer).takeIf { isDark }
     Box(
-        modifier = modifier.height(200.dp),
-        contentAlignment = Alignment.Center
+        modifier = modifier.height(180.dp),
+        contentAlignment = Alignment.TopCenter
     ) {
         Image(
             painterResource(background),
@@ -107,7 +107,7 @@ fun TopAppBar(
             Modifier,
             navigationIcon,
             actions,
-            200.dp,
+            120.dp,
             windowInsets,
             TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = Color.Transparent,

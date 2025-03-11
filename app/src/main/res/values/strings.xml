@@ -109,7 +109,7 @@
     <string name="customize_player">Customize player</string>
     <string name="play_next">Play next</string>
     <string name="add_to_playing_queue">Add to playing queue</string>
-    <string name="developer">Developer</string>
+    <string name="app_devs">App Developers</string>
     <string name="project">Project</string>
     <string name="source_code">Source Code</string>
     <string name="send_feedback">Send Feedback</string>
@@ -260,4 +260,17 @@
     <string name="emergency">Emergency</string>
     <string name="other">Other</string>
     <string name="edit_profile">Edit profile</string>
+    <string name="global_settings">Global settings</string>
+    <string name="change_password">Change password</string>
+    <string name="delete_account">Delete account</string>
+    <string name="account">Account</string>
+    <string name="legal">Legal</string>
+    <string name="support">Support</string>
+    <string name="help">Help</string>
+    <string name="logout">Logout</string>
+    <string name="app_devs_names">Younes Bouhouche\nAbderrahme Abdat\nOussama Chatri</string>
+    <string name="backend_devs_names">Mohamed Amine Lachi\nMounir Khabchache</string>
+    <string name="backend_devs">Backend Developers</string>
+    <string name="designer">Designer</string>
+    <string name="designer_name">Nadjet Bannaceur</string>
 </resources>
