@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.mapbox.maps.extension.style.expressions.dsl.generated.color
 import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.rememberDynamicColorScheme
 import esi.roadside.assistance.client.core.data.SettingsDataStore
@@ -48,6 +49,7 @@ internal fun AppTheme(
         primary = colorScheme.primary,
         secondary = colorScheme.secondary,
         tertiary = colorScheme.tertiary,
+        neutral = Color(49, 49, 49),
         animate = true,
         useDarkTheme = isDark,
         withAmoled = extraDark,

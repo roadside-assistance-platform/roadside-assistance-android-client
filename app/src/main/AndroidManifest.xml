@@ -40,6 +40,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".main.presentation.MainActivity" />
+        <activity android:name=".settings.presentation.ThemeActivity" />
+        <activity android:name=".settings.presentation.LanguageActivity" />
+        <activity android:name=".settings.presentation.AboutActivity" />
     </application>
 
 </manifest>

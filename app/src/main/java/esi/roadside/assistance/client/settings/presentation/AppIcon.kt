@@ -1,4 +1,4 @@
-package younesbouhouche.musicplayer.settings.presentation
+package esi.roadside.assistance.client.settings.presentation
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.animation.core.animateFloatAsState
@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -38,25 +36,25 @@ fun AppIcon(modifier: Modifier = Modifier) {
         modifier.size(300.dp),
         contentAlignment = Alignment.Center,
     ) {
-//        Image(
-//            ImageVector.vectorResource(id = R.drawable.material_3_flower),
-//            null,
-//            modifier =
-//                Modifier
-//                    .fillMaxSize()
-//                    .padding(16.dp)
-//                    .clickable(
-//                        indication = null,
-//                        interactionSource = null,
-//                    ) {
-//                        angle += 30f
-//                        view.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
-//                    }
-//                    .rotate(animatedAngle),
-//            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer),
-//        )
+        Image(
+            ImageVector.vectorResource(id = R.drawable.material_3_flower),
+            null,
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = null,
+                    ) {
+                        angle += 30f
+                        view.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+                    }
+                    .rotate(animatedAngle),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer),
+        )
         Icon(
-            Icons.Default.MusicNote,
+            ImageVector.vectorResource(R.drawable.app_icon),
             null,
             Modifier.fillMaxSize(.5f),
             MaterialTheme.colorScheme.onSurface,
