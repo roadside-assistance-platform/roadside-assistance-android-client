@@ -14,6 +14,7 @@ import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
 import esi.roadside.assistance.client.main.util.CollectNotifications
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
+import org.koin.androidx.compose.koinViewModel
 import kotlin.getValue
 
 class MainActivity : ComponentActivity() {
@@ -39,7 +40,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             SetSystemBarColors(settingsDataStore)
             val navController = rememberNavController()
-            val mainViewModel = get<MainViewModel>()
+           /* val mainViewModel = get<MainViewModel>()*/
+            val mainViewModel : MainViewModel = koinViewModel()
             CollectEvents {
                 when(it) {
                     is MainNavigate -> navController.navigate(it.route)

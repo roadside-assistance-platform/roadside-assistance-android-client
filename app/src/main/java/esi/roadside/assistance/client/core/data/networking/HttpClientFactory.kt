@@ -1,8 +1,14 @@
 package esi.roadside.assistance.client.core.data.networking
 
+import android.app.Application
+import android.content.Context
+import esi.roadside.assistance.client.auth.di.authModule
+import esi.roadside.assistance.client.auth.util.CookieStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
+import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
@@ -19,14 +25,19 @@ object HttpClientFactory {
             install(Logging) {
                 logger = Logger.ANDROID
                 level = LogLevel.ALL
-
             }
             install(ContentNegotiation) {
                 json(
                     json = Json {
                         ignoreUnknownKeys = true
+                        //isLenient = true
+                        //encodeDefaults = true
                     }
                 )
+            }
+            install(HttpCookies){
+                storage = AcceptAllCookiesStorage()
+                   /* CookieStorage(context = context)*/
             }
             defaultRequest {
                 contentType(ContentType.Application.Json)

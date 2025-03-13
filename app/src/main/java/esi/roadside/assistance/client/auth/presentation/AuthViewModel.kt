@@ -2,8 +2,8 @@ package esi.roadside.assistance.client.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import esi.roadside.assistance.client.auth.domain.models.SignupRequest
-import esi.roadside.assistance.client.auth.domain.models.UpdateRequest
+import esi.roadside.assistance.client.auth.domain.models.SignupModel
+import esi.roadside.assistance.client.auth.domain.models.UpdateModel
 import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
 import esi.roadside.assistance.client.auth.domain.use_case.GoogleLogin
 import esi.roadside.assistance.client.auth.domain.use_case.Login
@@ -66,9 +66,12 @@ class AuthViewModel(
             is Action.Signup -> {
                 viewModelScope.launch {
                     signUpUseCase(
-                        SignupRequest(
+                        SignupModel(
                             email = _signupUiState.value.email,
-                            password = _signupUiState.value.password
+                            password = _signupUiState.value.password,
+                            fullName = _signupUiState.value.fullName,
+                            phone = _signupUiState.value.phoneNumber,
+                            photo = ""
                         )
                     ).onSuccess { client ->
                         var url: String? = null
@@ -86,14 +89,14 @@ class AuthViewModel(
                                 }
                             )
                         }
-                        updateUseCase(
-                            UpdateRequest(
-                                id = client.id,
+                     /*   updateUseCase(
+                             UpdateModel(
+                                id ="",
                                 fullName = _signupUiState.value.fullName,
                                 phoneNumber = _signupUiState.value.phoneNumber,
                                 photo = url
                             )
-                        )
+                        )*/
                     }
                 }
             }

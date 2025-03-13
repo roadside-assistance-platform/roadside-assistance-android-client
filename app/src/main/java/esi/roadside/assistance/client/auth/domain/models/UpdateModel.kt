@@ -1,6 +1,6 @@
 package esi.roadside.assistance.client.auth.domain.models
 
-data class UpdateRequest(
+data class UpdateModel(
     val id: String,
     val fullName: String,
     val phoneNumber: String,
