@@ -33,11 +33,10 @@ import soup.compose.material.motion.animation.materialFadeThroughOut
 import kotlin.getValue
 
 class WelcomeActivity : ComponentActivity() {
-    val settingsDataStore by inject<SettingsDataStore>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SetSystemBarColors(settingsDataStore)
+            SetSystemBarColors()
             val navController = rememberNavController()
            /* val viewModel = getViewModel<AuthViewModel>()*/
             val viewModel: AuthViewModel = koinViewModel()
