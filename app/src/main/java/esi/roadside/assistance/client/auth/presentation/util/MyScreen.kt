@@ -55,7 +55,7 @@ fun MyScreen(
     },
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val isDark by isDark().collectAsState(false)
+    val isDark by isDark()
     val colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer).takeIf { isDark }
     Scaffold(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(WindowInsets.statusBars),

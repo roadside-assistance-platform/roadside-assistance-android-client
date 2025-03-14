@@ -35,7 +35,7 @@ fun BackgroundBox(
     resource: Int,
     modifier: Modifier = Modifier,
     navigationButton: @Composable BoxScope.() -> Unit = {
-        val isDark by isDark().collectAsState(false)
+        val isDark by isDark()
         val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
         IconButton(
             {
@@ -55,7 +55,7 @@ fun BackgroundBox(
     },
     content: @Composable BoxScope.() -> Unit
 ) {
-    val isDark by isDark().collectAsState(false)
+    val isDark by isDark()
     val colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer).takeIf { isDark }
     Surface(modifier = modifier.fillMaxSize()) {
         Box(Modifier.fillMaxSize()) {

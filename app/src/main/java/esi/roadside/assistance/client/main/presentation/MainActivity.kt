@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
             permissionsManager.requestLocationPermissions(this)
         }
         setContent {
-            SetSystemBarColors(settingsDataStore)
+            SetSystemBarColors()
             val navController = rememberNavController()
            /* val mainViewModel = get<MainViewModel>()*/
             val mainViewModel : MainViewModel = koinViewModel()

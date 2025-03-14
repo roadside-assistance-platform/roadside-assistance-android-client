@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -23,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +46,7 @@ fun TopAppBar(
     modifier: Modifier = Modifier,
     text: String? = null,
     navigationIcon: @Composable (() -> Unit) = {
-        val isDark by isDark().collectAsState(false)
+        val isDark by isDark()
         val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
         IconButton(
             {
@@ -68,6 +66,7 @@ fun TopAppBar(
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
+    val isDark by isDark()
     val colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer).takeIf { isDark }
     Box(
         modifier = modifier.height(180.dp),
@@ -107,7 +106,7 @@ fun TopAppBar(
             Modifier,
             navigationIcon,
             actions,
-            120.dp,
+            100.dp,
             windowInsets,
             TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = Color.Transparent,

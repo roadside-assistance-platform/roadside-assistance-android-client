@@ -28,7 +28,9 @@ import esi.roadside.assistance.client.main.presentation.routes.profile.ProfileSc
 import esi.roadside.assistance.client.main.presentation.routes.settings.AboutScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.CustomizeAppScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.LanguageScreen
+import esi.roadside.assistance.client.main.presentation.routes.settings.PrivacyPolicyScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.SettingsScreen
+import esi.roadside.assistance.client.main.presentation.routes.settings.TermsOfServiceScreen
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 
@@ -142,10 +144,10 @@ fun NavigationScreen(
                     AboutScreen()
                 }
                 composable<NavRoutes.TermsOfService> {
-                    // TermsOfServiceScreen()
+                    TermsOfServiceScreen()
                 }
                 composable<NavRoutes.PrivacyPolicy> {
-                    // PrivacyPolicyScreen()
+                    PrivacyPolicyScreen()
                 }
                 composable<NavRoutes.Help> {
                     // HelpScreen()
