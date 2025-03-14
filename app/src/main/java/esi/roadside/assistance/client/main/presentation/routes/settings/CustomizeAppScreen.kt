@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.core.data.SettingsDataStore
+import esi.roadside.assistance.client.core.presentation.util.isDark
 import esi.roadside.assistance.client.main.presentation.constants.Settings.themeOptions
 import esi.roadside.assistance.client.settings.presentation.checkSettingsItem
 import esi.roadside.assistance.client.settings.presentation.settingsItem
@@ -52,7 +53,7 @@ fun CustomizeAppScreen(modifier: Modifier = Modifier) {
     val dataStore = koinInject<SettingsDataStore>()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val context = LocalContext.current
-    val isDark by dataStore.isDark().collectAsState(initial = false)
+    val isDark by isDark()
     val dynamicColorsChecked by dataStore.dynamicColors.collectAsState(initial = true)
     val extraDarkChecked by dataStore.extraDark.collectAsState(initial = true)
     val theme by dataStore.theme.collectAsState(initial = "system")

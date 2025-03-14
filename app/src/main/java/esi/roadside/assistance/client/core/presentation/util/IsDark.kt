@@ -2,16 +2,16 @@ package esi.roadside.assistance.client.core.presentation.util
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.State
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import esi.roadside.assistance.client.core.data.SettingsDataStore
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.koin.compose.koinInject
 
 
 @Composable
-fun isDark(): Flow<Boolean> {
-    val datastore = SettingsDataStore(LocalContext.current)
+fun isDark(): State<Boolean> {
+    val datastore = koinInject<SettingsDataStore>()
     val isSystemDark = isSystemInDarkTheme()
     return datastore.theme.map {
         when (it) {
@@ -19,11 +19,5 @@ fun isDark(): Flow<Boolean> {
             "dark" -> true
             else -> isSystemDark
         }
-    }
+    }.collectAsStateWithLifecycle(false)
 }
-
-val isDark: Boolean
-    @Composable
-    get() {
-        return isDark().collectAsStateWithLifecycle(false).value
-    }

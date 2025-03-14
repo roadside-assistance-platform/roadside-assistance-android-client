@@ -25,18 +25,6 @@ class SettingsDataStore(private val context: Context) {
     val extraDark = dataFlow(context.dataStore, EXTRA_DARK_KEY, false)
     val language = dataFlow(context.dataStore, LANGUAGE_KEY, "system")
 
-    @Composable
-    fun isDark(): Flow<Boolean> {
-        val isSystemInDarkTheme = isSystemInDarkTheme()
-        return theme.map {
-            when (it) {
-                "light" -> false
-                "dark" -> true
-                else -> isSystemInDarkTheme
-            }
-        }
-    }
-
     suspend fun saveSettings(
         theme: String? = null,
         dynamic: Boolean? = null,

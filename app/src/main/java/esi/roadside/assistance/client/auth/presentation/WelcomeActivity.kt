@@ -18,24 +18,20 @@ import esi.roadside.assistance.client.auth.presentation.screens.reset_password.R
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupScreen
 import esi.roadside.assistance.client.auth.presentation.screens.signup.VerifyEmailScreen
 import esi.roadside.assistance.client.auth.presentation.screens.welcome.GetStartedScreen
-import esi.roadside.assistance.client.core.presentation.util.Event
-import esi.roadside.assistance.client.core.data.SettingsDataStore
-import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
+import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.util.composables.CollectEvents
+import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
 import esi.roadside.assistance.client.main.presentation.MainActivity
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
-import kotlin.getValue
 
 class WelcomeActivity : ComponentActivity() {
-    val settingsDataStore by inject<SettingsDataStore>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SetSystemBarColors(settingsDataStore)
+            SetSystemBarColors()
             val navController = rememberNavController()
             val viewModel = getViewModel<AuthViewModel>()
             val loginUiState by viewModel.loginUiState.collectAsState()

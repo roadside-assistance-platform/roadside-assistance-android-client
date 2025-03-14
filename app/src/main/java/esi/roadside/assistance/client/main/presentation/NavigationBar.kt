@@ -1,6 +1,5 @@
 package esi.roadside.assistance.client.main.presentation
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -13,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import esi.roadside.assistance.client.core.presentation.util.navigationBarItemColors
 
 @Composable
 fun NavigationBar(
@@ -33,6 +33,7 @@ fun NavigationBar(
                         Icon(screen.icon, null)
                     }
                 },
+                colors = navigationBarItemColors(),
                 label = {
                     Text(
                         stringResource(screen.title),
