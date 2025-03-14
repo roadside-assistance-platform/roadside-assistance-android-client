@@ -10,7 +10,7 @@ data class SignupModel(
     val photo: String,
 ) {
     fun toSignupRequest() = SignupRequest(
-        email = email,
+        email = this@SignupModel.email,
         password = password,
         fullName = fullName,
         phone = phone,

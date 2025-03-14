@@ -27,7 +27,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,13 +58,15 @@ fun MyScreen(
     val colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer).takeIf { isDark }
     Scaffold(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(WindowInsets.statusBars),
-        bottomBar = bottomContent
+        bottomBar = bottomContent,
     ) {
         Column(
-            modifier.padding(it)
-                .imePadding()
+            modifier
+                .padding(it)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())) {
+                .verticalScroll(rememberScrollState())
+                .imePadding()
+        ) {
             Box(Modifier.wrapContentSize()) {
                 Image(
                     painter = painterResource(id = R.drawable.welcome_background_4),

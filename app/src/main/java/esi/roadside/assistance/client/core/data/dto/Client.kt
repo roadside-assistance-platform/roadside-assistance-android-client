@@ -2,20 +2,20 @@ package esi.roadside.assistance.client.core.data.dto
 
 import esi.roadside.assistance.client.core.domain.model.ClientModel
 import kotlinx.serialization.Serializable
-import java.time.Instant
+import java.time.OffsetDateTime
 import java.time.ZoneId
 
 @Serializable
 data class Client(
-    val id: String? = "",
+    val id: String = "",
     val fullName: String,
     val email: String,
     val password: String,
     val phone: String,
     val photo: String,
     val services: List<Service> = emptyList(),
-    val createdAt: Long = 0,
-    val updatedAt: Long = 0
+    val createdAt: String = "",
+    val updatedAt: String = "",
 ) {
     fun toClientModel() = ClientModel(
         id = id,
@@ -25,7 +25,7 @@ data class Client(
         phone = phone,
         photo = photo,
         services = services.map { it.toServiceModel() },
-        createdAt = Instant.ofEpochMilli(createdAt).atZone(ZoneId.systemDefault()),
-        updatedAt = Instant.ofEpochMilli(updatedAt).atZone(ZoneId.systemDefault())
+        createdAt = OffsetDateTime.parse(createdAt).toLocalDateTime().atZone(ZoneId.systemDefault()),
+        updatedAt = OffsetDateTime.parse(updatedAt).toLocalDateTime().atZone(ZoneId.systemDefault())
     )
 }

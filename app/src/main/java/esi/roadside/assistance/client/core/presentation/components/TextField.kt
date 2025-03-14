@@ -12,15 +12,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import esi.roadside.assistance.client.R
+import esi.roadside.assistance.client.auth.presentation.screens.login.InputError
 import soup.compose.material.motion.animation.materialFadeIn
 import soup.compose.material.motion.animation.materialFadeOut
 
@@ -39,12 +40,10 @@ fun MyTextField(
             }
         }
     },
-    supportingText: String? = null,
-    isError: Boolean = false,
+    error: InputError? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(
-        imeAction = ImeAction.Next
-    ),
+    imeAction: ImeAction = ImeAction.Next,
+    keyboardType: KeyboardType = KeyboardType.Text,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = true
 ) {
@@ -56,10 +55,13 @@ fun MyTextField(
         placeholder = { Text(placeholder) },
         leadingIcon = leadingIcon?.let { { Icon(it, contentDescription = null) } },
         trailingIcon = trailingIcon,
-        supportingText = supportingText?.let { { Text(it) } },
-        isError = isError,
+        supportingText = error?.let { { Text(stringResource(it.text)) } },
+        isError = error != null,
         visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            imeAction = imeAction,
+            keyboardType = keyboardType
+        ),
         keyboardActions = keyboardActions,
         singleLine = singleLine
     )
@@ -84,11 +86,9 @@ fun PasswordTextField(
             )
         }
     },
-    supportingText: String? = null,
-    isError: Boolean = false,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(
-        imeAction = ImeAction.Next
-    ),
+    error: InputError? = null,
+    imeAction: ImeAction = ImeAction.Next,
+    keyboardType: KeyboardType = KeyboardType.Text,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = true
 ) {
@@ -100,10 +100,10 @@ fun PasswordTextField(
         placeholder,
         leadingIcon,
         trailingIcon,
-        supportingText,
-        isError,
+        error,
         if (passwordHidden) PasswordVisualTransformation() else VisualTransformation. None,
-        keyboardOptions,
+        imeAction,
+        keyboardType,
         keyboardActions,
         singleLine
     )

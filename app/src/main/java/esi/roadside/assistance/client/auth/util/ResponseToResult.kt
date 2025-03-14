@@ -12,9 +12,29 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.serialization.SerializationException
 import kotlin.coroutines.coroutineContext
 
-suspend inline fun <reified T> signUpResponseToResult(
+enum class AuthType {
+    LOGIN,
+    SIGNUP,
+    RESET_PASSWORD,
+    UPDATE,
+}
+
+suspend inline fun <reified T> responseToResult(
+    authType: AuthType,
     response: HttpResponse,
 ): Result<T, AuthError> {
+    val error400 = when (authType) {
+        AuthType.SIGNUP -> AuthError.USER_ALREADY_EXISTS
+        AuthType.LOGIN -> AuthError.USER_NOT_FOUND
+        AuthType.RESET_PASSWORD -> AuthError.USER_NOT_FOUND
+        AuthType.UPDATE -> AuthError.USER_NOT_FOUND
+    }
+    val error401 = when (authType) {
+        AuthType.SIGNUP -> AuthError.USER_ALREADY_EXISTS
+        AuthType.LOGIN -> AuthError.INTERNAL_ERROR
+        AuthType.RESET_PASSWORD -> AuthError.INTERNAL_ERROR
+        AuthType.UPDATE -> AuthError.INTERNAL_ERROR
+    }
     return when (response.status.value) {
         in 200..299 -> {
             try {
@@ -23,13 +43,15 @@ suspend inline fun <reified T> signUpResponseToResult(
                 Error(AuthError.SERIALIZATION_ERROR)
             }
         }
-        400 -> Error(AuthError.UserAlreadyExists)
-        500 -> Error(AuthError.SERVERERROR)
+        400 -> Error(error400)
+        401 -> Error(error401)
+        500 -> Error(AuthError.SERVER_ERROR)
         else -> Error(AuthError.UNKNOWN)
     }
 }
 
 suspend inline fun <reified T> safeAuth(
+    authType: AuthType,
     call: () -> HttpResponse,
 ): Result<T, AuthError> {
     val response = try {
@@ -42,5 +64,5 @@ suspend inline fun <reified T> safeAuth(
         coroutineContext.ensureActive()
         return Error(AuthError.UNKNOWN)
     }
-    return signUpResponseToResult(response)
+    return responseToResult(authType, response)
 }
