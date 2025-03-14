@@ -1,3 +1,5 @@
+import org.gradle.api.JavaVersion.VERSION_11
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -22,7 +24,10 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://localhost:8080/\"")
+            //Open Command Prompt and type ipconfig.
+            //Look for the "IPv4 Address" under your active network connection.
+            //Replace localhost with your computer's local IP address.
+            buildConfigField("String", "BASE_URL", "\"http://192.168.156.41:8080/\"")
             buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://your-cloudamqp-url\"")
         }
         release {
@@ -37,11 +42,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = VERSION_11
+        targetCompatibility = VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -64,11 +69,14 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.material.motion.compose.navigation)
     implementation(libs.androidx.material.icons.extended)
-    implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.datastore.preferences)
     testImplementation(libs.junit)
+    // Koin for Tests
+    testImplementation(libs.koin.test.junit4)
+    // this for logger in ktor
+    implementation(libs.slf4j.simple)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -96,7 +104,7 @@ dependencies {
     testImplementation(libs.truth)
     implementation(libs.cloudinary.android)
     implementation(libs.cloudinary.android.download)
-    //implementation(libs.kotlin.url.gen)
+   // implementation(libs.kotlin.url.gen)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)

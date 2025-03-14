@@ -8,5 +8,6 @@ import org.koin.dsl.module
 
 val coreModule = module {
     single { SettingsDataStore(androidContext()) }
-    viewModelOf(::AuthViewModel)
+    // not here ,impl in authModule
+    //viewModelOf(::AuthViewModel)
 }

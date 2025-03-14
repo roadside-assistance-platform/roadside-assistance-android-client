@@ -7,15 +7,15 @@ import java.time.ZoneId
 
 @Serializable
 data class Client(
-    val id: String,
+    val id: String? = "",
     val fullName: String,
     val email: String,
     val password: String,
     val phone: String,
     val photo: String,
-    val services: List<Service>,
-    val createdAt: Long,
-    val updatedAt: Long
+    val services: List<Service> = emptyList(),
+    val createdAt: Long = 0,
+    val updatedAt: Long = 0
 ) {
     fun toClientModel() = ClientModel(
         id = id,
