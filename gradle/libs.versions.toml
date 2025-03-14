@@ -4,8 +4,7 @@ amqpClient = "5.15.0"
 cloudinaryAndroid = "3.0.2"
 composeMarkdown = "0.5.7"
 googleid = "1.1.1"
-kotlinUrlGen = "1.7.0"
-credentials = "1.3.0"
+credentials = "1.5.0"
 mapboxAndroid = "11.9.1"
 kotlin = "2.1.0"
 coreKtx = "1.15.0"
@@ -14,13 +13,13 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
-composeBom = "2025.02.00"
+composeBom = "2025.03.00"
 mapboxMapsCompose = "11.9.1"
 material-icons-extended = "1.7.8"
 material3 = "1.3.1"
 materialKolor = "2.0.0"
 playServicesLocation = "21.3.0"
-navigation-compose = "2.8.8"
+navigation-compose = "2.8.9"
 serialization = "1.8.0"
 material-motion-compose-navigation = "1.1.3"
 roomRuntime = "2.6.1"
@@ -36,7 +35,6 @@ material3AdaptiveNavigationSuite = "1.3.1"
 desugar-jdk-libs = "2.1.5"
 ktor = "3.0.3"
 truth = "1.4.4"
-twain = "0.2.2"
 slf4jSimple = "2.0.9"
 
 [libraries]
@@ -48,7 +46,6 @@ cloudinary-android-download = { module = "com.cloudinary:cloudinary-android-down
 compose-markdown = { module = "com.github.jeziellago:compose-markdown", version.ref = "composeMarkdown" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4" }
-kotlin-url-gen = { module = "com.cloudinary:kotlin-url-gen", version.ref = "kotlinUrlGen" }
 mapbox-android = { module = "com.mapbox.maps:android", version.ref = "mapboxAndroid" }
 mapbox-maps-compose = { module = "com.mapbox.extension:maps-compose", version.ref = "mapboxMapsCompose" }
 androidx-material3-adaptive-navigation-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite", version.ref = "material3AdaptiveNavigationSuite" }
@@ -76,7 +73,6 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref="material3" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
 material-motion-compose-navigation = { module = "io.github.fornewid:material-motion-compose-navigation", version.ref = "material-motion-compose-navigation" }
