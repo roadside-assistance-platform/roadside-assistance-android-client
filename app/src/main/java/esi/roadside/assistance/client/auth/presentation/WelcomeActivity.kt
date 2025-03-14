@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -25,6 +26,7 @@ import esi.roadside.assistance.client.core.presentation.theme.AppTheme
 import esi.roadside.assistance.client.core.util.composables.CollectEvents
 import esi.roadside.assistance.client.main.presentation.MainActivity
 import org.koin.android.ext.android.inject
+import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
@@ -37,7 +39,8 @@ class WelcomeActivity : ComponentActivity() {
         setContent {
             SetSystemBarColors(settingsDataStore)
             val navController = rememberNavController()
-            val viewModel = getViewModel<AuthViewModel>()
+           /* val viewModel = getViewModel<AuthViewModel>()*/
+            val viewModel: AuthViewModel = koinViewModel()
             val loginUiState by viewModel.loginUiState.collectAsState()
             val signupUiState by viewModel.signupUiState.collectAsState()
             val resetPasswordUiState by viewModel.resetPasswordUiState.collectAsState()
