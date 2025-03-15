@@ -27,7 +27,7 @@ android {
             //Open Command Prompt and type ipconfig.
             //Look for the "IPv4 Address" under your active network connection.
             //Replace localhost with your computer's local IP address.
-            buildConfigField("String", "BASE_URL", "\"http://192.168.156.41:8080/\"")
+            buildConfigField("String", "BASE_URL", "\"http://localhost:8080/\"")
             buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://your-cloudamqp-url\"")
         }
         release {
@@ -37,7 +37,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            buildConfigField("String", "BASE_URL", "\"http://localhost:8080/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.162.28:8080/\"")
             buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://your-cloudamqp-url\"")
         }
     }

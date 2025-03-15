@@ -46,6 +46,7 @@ fun SignupScreen(
             Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
+                .imePadding()
                 .padding(horizontal = 48.dp)
                 .padding(top = 12.dp)
         ) {
@@ -95,8 +96,7 @@ fun SignupScreen(
                     },
                     label = stringResource(R.string.phone_number),
                     placeholder = stringResource(R.string.phone_number_placeholder),
-                    isError = uiState.phoneNumberError,
-                    supportingText = stringResource(R.string.invalid_phone_number).takeIf { uiState.phoneNumberError }
+                    error = uiState.phoneNumberError,
                 )
                 MyTextField(
                     uiState.email,
@@ -105,8 +105,7 @@ fun SignupScreen(
                     },
                     label = stringResource(R.string.email),
                     placeholder = stringResource(R.string.email_placeholder),
-                    isError = uiState.emailError,
-                    supportingText = stringResource(R.string.invalid_email).takeIf { uiState.emailError }
+                    error = uiState.emailError,
                 )
                 PasswordTextField(
                     uiState.password,
@@ -117,8 +116,7 @@ fun SignupScreen(
                     {
                         onAction(Action.ToggleSignupPasswordHidden)
                     },
-                    isError = uiState.passwordError,
-                    supportingText = stringResource(R.string.incorrect_password).takeIf { uiState.passwordError }
+                    error = uiState.passwordError,
                 )
                 PasswordTextField(
                     uiState.confirmPassword,
@@ -129,12 +127,17 @@ fun SignupScreen(
                     {
                         onAction(Action.ToggleSignupConfirmPasswordHidden)
                     },
-                    isError = uiState.confirmPasswordError,
+                    error = uiState.confirmPasswordError,
                     label = stringResource(R.string.confirm_password),
-                    placeholder = stringResource(R.string.confirm_password_placeholder),
-                    supportingText = stringResource(R.string.incorrect_password).takeIf { uiState.confirmPasswordError }
+                    placeholder = stringResource(R.string.confirm_password_placeholder)
                 )
-                Button({ onAction(Action.Signup) }, Modifier.fillMaxWidth().padding(top = 16.dp)) {
+                Button(
+                    { onAction(Action.Signup) },
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    enabled = !uiState.loading
+                ) {
                     Text(stringResource(R.string.continue_text))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -163,6 +166,6 @@ fun SignupScreen(
 @Composable
 private fun SignupScreenPreview() {
     PreviewAppTheme {
-        SignupScreen(SignupUiState("", ""), {})
+        SignupScreen(SignupUiState(), {})
     }
 }

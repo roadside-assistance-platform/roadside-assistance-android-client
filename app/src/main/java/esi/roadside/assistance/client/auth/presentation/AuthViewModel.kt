@@ -2,6 +2,8 @@ package esi.roadside.assistance.client.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import esi.roadside.assistance.client.auth.data.dto.LoginRequest
+import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
 import esi.roadside.assistance.client.auth.domain.models.UpdateModel
 import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
@@ -10,11 +12,16 @@ import esi.roadside.assistance.client.auth.domain.use_case.Login
 import esi.roadside.assistance.client.auth.domain.use_case.ResetPassword
 import esi.roadside.assistance.client.auth.domain.use_case.SignUp
 import esi.roadside.assistance.client.auth.domain.use_case.Update
+import esi.roadside.assistance.client.auth.presentation.Action
+import esi.roadside.assistance.client.auth.presentation.screens.AuthUiState
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginUiState
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordUiState
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupUiState
+import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess
 import esi.roadside.assistance.client.core.presentation.util.Event.*
+import esi.roadside.assistance.client.core.presentation.util.Field
+import esi.roadside.assistance.client.core.presentation.util.ValidateInput
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,6 +41,9 @@ class AuthViewModel(
 
     private val _signupUiState = MutableStateFlow(SignupUiState())
     val signupUiState = _signupUiState.asStateFlow()
+
+    private val _authUiState = MutableStateFlow(AuthUiState())
+    val authUiState = _authUiState.asStateFlow()
 
     private val _resetPasswordUiState = MutableStateFlow(ResetPasswordUiState())
     val resetPasswordUiState = _resetPasswordUiState.asStateFlow()
@@ -55,15 +65,62 @@ class AuthViewModel(
                 sendEvent(AuthNavigate(NavRoutes.ForgotPassword))
             }
             is Action.Login -> {
-//                viewModelScope.launch {
-//                    loginUseCase(LoginRequest(
-//                        email = _loginUiState.value.email,
-//                        password = _loginUiState.value.password
-//                    ))
-//                }
-                sendEvent(LaunchMainActivity)
+                val inputError = ValidateInput.validateLogin(
+                    _loginUiState.value.email,
+                    _loginUiState.value.password
+                )
+                if (inputError != null) {
+                    _loginUiState.update {
+                        it.copy(
+                            emailError = inputError.second.takeIf { inputError.first == Field.EMAIL },
+                            passwordError = inputError.second.takeIf { inputError.first == Field.PASSWORD },
+                        )
+                    }
+                    return
+                }
+                _loginUiState.update {
+                    it.copy(loading = true)
+                }
+                viewModelScope.launch {
+                    loginUseCase(
+                        LoginRequestModel(
+                            email = _loginUiState.value.email,
+                            password = _loginUiState.value.password
+                        )
+                    ).onSuccess {
+                        sendEvent(LaunchMainActivity)
+                    }.onError {
+                        println(it)
+                        onAction(Action.ShowAuthError(it))
+                        _loginUiState.update {
+                            it.copy(loading = false)
+                        }
+                    }
+                }
             }
             is Action.Signup -> {
+                val inputError = ValidateInput.validateSignup(
+                    _signupUiState.value.email,
+                    _signupUiState.value.password,
+                    _signupUiState.value.confirmPassword,
+                    _signupUiState.value.fullName,
+                    _signupUiState.value.phoneNumber
+                )
+                if (inputError != null) {
+                    _signupUiState.update {
+                        it.copy(
+                            emailError = inputError.takeIf { inputError.field == Field.EMAIL },
+                            passwordError = inputError.takeIf { inputError.field == Field.PASSWORD },
+                            confirmPasswordError = inputError.takeIf { inputError.field == Field.CONFIRM_PASSWORD },
+                            fullNameError = inputError.takeIf { inputError.field == Field.FULL_NAME },
+                            phoneNumberError = inputError.takeIf { inputError.field == Field.PHONE_NUMBER }
+                        )
+                    }
+                    return
+                }
+                _signupUiState.update {
+                    it.copy(loading = true)
+                }
                 viewModelScope.launch {
                     signUpUseCase(
                         SignupModel(
@@ -71,10 +128,11 @@ class AuthViewModel(
                             password = _signupUiState.value.password,
                             fullName = _signupUiState.value.fullName,
                             phone = _signupUiState.value.phoneNumber,
-                            photo = ""
+                            photo = "_"
                         )
                     ).onSuccess { client ->
                         var url: String? = null
+                        println("Signup image is null = ${_signupUiState.value.image == null}")
                         _signupUiState.value.image?.let {
                             cloudinaryUseCase(
                                 it,
@@ -89,14 +147,19 @@ class AuthViewModel(
                                 }
                             )
                         }
-                     /*   updateUseCase(
+                        updateUseCase(
                              UpdateModel(
-                                id ="",
+                                id = client.id,
                                 fullName = _signupUiState.value.fullName,
                                 phoneNumber = _signupUiState.value.phoneNumber,
                                 photo = url
                             )
-                        )*/
+                        )
+                        sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
+                    }.onError {
+                        _signupUiState.update {
+                            it.copy(loading = false)
+                        }
                     }
                 }
             }
@@ -176,6 +239,19 @@ class AuthViewModel(
                 _signupUiState.update {
                     it.copy(passwordHidden = !it.passwordHidden)
                 }
+            }
+            is Action.ShowAuthError -> {
+                _authUiState.update {
+                    it.copy(errorDialogVisible = true, error = action.error)
+                }
+            }
+            Action.HideAuthError -> {
+                _authUiState.update {
+                    it.copy(errorDialogVisible = false, error = null)
+                }
+            }
+            Action.SkipVerification -> {
+                sendEvent(LaunchMainActivity)
             }
         }
     }

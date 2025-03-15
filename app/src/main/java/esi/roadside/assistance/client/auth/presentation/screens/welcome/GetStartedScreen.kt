@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
@@ -95,7 +94,13 @@ fun GetStartedScreen(
                             .padding(16.dp)
                     )
                 }
-                FilledTonalButton({ onAction(Action.GoToGoogleLogin) }, Modifier.fillMaxWidth()
+                Button(
+                    { onAction(Action.GoToGoogleLogin) },
+                    Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary
+                    )
                 ) {
                     Icon(
                         painterResource(R.drawable.google),

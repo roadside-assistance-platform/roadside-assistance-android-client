@@ -3,6 +3,7 @@ package esi.roadside.assistance.client.main.presentation.routes.settings
 import android.app.LocaleManager
 import android.os.Build
 import android.os.LocaleList
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -50,6 +51,7 @@ fun LanguageScreen(modifier: Modifier = Modifier) {
     val language by dataStore.language.collectAsState(initial = "system")
     var selectedLanguage by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
+    val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Scaffold(
         modifier =
             modifier
@@ -65,7 +67,7 @@ fun LanguageScreen(modifier: Modifier = Modifier) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {  }) {
+                    IconButton(onClick = { dispatcher?.onBackPressed() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
                     }
                 },

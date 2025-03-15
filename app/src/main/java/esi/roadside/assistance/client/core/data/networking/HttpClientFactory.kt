@@ -1,9 +1,5 @@
 package esi.roadside.assistance.client.core.data.networking
 
-import android.app.Application
-import android.content.Context
-import esi.roadside.assistance.client.auth.di.authModule
-import esi.roadside.assistance.client.auth.util.CookieStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

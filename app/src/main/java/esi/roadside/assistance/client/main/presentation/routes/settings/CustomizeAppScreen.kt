@@ -2,6 +2,7 @@ package esi.roadside.assistance.client.main.presentation.routes.settings
 
 import android.app.Activity
 import android.os.Build
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -58,6 +59,7 @@ fun CustomizeAppScreen(modifier: Modifier = Modifier) {
     val extraDarkChecked by dataStore.extraDark.collectAsState(initial = true)
     val theme by dataStore.theme.collectAsState(initial = "system")
     val scope = rememberCoroutineScope()
+    val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Scaffold(
         modifier = modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -70,7 +72,7 @@ fun CustomizeAppScreen(modifier: Modifier = Modifier) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { (context as Activity).finish() }) {
+                    IconButton(onClick = { dispatcher?.onBackPressed() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
                     }
                 },

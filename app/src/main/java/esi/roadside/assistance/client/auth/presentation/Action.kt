@@ -1,6 +1,7 @@
 package esi.roadside.assistance.client.auth.presentation
 
 import android.net.Uri
+import esi.roadside.assistance.client.auth.util.AuthError
 
 sealed interface Action {
     data class SetLoginEmail(val email: String): Action
@@ -28,5 +29,10 @@ sealed interface Action {
     data object Send: Action
 
     data class SetResetPasswordEmail(val email: String): Action
+
     data class SetCode(val code: String): Action
+    data object SkipVerification: Action
+
+    data class ShowAuthError(val error: AuthError): Action
+    data object HideAuthError: Action
 }
