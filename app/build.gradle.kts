@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "esi.roadside.assistance.client"
-        minSdk = 30
+        minSdk = 28
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
