@@ -45,12 +45,7 @@ fun ResetPasswordScreen(
         modifier
     ) {
         Column(
-            Modifier
-                .fillMaxHeight()
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .imePadding()
-                .padding(horizontal = 48.dp),
+            Modifier.padding(horizontal = 48.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             AnimatedContent(uiState.sent, Modifier.fillMaxWidth(), label = "") {
