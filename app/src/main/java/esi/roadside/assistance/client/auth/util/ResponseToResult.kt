@@ -33,7 +33,7 @@ suspend inline fun <reified T> responseToResult(
     }
     val error401 = when (authType) {
         AuthType.SIGNUP -> AuthError.USER_ALREADY_EXISTS
-        AuthType.LOGIN -> AuthError.INTERNAL_ERROR
+        AuthType.LOGIN -> AuthError.INCORRECT_CREDENTIALS
         AuthType.RESET_PASSWORD -> AuthError.INTERNAL_ERROR
         AuthType.UPDATE -> AuthError.INTERNAL_ERROR
         AuthType.GOOGLE -> TODO()
