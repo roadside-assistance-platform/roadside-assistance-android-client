@@ -126,10 +126,6 @@ fun ResetPasswordScreen(
                 Text(stringResource(R.string.back_to_login))
             }
         }
-        TermsAndPolicy(
-            Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Max))
     }
 }
 
