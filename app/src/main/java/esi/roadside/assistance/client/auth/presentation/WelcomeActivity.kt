@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
@@ -22,7 +24,12 @@ import androidx.credentials.GetCredentialRequest
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import esi.roadside.assistance.client.BuildConfig
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginScreen
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordScreen
@@ -42,8 +49,14 @@ import org.koin.java.KoinJavaComponent.inject
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 
+@Suppress("DEPRECATION")
 class WelcomeActivity : ComponentActivity() {
-    val googleIdOption by inject<GetGoogleIdOption>()
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(BuildConfig.WEB_CLIENT_ID)
+        .requestEmail()
+        .build()
+    val googleSignInClient = GoogleSignIn.getClient(this, gso)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -54,11 +67,17 @@ class WelcomeActivity : ComponentActivity() {
             val signupUiState by viewModel.signupUiState.collectAsState()
             val authUiState by viewModel.authUiState.collectAsState()
             val resetPasswordUiState by viewModel.resetPasswordUiState.collectAsState()
-            val credentialManager = CredentialManager.create(this)
-            val scope = rememberCoroutineScope()
-            val request = GetCredentialRequest.Builder()
-                .addCredentialOption(googleIdOption)
-                .build()
+            val launcher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.StartActivityForResult()
+            ) { result ->
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                try {
+                    val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
+                    account.idToken?.let { viewModel.onAction(Action.GoogleOldLogin(it)) }
+                } catch (_: ApiException) {
+
+                }
+            }
             LaunchedEffect(Unit) {
                 viewModel.createAccountManager(this@WelcomeActivity)
             }
@@ -78,13 +97,7 @@ class WelcomeActivity : ComponentActivity() {
                         ).show()
                     }
                     Event.LaunchGoogleSignIn -> {
-                        scope.launch {
-                            val result = credentialManager.getCredential(
-                                request = request,
-                                context = this@WelcomeActivity,
-                            )
-                            viewModel.onAction(Action.GoogleLogin(result))
-                        }
+                        launcher.launch(googleSignInClient.signInIntent)
                     }
                     else -> Unit
                 }

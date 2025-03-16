@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.PasswordCredential
 import androidx.credentials.PublicKeyCredential
+import esi.roadside.assistance.client.auth.data.dto.LoginRequest
 import esi.roadside.assistance.client.auth.data.dto.LoginResponse
+import esi.roadside.assistance.client.auth.domain.models.GoogleLoginRequestModel
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
 import esi.roadside.assistance.client.auth.domain.models.LoginResponseModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
@@ -73,7 +75,7 @@ class AuthRepoImpl(
         return when (credential) {
             is PublicKeyCredential -> {
                 safeAuth<ClientModel>(AuthType.GOOGLE) {
-                    client.post(constructUrl("/client/google/auth")) {
+                    client.post(constructUrl("/google/verify")) {
                         setBody(credential.authenticationResponseJson)
                     }.body()
                 }
@@ -83,15 +85,25 @@ class AuthRepoImpl(
                 val password = credential.password
                 Log.d("AuthRepoImpl", "Username: $username, Password: $password")
                 safeAuth<ClientModel>(AuthType.GOOGLE) {
-                    client.post(constructUrl("/client/google/auth")) {
-                        setBody(PasswordCredential(username, password))
+                    client.post(constructUrl("/client/login")) {
+                        setBody(LoginRequest(username, password))
                     }.body()
                 }
-                Result.Error(AuthError.GOOGLE_UNEXPECTED_ERROR)
             }
             else -> {
                 Result.Error(AuthError.GOOGLE_UNEXPECTED_ERROR)
             }
+        }
+    }
+
+    override suspend fun googleOldLogin(idToken: String): Result<LoginResponseModel, AuthError> {
+        val remote = GoogleLoginRequestModel(idToken)
+        return safeAuth<LoginResponse>(AuthType.GOOGLE) {
+            client.post(constructUrl("/google/verify")) {
+                setBody(remote)
+            }.body()
+        }.map { response ->
+            response.toLoginResponseModel()
         }
     }
 

@@ -16,5 +16,6 @@ interface AuthRepo {
     suspend fun resetPassword(email: String): Result<ClientModel, AuthError>
     suspend fun update(request: UpdateModel): Result<ClientModel, AuthError>
     suspend fun googleLogin(result: GetCredentialResponse): Result<ClientModel, AuthError>
+    suspend fun googleOldLogin(idToken: String): Result<LoginResponseModel, AuthError>
     suspend fun authenticate()
 }

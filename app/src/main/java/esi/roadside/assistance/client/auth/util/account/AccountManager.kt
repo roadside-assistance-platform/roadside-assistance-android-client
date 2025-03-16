@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.credentials.CreatePasswordRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.GetCredentialResponse
 import androidx.credentials.GetPasswordOption
 import androidx.credentials.PasswordCredential
 import androidx.credentials.exceptions.CreateCredentialCancellationException
@@ -12,8 +13,12 @@ import androidx.credentials.exceptions.CreateCredentialException
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import esi.roadside.assistance.client.auth.presentation.WelcomeActivity
+import org.koin.android.ext.android.inject
+import kotlin.getValue
 
-class AccountManager(private val context: Context) {
+class AccountManager(private val context: Context, private val googleIdOption: GetGoogleIdOption) {
     private val credentialManager = CredentialManager.create(context)
 
     suspend fun signUp(username: String, password: String): SignUpResult {
@@ -60,5 +65,16 @@ class AccountManager(private val context: Context) {
             e.printStackTrace()
             SignInResult.Failure
         }
+    }
+
+    suspend fun googleSignIn(): GetCredentialResponse {
+        val credentialManager = CredentialManager.create(context)
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+        return credentialManager.getCredential(
+            request = request,
+            context = context,
+        )
     }
 }

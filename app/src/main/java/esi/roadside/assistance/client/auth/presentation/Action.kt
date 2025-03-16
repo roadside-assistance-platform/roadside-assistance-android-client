@@ -26,6 +26,7 @@ sealed interface Action {
 
     data object GoToGoogleLogin: Action
     data class GoogleLogin(val result: GetCredentialResponse): Action
+    data class GoogleOldLogin(val idToken: String): Action
 
     data object Login: Action
     data object Signup: Action

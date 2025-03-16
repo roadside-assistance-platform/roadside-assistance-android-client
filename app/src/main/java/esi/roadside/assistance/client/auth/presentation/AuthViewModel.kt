@@ -3,6 +3,7 @@ package esi.roadside.assistance.client.auth.presentation
 import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import esi.roadside.assistance.client.auth.Crypto
 import esi.roadside.assistance.client.auth.data.dto.LoginRequest
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
@@ -10,6 +11,7 @@ import esi.roadside.assistance.client.auth.domain.models.SignupModel
 import esi.roadside.assistance.client.auth.domain.models.UpdateModel
 import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
 import esi.roadside.assistance.client.auth.domain.use_case.GoogleLogin
+import esi.roadside.assistance.client.auth.domain.use_case.GoogleOldLogin
 import esi.roadside.assistance.client.auth.domain.use_case.Login
 import esi.roadside.assistance.client.auth.domain.use_case.ResetPassword
 import esi.roadside.assistance.client.auth.domain.use_case.SignUp
@@ -41,6 +43,8 @@ class AuthViewModel(
     private val updateUseCase: Update,
     private val resetPasswordUseCase: ResetPassword,
     private val googleLoginUseCase: GoogleLogin,
+    private val googleOldLoginUseCase: GoogleOldLogin,
+    private val googleIdOption: GetGoogleIdOption
 ): ViewModel() {
     private val _loginUiState = MutableStateFlow(LoginUiState())
     val loginUiState = _loginUiState.asStateFlow()
@@ -57,7 +61,7 @@ class AuthViewModel(
     private lateinit var accountManager: AccountManager
 
     fun createAccountManager(activity: Activity) {
-        accountManager = AccountManager(activity)
+        accountManager = AccountManager(activity, googleIdOption)
     }
 
     fun onAction(action: Action) {
@@ -77,6 +81,9 @@ class AuthViewModel(
                 sendEvent(AuthNavigate(NavRoutes.Signup))
             }
             is Action.GoToGoogleLogin -> {
+//                viewModelScope.launch {
+//                    googleLoginUseCase(accountManager.googleSignIn())
+//                }
                 sendEvent(LaunchGoogleSignIn)
             }
             is Action.GoToForgotPassword -> {
@@ -279,6 +286,16 @@ class AuthViewModel(
                     googleLoginUseCase(action.result)
                         .onSuccess {
                             loggedIn(it)
+                        }.onError {
+                            onAction(ShowAuthError(it))
+                        }
+                }
+            }
+            is Action.GoogleOldLogin -> {
+                viewModelScope.launch {
+                    googleOldLoginUseCase(action.idToken)
+                        .onSuccess {
+                            loggedIn(it.client)
                         }.onError {
                             onAction(ShowAuthError(it))
                         }
