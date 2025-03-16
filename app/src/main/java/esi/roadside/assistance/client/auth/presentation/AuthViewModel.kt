@@ -79,6 +79,18 @@ class AuthViewModel(
             }
             is Action.GoToSignup -> {
                 sendEvent(AuthNavigate(NavRoutes.Signup))
+                viewModelScope.launch {
+                    val result = accountManager.signIn()
+                    if (result is SignInResult.Success) {
+                        _signupUiState.update {
+                            it.copy(
+                                email = result.username,
+                                password = result.password,
+                                confirmPassword = result.password
+                            )
+                        }
+                    }
+                }
             }
             is Action.GoToGoogleLogin -> {
 //                viewModelScope.launch {
@@ -113,7 +125,8 @@ class AuthViewModel(
                             password = _loginUiState.value.password
                         )
                     ).onSuccess {
-                        accountManager.signUp(_loginUiState.value.email, _loginUiState.value.password)
+                        if (!accountManager.checkCredentials(_loginUiState.value.email, _loginUiState.value.password))
+                            accountManager.signUp(_loginUiState.value.email, _loginUiState.value.password)
                         loggedIn(it.client)
                     }.onError {
                         println(it)

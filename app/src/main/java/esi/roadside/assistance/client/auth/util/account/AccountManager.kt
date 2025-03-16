@@ -1,6 +1,5 @@
 package esi.roadside.assistance.client.auth.util.account
 
-import android.app.Activity
 import android.content.Context
 import androidx.credentials.CreatePasswordRequest
 import androidx.credentials.CredentialManager
@@ -14,12 +13,34 @@ import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import esi.roadside.assistance.client.auth.presentation.WelcomeActivity
-import org.koin.android.ext.android.inject
-import kotlin.getValue
 
 class AccountManager(private val context: Context, private val googleIdOption: GetGoogleIdOption) {
     private val credentialManager = CredentialManager.create(context)
+
+    suspend fun checkCredentials(username: String, password: String): Boolean {
+        return try {
+            val credentialResponse = credentialManager.getCredential(
+                context = context,
+                request = GetCredentialRequest(
+                    credentialOptions = listOf(GetPasswordOption())
+                )
+            )
+
+            val credential = credentialResponse.credential as? PasswordCredential
+                ?: return false
+
+            credential.id == username && credential.password == password
+        } catch (e: GetCredentialCancellationException) {
+            e.printStackTrace()
+            false
+        } catch (e: NoCredentialException) {
+            e.printStackTrace()
+            false
+        } catch (e: GetCredentialException) {
+            e.printStackTrace()
+            false
+        }
+    }
 
     suspend fun signUp(username: String, password: String): SignUpResult {
         return try {
@@ -48,12 +69,8 @@ class AccountManager(private val context: Context, private val googleIdOption: G
                     credentialOptions = listOf(GetPasswordOption())
                 )
             )
-
             val credential = credentialResponse.credential as? PasswordCredential
                 ?: return SignInResult.Failure
-
-            // Make login API call here with credential.id and credential.password
-
             SignInResult.Success(credential.id, credential.password)
         } catch (e: GetCredentialCancellationException) {
             e.printStackTrace()
