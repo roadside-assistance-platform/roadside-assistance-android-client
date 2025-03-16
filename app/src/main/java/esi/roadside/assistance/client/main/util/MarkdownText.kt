@@ -20,7 +20,6 @@ fun MarkdownText(
     MarkdownText(
         modifier = modifier,
         markdown = text,
-        maxLines = 3,
         style = LocalTextStyle.current.copy(
             textAlign = TextAlign.Justify
         )
