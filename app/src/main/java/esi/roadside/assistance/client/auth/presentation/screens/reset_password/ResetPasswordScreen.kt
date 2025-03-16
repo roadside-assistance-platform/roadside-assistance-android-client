@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -45,7 +49,10 @@ fun ResetPasswordScreen(
         Column(
             Modifier
                 .fillMaxHeight()
-                .weight(1f),
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .imePadding()
+                .padding(horizontal = 48.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             AnimatedContent(uiState.sent, Modifier.fillMaxWidth(), label = "") {
