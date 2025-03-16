@@ -297,4 +297,6 @@
     <string name="user_not_found_error">User not found</string>
     <string name="internal_error">Internal error</string>
     <string name="skip_verification">Skip</string>
+    <string name="google_unexpected_error">Unexpected type of credential</string>
+    <string name="google_invalid_id_token_error">Received an invalid google id token response</string>
 </resources>

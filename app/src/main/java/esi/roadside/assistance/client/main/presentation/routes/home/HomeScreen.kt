@@ -95,7 +95,8 @@ fun HomeScreen(
                             onAction(Action.Navigate(NavRoutes.RequestAssistance))
                         },
                         icon = { Icon(Icons.Outlined.Edit, null) },
-                        text = { Text(stringResource(R.string.request_service)) }
+                        text = { Text(stringResource(R.string.request_service)) },
+                        containerColor = MaterialTheme.colorScheme.primary
                     )
                 }
             }

@@ -1,5 +1,9 @@
 package esi.roadside.assistance.client.auth.data
 
+import android.util.Log
+import androidx.credentials.GetCredentialResponse
+import androidx.credentials.PasswordCredential
+import androidx.credentials.PublicKeyCredential
 import esi.roadside.assistance.client.auth.data.dto.LoginResponse
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
 import esi.roadside.assistance.client.auth.domain.models.LoginResponseModel
@@ -10,16 +14,12 @@ import esi.roadside.assistance.client.auth.util.AuthError
 import esi.roadside.assistance.client.auth.util.AuthType
 import esi.roadside.assistance.client.auth.util.safeAuth
 import esi.roadside.assistance.client.core.data.dto.Client
-import esi.roadside.assistance.client.core.data.networking.HttpClientFactory
 import esi.roadside.assistance.client.core.data.networking.constructUrl
 import esi.roadside.assistance.client.core.domain.model.ClientModel
 import esi.roadside.assistance.client.core.domain.util.Result
 import esi.roadside.assistance.client.core.domain.util.map
-import esi.roadside.assistance.client.core.domain.util.onError
-import esi.roadside.assistance.client.core.domain.util.onSuccess
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
@@ -60,7 +60,7 @@ class AuthRepoImpl(
     override suspend fun update(request: UpdateModel): Result<ClientModel, AuthError> {
         val remote = request.toUpdateRequest()
         return safeAuth<Client>(AuthType.UPDATE) {
-            client.put(constructUrl("/client/update")) {
+            client.put(constructUrl("/client/update/${request.id}")) {
                 setBody(remote)
             }.body()
         }.map { response ->
@@ -68,8 +68,31 @@ class AuthRepoImpl(
         }
     }
 
-    override suspend fun googleLogin(): Result<ClientModel, AuthError> {
-        TODO("Not yet implemented")
+    override suspend fun googleLogin(result: GetCredentialResponse): Result<ClientModel, AuthError> {
+        val credential = result.credential
+        return when (credential) {
+            is PublicKeyCredential -> {
+                safeAuth<ClientModel>(AuthType.GOOGLE) {
+                    client.post(constructUrl("/client/google/auth")) {
+                        setBody(credential.authenticationResponseJson)
+                    }.body()
+                }
+            }
+            is PasswordCredential -> {
+                val username = credential.id
+                val password = credential.password
+                Log.d("AuthRepoImpl", "Username: $username, Password: $password")
+                safeAuth<ClientModel>(AuthType.GOOGLE) {
+                    client.post(constructUrl("/client/google/auth")) {
+                        setBody(PasswordCredential(username, password))
+                    }.body()
+                }
+                Result.Error(AuthError.GOOGLE_UNEXPECTED_ERROR)
+            }
+            else -> {
+                Result.Error(AuthError.GOOGLE_UNEXPECTED_ERROR)
+            }
+        }
     }
 
     //home in routs
@@ -103,21 +126,21 @@ class AuthRepoImpl(
 fun main(): Unit = runBlocking {
     // login
     //val context = Application().applicationContext
-    val auth = AuthRepoImpl(HttpClientFactory.create(CIO.create()))
-    // test sign up
-    auth.signup(SignupModel( "test10@example.com", "password12354","name1", "1600000000",
-        "https://www.photo-paysage.com/albums/userpics/10001/thumb_Balade-chemin-hautes-pyrenees-16.JPG"))
-        .onSuccess {
-            println("id: ${it.id}")
-        }
-    //test login
-    auth.login(LoginRequestModel("test8@example.com", "password123"))
-        .onSuccess {
-            println("Full name: " + it.client.fullName)
-            println("email: " + it.client.email)
-        }
-        .onError {
-            println("Error: ${it.name}")
-        }
+//    val auth = AuthRepoImpl(HttpClientFactory.create(CIO.create()))
+//    // test sign up
+//    auth.signup(SignupModel( "test10@example.com", "password12354","name1", "1600000000",
+//        "https://www.photo-paysage.com/albums/userpics/10001/thumb_Balade-chemin-hautes-pyrenees-16.JPG"))
+//        .onSuccess {
+//            println("id: ${it.id}")
+//        }
+//    //test login
+//    auth.login(LoginRequestModel("test8@example.com", "password123"))
+//        .onSuccess {
+//            println("Full name: " + it.client.fullName)
+//            println("email: " + it.client.email)
+//        }
+//        .onError {
+//            println("Error: ${it.name}")
+//        }
    // auth.authenticate()
 }

@@ -11,13 +11,18 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginScreen
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordScreen
@@ -30,11 +35,15 @@ import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.util.composables.CollectEvents
 import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
 import esi.roadside.assistance.client.main.presentation.MainActivity
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
+import org.koin.java.KoinJavaComponent.inject
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 
 class WelcomeActivity : ComponentActivity() {
+    val googleIdOption by inject<GetGoogleIdOption>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -45,6 +54,14 @@ class WelcomeActivity : ComponentActivity() {
             val signupUiState by viewModel.signupUiState.collectAsState()
             val authUiState by viewModel.authUiState.collectAsState()
             val resetPasswordUiState by viewModel.resetPasswordUiState.collectAsState()
+            val credentialManager = CredentialManager.create(this)
+            val scope = rememberCoroutineScope()
+            val request = GetCredentialRequest.Builder()
+                .addCredentialOption(googleIdOption)
+                .build()
+            LaunchedEffect(Unit) {
+                viewModel.createAccountManager(this@WelcomeActivity)
+            }
             CollectEvents { event ->
                 when (event) {
                     is Event.AuthNavigate -> {
@@ -59,6 +76,15 @@ class WelcomeActivity : ComponentActivity() {
                             "Error occurred when uploading your image",
                             Toast.LENGTH_SHORT
                         ).show()
+                    }
+                    Event.LaunchGoogleSignIn -> {
+                        scope.launch {
+                            val result = credentialManager.getCredential(
+                                request = request,
+                                context = this@WelcomeActivity,
+                            )
+                            viewModel.onAction(Action.GoogleLogin(result))
+                        }
                     }
                     else -> Unit
                 }

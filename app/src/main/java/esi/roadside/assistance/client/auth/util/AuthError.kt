@@ -11,5 +11,7 @@ enum class AuthError(val text: Int): Error {
     SERIALIZATION_ERROR(R.string.serialization_error),
     UNKNOWN(R.string.unknown_error),
     NO_INTERNET(R.string.no_internet_error),
+    GOOGLE_UNEXPECTED_ERROR(R.string.google_unexpected_error),
+    GOOGLE_INVALID_ID_TOKEN(R.string.google_invalid_id_token_error),
 }
 

@@ -24,3 +24,7 @@
 -keep public class esi.roadside.assistance.client.main.presentation.NavRoutes
 -keep public class esi.roadside.assistance.client.main.presentation.NavRoutes$*
 -dontwarn org.slf4j.impl.StaticLoggerBinder
+-if class androidx.credentials.CredentialManager
+-keep class androidx.credentials.playservices.** {
+  *;
+}

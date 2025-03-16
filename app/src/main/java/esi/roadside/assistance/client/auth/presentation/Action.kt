@@ -1,6 +1,7 @@
 package esi.roadside.assistance.client.auth.presentation
 
 import android.net.Uri
+import androidx.credentials.GetCredentialResponse
 import esi.roadside.assistance.client.auth.util.AuthError
 
 sealed interface Action {
@@ -21,8 +22,10 @@ sealed interface Action {
 
     data object GoToLogin: Action
     data object GoToSignup: Action
-    data object GoToGoogleLogin: Action
     data object GoToForgotPassword: Action
+
+    data object GoToGoogleLogin: Action
+    data class GoogleLogin(val result: GetCredentialResponse): Action
 
     data object Login: Action
     data object Signup: Action
