@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.Action
 import esi.roadside.assistance.client.auth.presentation.util.MyScreen
-import esi.roadside.assistance.client.auth.presentation.util.TermsAndPolicy
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 
 @Composable

@@ -51,11 +51,11 @@ import soup.compose.material.motion.animation.materialFadeThroughOut
 
 @Suppress("DEPRECATION")
 class WelcomeActivity : ComponentActivity() {
-    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(BuildConfig.WEB_CLIENT_ID)
-        .requestEmail()
-        .build()
-    val googleSignInClient = GoogleSignIn.getClient(this, gso)
+//    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//        .requestIdToken(BuildConfig.WEB_CLIENT_ID)
+//        .requestEmail()
+//        .build()
+//    val googleSignInClient = GoogleSignIn.getClient(this, gso)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +97,7 @@ class WelcomeActivity : ComponentActivity() {
                         ).show()
                     }
                     Event.LaunchGoogleSignIn -> {
-                        launcher.launch(googleSignInClient.signInIntent)
+//                        launcher.launch(googleSignInClient.signInIntent)
                     }
                     else -> Unit
                 }
