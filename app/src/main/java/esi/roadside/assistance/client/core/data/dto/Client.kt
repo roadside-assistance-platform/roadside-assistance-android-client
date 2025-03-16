@@ -8,11 +8,11 @@ import java.time.ZoneId
 @Serializable
 data class Client(
     val id: String = "",
-    val fullName: String,
-    val email: String,
-    val password: String,
-    val phone: String,
-    val photo: String,
+    val fullName: String = "",
+    val email: String = "",
+    val password: String = "",
+    val phone: String = "",
+    val photo: String = "",
     val services: List<Service> = emptyList(),
     val createdAt: String = "",
     val updatedAt: String = "",

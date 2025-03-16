@@ -7,6 +7,7 @@ import androidx.credentials.PublicKeyCredential
 import esi.roadside.assistance.client.auth.data.dto.LoginRequest
 import esi.roadside.assistance.client.auth.data.dto.LoginResponse
 import esi.roadside.assistance.client.auth.domain.models.GoogleLoginRequestModel
+import esi.roadside.assistance.client.auth.domain.models.HomeRequestModel
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
 import esi.roadside.assistance.client.auth.domain.models.LoginResponseModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
@@ -67,6 +68,14 @@ class AuthRepoImpl(
             }.body()
         }.map { response ->
             response.toClientModel()
+        }
+    }
+
+    override suspend fun home(): Result<Boolean, AuthError> {
+        return safeAuth<String>(AuthType.HOME) {
+            client.get(constructUrl("/")).body()
+        }.map { response ->
+            response == "Success! You are in home."
         }
     }
 

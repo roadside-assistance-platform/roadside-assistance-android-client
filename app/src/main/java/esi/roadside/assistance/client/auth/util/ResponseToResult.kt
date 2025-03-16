@@ -17,6 +17,7 @@ enum class AuthType {
     SIGNUP,
     RESET_PASSWORD,
     UPDATE,
+    HOME,
     GOOGLE,
 }
 
@@ -29,14 +30,16 @@ suspend inline fun <reified T> responseToResult(
         AuthType.LOGIN -> AuthError.USER_NOT_FOUND
         AuthType.RESET_PASSWORD -> AuthError.USER_NOT_FOUND
         AuthType.UPDATE -> AuthError.USER_NOT_FOUND
-        AuthType.GOOGLE -> TODO()
+        AuthType.GOOGLE -> AuthError.UNKNOWN
+        AuthType.HOME -> AuthError.UNKNOWN
     }
     val error401 = when (authType) {
         AuthType.SIGNUP -> AuthError.USER_ALREADY_EXISTS
         AuthType.LOGIN -> AuthError.INCORRECT_CREDENTIALS
         AuthType.RESET_PASSWORD -> AuthError.INTERNAL_ERROR
         AuthType.UPDATE -> AuthError.INTERNAL_ERROR
-        AuthType.GOOGLE -> TODO()
+        AuthType.GOOGLE -> AuthError.UNKNOWN
+        AuthType.HOME -> AuthError.UNKNOWN
     }
     return when (response.status.value) {
         in 200..299 -> {

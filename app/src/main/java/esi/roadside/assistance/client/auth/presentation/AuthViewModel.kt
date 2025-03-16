@@ -1,10 +1,12 @@
 package esi.roadside.assistance.client.auth.presentation
 
 import android.app.Activity
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import esi.roadside.assistance.client.auth.Crypto
+import esi.roadside.assistance.client.auth.UserPreferences
 import esi.roadside.assistance.client.auth.data.dto.LoginRequest
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
@@ -12,6 +14,7 @@ import esi.roadside.assistance.client.auth.domain.models.UpdateModel
 import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
 import esi.roadside.assistance.client.auth.domain.use_case.GoogleLogin
 import esi.roadside.assistance.client.auth.domain.use_case.GoogleOldLogin
+import esi.roadside.assistance.client.auth.domain.use_case.Home
 import esi.roadside.assistance.client.auth.domain.use_case.Login
 import esi.roadside.assistance.client.auth.domain.use_case.ResetPassword
 import esi.roadside.assistance.client.auth.domain.use_case.SignUp
@@ -24,6 +27,7 @@ import esi.roadside.assistance.client.auth.presentation.screens.reset_password.R
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupUiState
 import esi.roadside.assistance.client.auth.util.account.AccountManager
 import esi.roadside.assistance.client.auth.util.account.SignInResult
+import esi.roadside.assistance.client.auth.util.dataStore
 import esi.roadside.assistance.client.core.domain.model.ClientModel
 import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess
@@ -33,14 +37,17 @@ import esi.roadside.assistance.client.core.presentation.util.ValidateInput
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
+    private val context: Context,
     private val cloudinaryUseCase: Cloudinary,
     private val loginUseCase: Login,
     private val signUpUseCase: SignUp,
     private val updateUseCase: Update,
+    private val homeUseCase: Home,
     private val resetPasswordUseCase: ResetPassword,
     private val googleLoginUseCase: GoogleLogin,
     private val googleOldLoginUseCase: GoogleOldLogin,
@@ -125,8 +132,8 @@ class AuthViewModel(
                             password = _loginUiState.value.password
                         )
                     ).onSuccess {
-                        if (!accountManager.checkCredentials(_loginUiState.value.email, _loginUiState.value.password))
-                            accountManager.signUp(_loginUiState.value.email, _loginUiState.value.password)
+//                        if (!accountManager.checkCredentials(_loginUiState.value.email, _loginUiState.value.password))
+//                            accountManager.signUp(_loginUiState.value.email, _loginUiState.value.password)
                         loggedIn(it.client)
                     }.onError {
                         println(it)
@@ -317,8 +324,23 @@ class AuthViewModel(
         }
     }
 
-    private fun loggedIn(client: ClientModel, launchMainActivity: Boolean = true) {
-        
+    private suspend fun loggedIn(client: ClientModel, launchMainActivity: Boolean = true) {
+        context.dataStore.updateData {
+            UserPreferences(client.toClient())
+        }
         if (launchMainActivity) sendEvent(LaunchMainActivity)
+    }
+
+    init {
+        viewModelScope.launch {
+            context.dataStore.data.firstOrNull()?.let { userPreferences ->
+                homeUseCase()
+                    .onSuccess {
+                        if (it) loggedIn(userPreferences.client.toClientModel())
+                    }.onError {
+                        println(it)
+                    }
+            }
+        }
     }
 }
