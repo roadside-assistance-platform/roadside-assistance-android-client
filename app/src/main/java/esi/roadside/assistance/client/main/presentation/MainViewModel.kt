@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class MainViewModel: ViewModel() {
+class MainViewModel(
+
+): ViewModel() {
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState = _homeUiState.asStateFlow()
 
@@ -49,7 +51,9 @@ class MainViewModel: ViewModel() {
                     it.copy(description = action.description)
                 }
             }
-            Action.SubmitRequest -> TODO()
+            Action.SubmitRequest -> {
+
+            }
             Action.ConfirmProfileEditing -> TODO()
             Action.EnableProfileEditing -> {
                 _profileUiState.update {

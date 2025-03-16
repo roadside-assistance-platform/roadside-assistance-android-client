@@ -1,13 +1,14 @@
 package esi.roadside.assistance.client.auth.di
 
 import com.cloudinary.android.MediaManager
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import esi.roadside.assistance.client.BuildConfig
 import esi.roadside.assistance.client.auth.data.AuthRepoImpl
 import esi.roadside.assistance.client.auth.data.CloudinaryRepoImpl
 import esi.roadside.assistance.client.auth.domain.repository.AuthRepo
 import esi.roadside.assistance.client.auth.domain.repository.CloudinaryRepo
 import esi.roadside.assistance.client.core.data.networking.HttpClientFactory
 import io.ktor.client.engine.cio.CIO
-import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -20,6 +21,13 @@ val RepoModule = module {
         config.put("api_secret", "d8gJrtFaBOSAkSrpaPNU4V4M2-Y")
         MediaManager.init(androidContext(), config)
         MediaManager.get()
+    }
+    single {
+        GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(true)
+            .setServerClientId(BuildConfig.WEB_CLIENT_ID)
+            .setAutoSelectEnabled(true)
+            .build()
     }
     single<AuthRepo> { AuthRepoImpl(get()) }
     single<CloudinaryRepo> { CloudinaryRepoImpl(get()) }

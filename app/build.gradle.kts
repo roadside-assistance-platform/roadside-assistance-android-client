@@ -26,6 +26,7 @@ android {
         debug {
             buildConfigField("String", "BASE_URL", "\"http://localhost:8080/\"")
             buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://your-cloudamqp-url\"")
+            buildConfigField("String", "WEB_CLIENT_ID", "\"469116526388-l4fltok5uk1qo6gf4jup9eu57m558h6v.apps.googleusercontent.com\"")
         }
         release {
             isMinifyEnabled = true
@@ -36,6 +37,7 @@ android {
             )
             buildConfigField("String", "BASE_URL", "\"http://localhost:8080/\"")
             buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://your-cloudamqp-url\"")
+            buildConfigField("String", "WEB_CLIENT_ID", "\"469116526388-l4fltok5uk1qo6gf4jup9eu57m558h6v.apps.googleusercontent.com\"")
         }
     }
     compileOptions {
