@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RoadsideAssistanceClient</string>
+    <string name="app_name">Depan.Go</string>
 
     <string name="home">Home</string>
     <string name="settings">Settings</string>
@@ -302,4 +302,12 @@
     <string name="incorrect_credentials_error">Incorrect email or password</string>
     <string name="log_in_with_google">Log in with Google</string>
     <string name="description_issue_placeholder">ex: “strange noise”, “car wont’ start”....etc</string>
+    <string name="next">Next</string>
+    <string name="welcome_title_1">Hi and welcome to Depan.Go!</string>
+    <string name="welcome_text_1">Discover Algeria’s premier roadside assistance app!</string>
+    <string name="welcome_title_2">Rescue is just one click away!</string>
+    <string name="welcome_text_2">get the help whenever u need it , ur safety is our priority</string>
+    <string name="welcome_title_3">Reliable and affordable!</string>
+    <string name="welcome_text_3">Trusted service providers and great prices !</string>
+    <string name="skip">Skip</string>
 </resources>
