@@ -301,4 +301,5 @@
     <string name="google_invalid_id_token_error">Received an invalid google id token response</string>
     <string name="incorrect_credentials_error">Incorrect email or password</string>
     <string name="log_in_with_google">Log in with Google</string>
+    <string name="description_issue_placeholder">ex: “strange noise”, “car wont’ start”....etc</string>
 </resources>

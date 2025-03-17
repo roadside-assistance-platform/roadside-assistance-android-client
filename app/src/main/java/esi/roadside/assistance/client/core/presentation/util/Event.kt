@@ -11,4 +11,5 @@ sealed interface Event {
     data class MainNavigate(val route: MainNavRoutes): Event
     data object ImageUploadError: Event
     data object LaunchMainActivity: Event
+    data class ShowMainActivityToast(val text: Int): Event
 }

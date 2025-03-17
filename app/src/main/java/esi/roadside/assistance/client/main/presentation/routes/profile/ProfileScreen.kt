@@ -1,9 +1,12 @@
 package esi.roadside.assistance.client.main.presentation.routes.profile
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +19,7 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.Title
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
@@ -64,51 +68,67 @@ fun ProfileScreen(
             )
         },
         floatingActionButton = {
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                if (state.enableEditing)
-                    FloatingActionButton(
-                        { onAction(Action.CancelProfileEditing) },
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.error,
-                    ) {
-                        Icon(Icons.Default.Cancel, null)
+            AnimatedContent(state.loading) {
+                if (it)
+                    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
                     }
-                ExtendedFloatingActionButton(
-                    onClick = {
-                        onAction(
-                            if (state.enableEditing) Action.ConfirmProfileEditing
-                            else Action.EnableProfileEditing
+                else {
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End)
+                    ) {
+                        if (state.enableEditing)
+                            FloatingActionButton(
+                                { onAction(Action.CancelProfileEditing) },
+                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                contentColor = MaterialTheme.colorScheme.error,
+                            ) {
+                                Icon(Icons.Default.Cancel, null)
+                            }
+                        ExtendedFloatingActionButton(
+                            onClick = {
+                                onAction(
+                                    if (state.enableEditing) Action.ConfirmProfileEditing
+                                    else Action.EnableProfileEditing
+                                )
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector =
+                                        if (state.enableEditing) Icons.Outlined.Check
+                                        else Icons.Outlined.Edit,
+                                    contentDescription = null
+                                )
+                            },
+                            text = {
+                                Text(
+                                    if (state.enableEditing) stringResource(R.string.save)
+                                    else stringResource(R.string.edit_profile)
+                                )
+                            },
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            contentColor = MaterialTheme.colorScheme.tertiary,
                         )
-                    },
-                    icon = {
-                        Icon(
-                            imageVector =
-                                if (state.enableEditing) Icons.Outlined.Check
-                                else Icons.Outlined.Edit,
-                            contentDescription = null
-                        )
-                    },
-                    text = {
-                        Text(
-                            if (state.enableEditing) stringResource(R.string.save)
-                            else stringResource(R.string.edit_profile)
-                        )
-                    },
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.tertiary,
-                )
+                    }
+                }
             }
         }
     ) {
         Column(
-            modifier = modifier.verticalScroll(rememberScrollState()).fillMaxSize().imePadding().padding(it),
+            modifier = modifier.verticalScroll(rememberScrollState())
+                .fillMaxSize()
+                .imePadding()
+                .padding(it)
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             ProfilePicturePicker(
                 state.editClient.photo,
                 icon = Icons.Default.Person,
                 enabled = state.enableEditing,
+                modifier = Modifier.padding(bottom = 24.dp)
             ) {
 
             }
@@ -122,7 +142,8 @@ fun ProfileScreen(
                     )
                 )) },
                 enabled = state.enableEditing,
-                focusRequester = focusRequester
+                focusRequester = focusRequester,
+                error = state.fullNameError
             )
             InformationCard(
                 icon = Icons.Outlined.Email,
@@ -133,7 +154,8 @@ fun ProfileScreen(
                         email = it
                     )
                 )) },
-                enabled = state.enableEditing
+                enabled = state.enableEditing,
+                error = state.emailError
             )
             InformationCard(
                 icon = Icons.Outlined.Phone,
@@ -144,7 +166,8 @@ fun ProfileScreen(
                         phone = it
                     )
                 )) },
-                enabled = state.enableEditing
+                enabled = state.enableEditing,
+                error = state.phoneError
             )
         }
     }

@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mapbox.maps.extension.style.expressions.dsl.generated.color
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.util.Button
 import esi.roadside.assistance.client.auth.presentation.util.ToggleOutlineButton
@@ -138,7 +139,15 @@ fun RequestAssistance(
                 ),
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                 decorationBox = { innerTextField ->
-                    Box(Modifier.fillMaxSize().padding(16.dp)) {
+                    Box(Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)) {
+                        if (state.description.isEmpty())
+                            Text(
+                                stringResource(R.string.description_issue_placeholder),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
                         innerTextField()
                     }
                 }

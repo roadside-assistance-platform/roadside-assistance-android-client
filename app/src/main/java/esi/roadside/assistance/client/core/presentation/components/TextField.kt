@@ -1,6 +1,7 @@
 package esi.roadside.assistance.client.core.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -45,13 +46,15 @@ fun MyTextField(
     imeAction: ImeAction = ImeAction.Next,
     keyboardType: KeyboardType = KeyboardType.Text,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    interactionSource: MutableInteractionSource? = null
 ) {
     OutlinedTextField(
-        value,
-        onValueChange,
-        modifier.fillMaxWidth(),
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier.fillMaxWidth(),
         label = { Text(label) },
+        interactionSource = interactionSource,
         placeholder = { Text(placeholder) },
         leadingIcon = leadingIcon?.let { { Icon(it, contentDescription = null) } },
         trailingIcon = trailingIcon,

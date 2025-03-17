@@ -7,9 +7,12 @@ import esi.roadside.assistance.client.auth.UserPreferences
 import esi.roadside.assistance.client.auth.domain.models.UpdateModel
 import esi.roadside.assistance.client.auth.domain.use_case.Update
 import esi.roadside.assistance.client.auth.util.dataStore
+import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess
 import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.presentation.util.Event.*
+import esi.roadside.assistance.client.core.presentation.util.Field
+import esi.roadside.assistance.client.core.presentation.util.ValidateInput
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import esi.roadside.assistance.client.main.domain.models.NotificationModel
 import esi.roadside.assistance.client.main.presentation.models.ClientUi
@@ -81,14 +84,47 @@ class MainViewModel(
 
             }
             Action.ConfirmProfileEditing -> {
-                viewModelScope.launch {
-                    updateUseCase(_profileUiState.value.editClient.toUpdateModel())
-                        .onSuccess {
-                            saveClient(context, it)
-                            _profileUiState.update {
-                                it.copy(enableEditing = false)
+                val inputError = ValidateInput.validateUpdateProfile(
+                    _profileUiState.value.editClient.fullName,
+                    _profileUiState.value.editClient.email,
+                    _profileUiState.value.editClient.phone
+                )
+                if (inputError != null)
+                    _profileUiState.update {
+                        it.copy(
+                            fullNameError = inputError.takeIf { it.field == Field.FULL_NAME },
+                            emailError = inputError.takeIf { it.field == Field.EMAIL },
+                            phoneError = inputError.takeIf { it.field == Field.PHONE_NUMBER }
+                        )
+                    }
+                else {
+                    _profileUiState.update { it.copy(loading = true) }
+                    viewModelScope.launch {
+                        updateUseCase(_profileUiState.value.editClient.toUpdateModel())
+                            .onSuccess {
+                                saveClient(context, it)
+                                _profileUiState.update {
+                                    it.copy(
+                                        enableEditing = false,
+                                        fullNameError = null,
+                                        emailError = null,
+                                        phoneError = null
+                                    )
+                                }
                             }
-                        }
+                            .onError {
+                                _profileUiState.update {
+                                    it.copy(
+                                        enableEditing = false,
+                                        fullNameError = null,
+                                        emailError = null,
+                                        phoneError = null
+                                    )
+                                }
+                                sendEvent(ShowMainActivityToast(it.text))
+                            }
+                        _profileUiState.update { it.copy(loading = false) }
+                    }
                 }
             }
             Action.EnableProfileEditing -> {

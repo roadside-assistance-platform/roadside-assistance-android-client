@@ -71,6 +71,14 @@ object ValidateInput {
         }
     }
 
+    fun validateUpdateProfile(
+        fullName: String,
+        email: String,
+        phoneNumber: String
+    ): InputError? =
+        validateFullName(fullName) ?: validateEmail(email) ?:
+        validatePhoneNumber(phoneNumber)
+
     fun validateSignup(
         email: String,
         password: String,

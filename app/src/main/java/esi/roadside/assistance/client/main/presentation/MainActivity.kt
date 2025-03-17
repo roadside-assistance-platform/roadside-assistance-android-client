@@ -1,6 +1,7 @@
 package esi.roadside.assistance.client.main.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
@@ -8,6 +9,7 @@ import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import esi.roadside.assistance.client.core.data.SettingsDataStore
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
+import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.presentation.util.Event.MainNavigate
 import esi.roadside.assistance.client.core.util.composables.CollectEvents
 import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
@@ -45,6 +47,8 @@ class MainActivity : ComponentActivity() {
             CollectEvents {
                 when(it) {
                     is MainNavigate -> navController.navigate(it.route)
+                    is Event.ShowMainActivityToast ->
+                        Toast.makeText(this, getString(it.text), Toast.LENGTH_SHORT).show()
                     else -> Unit
                 }
             }
