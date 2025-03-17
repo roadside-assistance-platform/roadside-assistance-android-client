@@ -1,6 +1,7 @@
 package esi.roadside.assistance.client.core.data.dto
 
 import esi.roadside.assistance.client.core.domain.model.ClientModel
+import esi.roadside.assistance.client.main.presentation.models.ClientUi
 import kotlinx.serialization.Serializable
 import java.time.OffsetDateTime
 import java.time.ZoneId

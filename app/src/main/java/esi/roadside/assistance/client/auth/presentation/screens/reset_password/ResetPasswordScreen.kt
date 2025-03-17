@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -24,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.Action
+import esi.roadside.assistance.client.auth.presentation.util.Button
 import esi.roadside.assistance.client.auth.presentation.util.MyScreen
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 
@@ -101,8 +101,8 @@ fun ResetPasswordScreen(
                     }
                 }
             }
-            Button({ onAction(Action.Send) }, Modifier.fillMaxWidth()) {
-                Text(stringResource(R.string.send_reset_code))
+            Button(stringResource(R.string.send_reset_code), Modifier.fillMaxWidth()) {
+                onAction(Action.Send)
             }
             Spacer(Modifier.height(40.dp))
             TextButton(

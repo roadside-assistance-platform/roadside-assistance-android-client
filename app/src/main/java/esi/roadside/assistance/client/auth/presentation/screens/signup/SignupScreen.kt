@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.Action
 import esi.roadside.assistance.client.auth.presentation.util.BackgroundBox
+import esi.roadside.assistance.client.auth.presentation.util.Button
 import esi.roadside.assistance.client.auth.presentation.util.TermsAndPolicy
 import esi.roadside.assistance.client.core.presentation.components.MyTextField
 import esi.roadside.assistance.client.core.presentation.components.PasswordTextField
@@ -132,13 +132,13 @@ fun SignupScreen(
                     placeholder = stringResource(R.string.confirm_password_placeholder)
                 )
                 Button(
-                    { onAction(Action.Signup) },
+                    stringResource(R.string.continue_text),
                     Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp),
                     enabled = !uiState.loading
                 ) {
-                    Text(stringResource(R.string.continue_text))
+                    onAction(Action.Signup)
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(stringResource(R.string.already_have_an_account))

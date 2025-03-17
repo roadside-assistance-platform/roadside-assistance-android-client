@@ -32,13 +32,17 @@ fun PrivacyPolicyScreen(modifier: Modifier = Modifier) {
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = stringResource(R.string.terms_of_service),
+                title = stringResource(R.string.privacy_policy),
                 background = R.drawable.union,
                 scrollBehavior = scrollBehavior
             )
         },
         contentWindowInsets = WindowInsets(bottom = 16.dp),
     ) {
-        MarkdownText("privacy_policy.md", Modifier.padding(it).fillMaxSize().verticalScroll(rememberScrollState()))
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = it) {
+            item {
+                MarkdownText("privacy_policy.md", Modifier.padding(16.dp).fillMaxWidth())
+            }
+        }
     }
 }

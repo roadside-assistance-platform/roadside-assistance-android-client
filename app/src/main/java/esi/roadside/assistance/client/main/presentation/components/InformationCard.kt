@@ -1,8 +1,10 @@
 package esi.roadside.assistance.client.main.presentation.components
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +18,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +49,8 @@ fun InformationCard(
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
-    BasicTextField(
+    val interactionSource = remember { MutableInteractionSource() }
+    OutlinedTextField(
         value = value,
         onValueChange = {
             if (enabled) {
@@ -57,41 +63,12 @@ fun InformationCard(
             .fillMaxWidth()
             .focusRequester(focusRequester),
         textStyle = MaterialTheme.typography.bodyLarge,
-        decorationBox = { innerTextField ->
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ),
-            ) {
-                Row(
-                    Modifier.padding(12.dp).fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    Icon(
-                        icon,
-                        null,
-                        Modifier
-                            .size(48.dp)
-                            .background(
-                                MaterialTheme.colorScheme.primaryContainer,
-                                MaterialTheme.shapes.medium
-                            )
-                            .padding(12.dp),
-                    )
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                    ) {
-                        Text(
-                            stringResource(title),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        innerTextField()
-                    }
-                }
-            }
+        interactionSource = interactionSource,
+        label = {
+            Text(stringResource(title))
+        },
+        leadingIcon = {
+            Icon(icon, null)
         }
     )
 }

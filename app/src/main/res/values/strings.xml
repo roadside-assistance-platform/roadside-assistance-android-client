@@ -176,8 +176,8 @@
     <string name="join_us_text">and get back on the road quickly!</string>
     <string name="sign_up">Sign up</string>
     <string name="log_in">Log in</string>
-    <string name="terms_of_service">terms of service</string>
-    <string name="privacy_policy">privacy policy</string>
+    <string name="terms_of_service">Terms of service</string>
+    <string name="privacy_policy">Privacy policy</string>
     <string name="email_placeholder">Enter your email address</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -224,9 +224,9 @@
     <string name="unkown">I don’t know</string>
     <string name="mechanic">mechanic</string>
     <string name="electrician">electrician</string>
-    <string name="towing">towing</string>
-    <string name="fuel">fuel</string>
-    <string name="des_issue">describe the issue</string>
+    <string name="towing">Towing</string>
+    <string name="fuel">Fuel</string>
+    <string name="des_issue">Describe the issue</string>
 
     <!--    Hints-->
     <string name="hint_request_ass">ex: “ strange noise” , “car wont’ start”....etc</string>
@@ -300,4 +300,5 @@
     <string name="google_unexpected_error">Unexpected type of credential</string>
     <string name="google_invalid_id_token_error">Received an invalid google id token response</string>
     <string name="incorrect_credentials_error">Incorrect email or password</string>
+    <string name="log_in_with_google">Log in with Google</string>
 </resources>

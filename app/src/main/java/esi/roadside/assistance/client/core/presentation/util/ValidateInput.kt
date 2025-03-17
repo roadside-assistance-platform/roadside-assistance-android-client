@@ -50,9 +50,6 @@ object ValidateInput {
             phoneNumber.isEmpty() -> {
                 InputError.Empty(Field.PHONE_NUMBER, R.string.error_empty_phone_number)
             }
-            phoneNumber.length < 10 -> {
-                InputError.Short(Field.PHONE_NUMBER, R.string.error_short_phone_number)
-            }
             !android.util.Patterns.PHONE.matcher(phoneNumber).matches() -> {
                 InputError.Invalid(Field.PHONE_NUMBER, R.string.error_invalid_phone_number)
             }

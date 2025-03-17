@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +20,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.Action
+import esi.roadside.assistance.client.auth.presentation.util.Button
 import esi.roadside.assistance.client.auth.presentation.util.MyScreen
 import esi.roadside.assistance.client.core.presentation.components.MyTextField
 import esi.roadside.assistance.client.core.presentation.components.PasswordTextField
@@ -75,8 +75,8 @@ fun LoginScreen(
                     Text(stringResource(R.string.forgot_password))
                 }
             }
-            Button({ onAction(Action.Login) }, Modifier.fillMaxWidth(), enabled = !uiState.loading) {
-                Text(stringResource(R.string.log_in))
+            Button(stringResource(R.string.log_in), Modifier.fillMaxWidth(), enabled = !uiState.loading) {
+                onAction(Action.Login)
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(R.string.don_t_have_an_account))

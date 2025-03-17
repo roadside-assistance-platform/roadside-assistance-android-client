@@ -53,7 +53,6 @@ fun CustomizeAppScreen(modifier: Modifier = Modifier) {
     val listState = rememberLazyListState()
     val dataStore = koinInject<SettingsDataStore>()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    val context = LocalContext.current
     val isDark by isDark()
     val dynamicColorsChecked by dataStore.dynamicColors.collectAsState(initial = true)
     val extraDarkChecked by dataStore.extraDark.collectAsState(initial = true)

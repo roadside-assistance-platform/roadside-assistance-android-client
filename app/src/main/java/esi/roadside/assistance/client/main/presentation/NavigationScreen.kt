@@ -19,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import esi.roadside.assistance.client.core.util.intUpDownTransSpec
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeScreen
 import esi.roadside.assistance.client.main.presentation.routes.home.request.RequestAssistance
@@ -33,6 +34,9 @@ import esi.roadside.assistance.client.main.presentation.routes.settings.Settings
 import esi.roadside.assistance.client.main.presentation.routes.settings.TermsOfServiceScreen
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
+import soup.compose.material.motion.animation.materialSharedAxisX
+import soup.compose.material.motion.animation.materialSharedAxisXIn
+import soup.compose.material.motion.animation.materialSharedAxisXOut
 
 @Composable
 fun NavigationScreen(
@@ -96,8 +100,6 @@ fun NavigationScreen(
         NavHost(
             navController = navController,
             startDestination = NavRoutes.Home,
-            enterTransition = { materialFadeThroughIn() },
-            exitTransition = { materialFadeThroughOut() },
             modifier = Modifier.fillMaxSize().padding(it),
         ) {
             navigation<NavRoutes.Home>(NavRoutes.Map) {

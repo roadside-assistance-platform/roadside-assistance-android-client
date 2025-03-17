@@ -5,23 +5,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Button
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.InputChip
-import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,10 +35,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import esi.roadside.assistance.client.R
+import esi.roadside.assistance.client.auth.presentation.util.Button
+import esi.roadside.assistance.client.auth.presentation.util.ToggleOutlineButton
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 import esi.roadside.assistance.client.main.domain.Categories
 import esi.roadside.assistance.client.main.presentation.Action
-import esi.roadside.assistance.client.main.presentation.components.TopAppBar
+import esi.roadside.assistance.client.main.presentation.components.LargeTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,12 +49,14 @@ fun RequestAssistance(
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         topBar = {
-            TopAppBar(
+            LargeTopAppBar(
                 title = stringResource(R.string.request_assistance),
                 background = R.drawable.union,
-                text = stringResource(R.string.request_assistance_des)
+                text = stringResource(R.string.request_assistance_des),
+                scrollBehavior = scrollBehavior
             )
         },
         bottomBar = {
@@ -61,55 +66,55 @@ fun RequestAssistance(
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.Center,
             ) {
-                Button(
-                    onClick = { onAction(Action.SubmitRequest) },
-                    modifier = Modifier.padding(10.dp)
-                ) {
-                    Text(text = stringResource(R.string.submit_req))
+                Button(stringResource(R.string.submit_req), Modifier.padding(10.dp)) {
+                    onAction(Action.SubmitRequest)
                 }
             }
         },
         modifier = modifier
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(it).padding(horizontal = 16.dp),
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
+                .padding(it)
+                .padding(horizontal = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             Text(
                 text = stringResource(R.string.selecte_the_field),
                 style = MaterialTheme.typography.titleSmall
             )
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                modifier = Modifier.padding(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+            Column(
+                Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(Categories.entries, { it.name }) {
-                    InputChip(
-                        modifier = modifier.wrapContentSize(),
-                        selected = state.category == it,
-                        onClick = { onAction(Action.SelectCategory(it)) },
-                        label = {
-                            Text(
-                                text = stringResource(it.text),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(id = it.icon),
-                                contentDescription = null,
-                                modifier = Modifier.size(InputChipDefaults.IconSize)
-                            )
-                        },
-                        colors = InputChipDefaults.inputChipColors(
-                            selectedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                            selectedLabelColor = MaterialTheme.colorScheme.tertiary,
-                            selectedLeadingIconColor = MaterialTheme.colorScheme.tertiary,
-                        )
-                    )
+                Categories.entries.chunked(2).forEach {
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        it.forEach { category ->
+                            ToggleOutlineButton(
+                                state.category == category,
+                                { onAction(Action.SelectCategory(category)) },
+                                Modifier.weight(1f)
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = category.icon),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                                )
+                                Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+                                Text(
+                                    text = stringResource(category.text),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    }
                 }
             }
             Text(
@@ -122,8 +127,8 @@ fun RequestAssistance(
                 value = state.description,
                 onValueChange = { onAction(Action.SetDescription(it)) },
                 modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
+                    .fillMaxWidth()
+                    .height(100.dp)
                     .clip(MaterialTheme.shapes.large)
                     .background(MaterialTheme.colorScheme.surfaceContainer),
                 textStyle = MaterialTheme.typography.bodyMedium.copy(

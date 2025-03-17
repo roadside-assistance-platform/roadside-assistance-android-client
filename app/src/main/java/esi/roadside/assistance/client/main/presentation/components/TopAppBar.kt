@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -88,7 +89,9 @@ fun TopAppBar(
                     Text(
                         text = title,
                         textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -117,6 +120,90 @@ fun TopAppBar(
         )
     }
 }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LargeTopAppBar(
+    title: String,
+    @DrawableRes background: Int,
+    modifier: Modifier = Modifier,
+    text: String? = null,
+    navigationIcon: @Composable (() -> Unit) = {
+        val isDark by isDark()
+        val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+        IconButton(
+            {
+                dispatcher?.onBackPressed()
+            },
+            colors = IconButtonDefaults.iconButtonColors(
+                contentColor = if (isDark) MaterialTheme.colorScheme.onSurface
+                else MaterialTheme.colorScheme.surface,
+                containerColor = Color.Transparent
+            )
+        ) {
+            Icon(Icons.AutoMirrored.Default.ArrowBack, null)
+        }
+
+    },
+    actions: @Composable (RowScope.() -> Unit) = {},
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
+    scrollBehavior: TopAppBarScrollBehavior? = null
+) {
+    val isDark by isDark()
+    val colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer).takeIf { isDark }
+    Box(
+        modifier = modifier.height(300.dp),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Image(
+            painterResource(background),
+            null,
+            Modifier.fillMaxSize(),
+            contentScale = ContentScale.FillBounds,
+            colorFilter = colorFilter
+        )
+        CenterAlignedTopAppBar(
+            {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Text(
+                        text = title,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    text?.let {
+                        Text(
+                            text = text,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.bodyMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+            },
+            Modifier,
+            navigationIcon,
+            actions,
+            200.dp,
+            windowInsets,
+            TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = Color.Transparent,
+                scrolledContainerColor = Color.Transparent,
+                titleContentColor = lightScheme.background,
+            ),
+            scrollBehavior
+        )
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview

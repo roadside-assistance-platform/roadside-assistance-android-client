@@ -5,9 +5,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import esi.roadside.assistance.client.auth.Crypto
-import esi.roadside.assistance.client.auth.UserPreferences
-import esi.roadside.assistance.client.auth.data.dto.LoginRequest
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
 import esi.roadside.assistance.client.auth.domain.models.UpdateModel
@@ -19,7 +16,6 @@ import esi.roadside.assistance.client.auth.domain.use_case.Login
 import esi.roadside.assistance.client.auth.domain.use_case.ResetPassword
 import esi.roadside.assistance.client.auth.domain.use_case.SignUp
 import esi.roadside.assistance.client.auth.domain.use_case.Update
-import esi.roadside.assistance.client.auth.presentation.Action
 import esi.roadside.assistance.client.auth.presentation.Action.*
 import esi.roadside.assistance.client.auth.presentation.screens.AuthUiState
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginUiState
@@ -35,6 +31,7 @@ import esi.roadside.assistance.client.core.presentation.util.Event.*
 import esi.roadside.assistance.client.core.presentation.util.Field
 import esi.roadside.assistance.client.core.presentation.util.ValidateInput
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
+import esi.roadside.assistance.client.main.util.saveClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -198,7 +195,8 @@ class AuthViewModel(
                              UpdateModel(
                                 id = client.id,
                                 fullName = _signupUiState.value.fullName,
-                                phoneNumber = _signupUiState.value.phoneNumber,
+                                phone = _signupUiState.value.phoneNumber,
+                                email = _signupUiState.value.email,
                                 photo = url
                             )
                         )
@@ -325,9 +323,7 @@ class AuthViewModel(
     }
 
     private suspend fun loggedIn(client: ClientModel, launchMainActivity: Boolean = true) {
-        context.dataStore.updateData {
-            UserPreferences(client.toClient())
-        }
+        saveClient(context, client)
         if (launchMainActivity) sendEvent(LaunchMainActivity)
     }
 

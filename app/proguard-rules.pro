@@ -28,3 +28,5 @@
 -keep class androidx.credentials.playservices.** {
   *;
 }
+-keepnames class esi.roadside.assistance.client.auth.presentation.NavRoutes
+-keepnames class * extends esi.roadside.assistance.client.auth.presentation.NavRoutes

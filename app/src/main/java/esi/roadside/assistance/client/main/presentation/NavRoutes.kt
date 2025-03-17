@@ -3,55 +3,55 @@ package esi.roadside.assistance.client.main.presentation
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class NavRoutes {
+sealed class NavRoutes(val ordinal: Int) {
     @Serializable
-    data object Home : NavRoutes()
+    data object Home : NavRoutes(0)
 
     @Serializable
-    data object Map : NavRoutes()
+    data object Map : NavRoutes(1)
 
     @Serializable
-    data object RequestAssistance : NavRoutes()
+    data object RequestAssistance : NavRoutes(1)
 
     @Serializable
-    data object Notifications : NavRoutes()
+    data object Notifications : NavRoutes(2)
 
     @Serializable
-    data object NotificationsList : NavRoutes()
+    data object NotificationsList : NavRoutes(3)
 
     @Serializable
-    data class Notification(val id: String) : NavRoutes()
+    data class Notification(val id: String) : NavRoutes(4)
 
     @Serializable
-    data object Profile : NavRoutes()
+    data object Profile : NavRoutes(5)
 
     @Serializable
-    data object Settings : NavRoutes()
+    data object Settings : NavRoutes(6)
 
     @Serializable
-    data object SettingsList : NavRoutes()
+    data object SettingsList : NavRoutes(7)
 
     @Serializable
-    data object ChangePassword : NavRoutes()
+    data object ChangePassword : NavRoutes(8)
 
     @Serializable
-    data object DeleteAccount : NavRoutes()
+    data object DeleteAccount : NavRoutes(8)
 
     @Serializable
-    data object CustomizeApp : NavRoutes()
+    data object CustomizeApp : NavRoutes(8)
 
     @Serializable
-    data object Language : NavRoutes()
+    data object Language : NavRoutes(8)
 
     @Serializable
-    data object About : NavRoutes()
+    data object About : NavRoutes(8)
 
     @Serializable
-    data object TermsOfService : NavRoutes()
+    data object TermsOfService : NavRoutes(8)
 
     @Serializable
-    data object PrivacyPolicy : NavRoutes()
+    data object PrivacyPolicy : NavRoutes(8)
 
     @Serializable
-    data object Help : NavRoutes()
+    data object Help : NavRoutes(8)
 }

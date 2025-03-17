@@ -2,7 +2,9 @@ package esi.roadside.assistance.client.main.presentation.routes.settings
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,6 +39,10 @@ fun TermsOfServiceScreen(modifier: Modifier = Modifier) {
         },
         contentWindowInsets = WindowInsets(bottom = 16.dp),
     ) {
-        MarkdownText("terms_of_use.md", Modifier.padding(it).fillMaxSize().verticalScroll(rememberScrollState()))
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = it) {
+            item {
+                MarkdownText("terms_of_use.md", Modifier.padding(16.dp).fillMaxWidth())
+            }
+        }
     }
 }

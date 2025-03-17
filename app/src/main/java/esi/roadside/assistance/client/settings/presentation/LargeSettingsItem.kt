@@ -70,12 +70,12 @@ fun LargeSettingsItem(
             }
                 ?: Modifier
         )
-        .padding(10.dp, 12.dp),
+        .padding(12.dp, 16.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            Modifier.size(45.dp)
+            Modifier.size(36.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary),
             contentAlignment = Alignment.Center,
@@ -83,7 +83,7 @@ fun LargeSettingsItem(
             Icon(
                 item.icon,
                 null,
-                Modifier.size(30.dp),
+                Modifier.size(24.dp),
                 tint = MaterialTheme.colorScheme.onPrimary
             )
         }

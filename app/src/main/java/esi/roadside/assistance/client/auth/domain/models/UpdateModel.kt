@@ -5,12 +5,13 @@ import esi.roadside.assistance.client.auth.data.dto.UpdateRequest
 data class UpdateModel(
     val id: String,
     val fullName: String,
-    val phoneNumber: String,
-    val photo: String?
+    val email: String,
+    val phone: String,
+    val photo: String? = null
 ) {
     fun toUpdateRequest() = UpdateRequest(
         fullName = fullName,
-        phoneNumber = phoneNumber,
+        phone = phone,
         photo = photo
     )
 }
