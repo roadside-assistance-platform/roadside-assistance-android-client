@@ -30,6 +30,7 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:noHistory="true"
+            android:configChanges="orientation|screenSize|density|locale|keyboard|keyboardHidden|navigation"
             android:theme="@style/Theme.RoadsideAssistanceClient">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,10 +38,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.presentation.MainActivity" />
-        <activity android:name=".settings.presentation.ThemeActivity" />
-        <activity android:name=".settings.presentation.LanguageActivity" />
-        <activity android:name=".settings.presentation.AboutActivity" />
+        <activity android:name=".main.presentation.MainActivity"
+            android:configChanges="orientation|screenSize|density|locale|keyboard|keyboardHidden|navigation"
+            />
     </application>
 
 </manifest>
