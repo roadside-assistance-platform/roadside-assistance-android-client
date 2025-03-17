@@ -41,6 +41,25 @@ import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 import esi.roadside.assistance.client.core.presentation.theme.lightScheme
 import esi.roadside.assistance.client.core.presentation.util.isDark
 
+@Composable
+fun DefaultBackNavButton(modifier: Modifier = Modifier) {
+    val isDark by isDark()
+    val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    IconButton(
+        {
+            dispatcher?.onBackPressed()
+        },
+        colors = IconButtonDefaults.iconButtonColors(
+            contentColor = if (isDark) MaterialTheme.colorScheme.onSurface
+            else MaterialTheme.colorScheme.surface,
+            containerColor = Color.Transparent
+        ),
+        modifier = modifier
+    ) {
+        Icon(Icons.AutoMirrored.Default.ArrowBack, null)
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBar(
@@ -48,23 +67,7 @@ fun TopAppBar(
     @DrawableRes background: Int,
     modifier: Modifier = Modifier,
     text: String? = null,
-    navigationIcon: @Composable (() -> Unit) = {
-        val isDark by isDark()
-        val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-        IconButton(
-            {
-                dispatcher?.onBackPressed()
-            },
-            colors = IconButtonDefaults.iconButtonColors(
-                contentColor = if (isDark) MaterialTheme.colorScheme.onSurface
-                else MaterialTheme.colorScheme.surface,
-                containerColor = Color.Transparent
-            )
-        ) {
-            Icon(Icons.AutoMirrored.Default.ArrowBack, null)
-        }
-
-    },
+    navigationIcon: @Composable (() -> Unit) = { DefaultBackNavButton() },
     actions: @Composable (RowScope.() -> Unit) = {},
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     scrollBehavior: TopAppBarScrollBehavior? = null
@@ -131,24 +134,7 @@ fun LargeTopAppBar(
     @DrawableRes background: Int,
     modifier: Modifier = Modifier,
     text: String? = null,
-    navigationIcon: @Composable (() -> Unit) = {
-        val isDark by isDark()
-        val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-        IconButton(
-            {
-                dispatcher?.onBackPressed()
-            },
-            colors = IconButtonDefaults.iconButtonColors(
-                contentColor = if (isDark) MaterialTheme.colorScheme.onSurface
-                else MaterialTheme.colorScheme.surface,
-                containerColor = Color.Transparent
-            )
-        ) {
-            Icon(Icons.AutoMirrored.Default.ArrowBack, null)
-        }
-
-    },
-    actions: @Composable (RowScope.() -> Unit) = {},
+    navigationIcon: @Composable (() -> Unit) = { DefaultBackNavButton() },
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
@@ -200,7 +186,10 @@ fun LargeTopAppBar(
             ),
             scrollBehavior = scrollBehavior
         )
-        Box(Modifier.align(Alignment.TopStart).statusBarsPadding().padding(8.dp)) {
+        Box(Modifier
+            .align(Alignment.TopStart)
+            .statusBarsPadding()
+            .padding(8.dp)) {
             navigationIcon()
         }
     }

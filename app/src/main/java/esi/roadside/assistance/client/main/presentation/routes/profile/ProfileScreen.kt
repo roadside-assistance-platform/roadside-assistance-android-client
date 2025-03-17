@@ -1,6 +1,8 @@
 package esi.roadside.assistance.client.main.presentation.routes.profile
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +44,7 @@ import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.core.presentation.components.ProfilePicturePicker
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 import esi.roadside.assistance.client.main.presentation.Action
+import esi.roadside.assistance.client.main.presentation.components.DefaultBackNavButton
 import esi.roadside.assistance.client.main.presentation.components.InformationCard
 import esi.roadside.assistance.client.main.presentation.components.TopAppBar
 import esi.roadside.assistance.client.main.presentation.models.ClientUi
@@ -64,7 +67,12 @@ fun ProfileScreen(
             TopAppBar(
                 title = stringResource(R.string.profile),
                 background = R.drawable.vector_9,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                navigationIcon = {
+                    AnimatedVisibility(!state.enableEditing) {
+                        DefaultBackNavButton()
+                    }
+                }
             )
         },
         floatingActionButton = {
@@ -170,6 +178,9 @@ fun ProfileScreen(
                 error = state.phoneError
             )
         }
+    }
+    BackHandler(enabled = state.enableEditing) {
+        onAction(Action.CancelProfileEditing)
     }
 }
 

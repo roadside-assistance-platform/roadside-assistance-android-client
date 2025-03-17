@@ -67,13 +67,14 @@ fun NavigationScreen(
     val requestAssistanceState by mainViewModel.requestAssistanceState.collectAsState()
     val profileUiState by mainViewModel.profileUiState.collectAsState()
     val notifications by mainViewModel.notifications.collectAsState()
+    val navigationBarVisible = isParent and ((currentNavRoute != Routes.PROFILE) or !profileUiState.enableEditing)
 
     Scaffold(
         modifier = modifier,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             AnimatedVisibility(
-                isParent,
+                navigationBarVisible,
                 enter = slideInVertically { it },
                 exit = slideOutVertically { it }
             ) {
