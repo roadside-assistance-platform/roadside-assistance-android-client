@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -164,7 +166,7 @@ fun LargeTopAppBar(
             colorFilter = colorFilter
         )
         CenterAlignedTopAppBar(
-            {
+            title = {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -189,18 +191,18 @@ fun LargeTopAppBar(
                     }
                 }
             },
-            Modifier,
-            navigationIcon,
-            actions,
-            200.dp,
-            windowInsets,
-            TopAppBarDefaults.centerAlignedTopAppBarColors(
+            expandedHeight = 200.dp,
+            windowInsets = windowInsets,
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = Color.Transparent,
                 scrolledContainerColor = Color.Transparent,
                 titleContentColor = lightScheme.background,
             ),
-            scrollBehavior
+            scrollBehavior = scrollBehavior
         )
+        Box(Modifier.align(Alignment.TopStart).statusBarsPadding().padding(8.dp)) {
+            navigationIcon()
+        }
     }
 }
 

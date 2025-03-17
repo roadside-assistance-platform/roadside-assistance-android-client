@@ -1,6 +1,5 @@
 package esi.roadside.assistance.client.main.presentation.routes.profile
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
