@@ -29,7 +29,7 @@ import esi.roadside.assistance.client.auth.presentation.screens.login.LoginScree
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordScreen
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupScreen
 import esi.roadside.assistance.client.auth.presentation.screens.signup.VerifyEmailScreen
-import esi.roadside.assistance.client.auth.presentation.screens.welcome.GetStartedScreen
+import esi.roadside.assistance.client.auth.presentation.screens.welcome.WelcomeScreen
 import esi.roadside.assistance.client.core.presentation.components.IconDialog
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
 import esi.roadside.assistance.client.core.presentation.util.Event
@@ -102,7 +102,7 @@ class WelcomeActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         composable<NavRoutes.Welcome> {
-                            GetStartedScreen(viewModel::onAction)
+                            WelcomeScreen(viewModel::onAction)
                         }
                         composable<NavRoutes.Login> {
                             LoginScreen(loginUiState, viewModel::onAction)
