@@ -73,6 +73,18 @@ class AuthViewModel(
 
     fun onAction(action: Action) {
         when(action) {
+            Initiate -> {
+                viewModelScope.launch {
+                    context.dataStore.data.firstOrNull()?.let { userPreferences ->
+                        homeUseCase()
+                            .onSuccess {
+                                if (it) loggedIn(userPreferences.client.toClientModel())
+                            }.onError {
+                                println(it)
+                            }
+                    }
+                }
+            }
             is GoToLogin -> {
                 sendEvent(AuthNavigate(NavRoutes.Login))
                 viewModelScope.launch {
@@ -132,8 +144,6 @@ class AuthViewModel(
                             password = _loginUiState.value.password
                         )
                     ).onSuccess {
-                        if (!accountManager.checkCredentials(_loginUiState.value.email, _loginUiState.value.password))
-                            accountManager.signUp(_loginUiState.value.email, _loginUiState.value.password)
                         loggedIn(it.client)
                     }.onError {
                         println(it)
@@ -290,9 +300,7 @@ class AuthViewModel(
                 }
             }
             is ShowAuthError -> {
-                _authUiState.update {
-                    it.copy(errorDialogVisible = true, error = action.error)
-                }
+                sendEvent(AuthShowError(action.error))
             }
             HideAuthError -> {
                 _authUiState.update {
@@ -338,18 +346,5 @@ class AuthViewModel(
     private suspend fun loggedIn(client: ClientModel, launchMainActivity: Boolean = true) {
         saveClient(context, client)
         if (launchMainActivity) sendEvent(LaunchMainActivity)
-    }
-
-    init {
-        viewModelScope.launch {
-            context.dataStore.data.firstOrNull()?.let { userPreferences ->
-                homeUseCase()
-                    .onSuccess {
-                        if (it) loggedIn(userPreferences.client.toClientModel())
-                    }.onError {
-                        println(it)
-                    }
-            }
-        }
     }
 }

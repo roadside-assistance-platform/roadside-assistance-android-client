@@ -8,18 +8,21 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Badge
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navigation
-import androidx.navigation.toRoute
 import esi.roadside.assistance.client.core.util.intUpDownTransSpec
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeScreen
 import esi.roadside.assistance.client.main.presentation.routes.home.request.RequestAssistance
@@ -32,17 +35,17 @@ import esi.roadside.assistance.client.main.presentation.routes.settings.Language
 import esi.roadside.assistance.client.main.presentation.routes.settings.PrivacyPolicyScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.SettingsScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.TermsOfServiceScreen
+import kotlinx.coroutines.launch
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
-import soup.compose.material.motion.animation.materialSharedAxisX
-import soup.compose.material.motion.animation.materialSharedAxisXIn
-import soup.compose.material.motion.animation.materialSharedAxisXOut
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationScreen(
     navController: NavHostController,
     mainViewModel: MainViewModel,
     modifier: Modifier = Modifier,
+    bottomSheetState: SheetState,
     onAction: (Action) -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -68,6 +71,7 @@ fun NavigationScreen(
     val profileUiState by mainViewModel.profileUiState.collectAsState()
     val notifications by mainViewModel.notifications.collectAsState()
     val navigationBarVisible = isParent and ((currentNavRoute != Routes.PROFILE) or !profileUiState.enableEditing)
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier,
@@ -106,9 +110,6 @@ fun NavigationScreen(
             navigation<NavRoutes.Home>(NavRoutes.Map) {
                 composable<NavRoutes.Map> {
                     HomeScreen(homeUiState, onAction)
-                }
-                composable<NavRoutes.RequestAssistance> {
-                    RequestAssistance(requestAssistanceState, onAction)
                 }
             }
             navigation<NavRoutes.Notifications>(NavRoutes.NotificationsList) {
@@ -158,4 +159,5 @@ fun NavigationScreen(
             }
         }
     }
+    RequestAssistance(bottomSheetState, requestAssistanceState, onAction)
 }
