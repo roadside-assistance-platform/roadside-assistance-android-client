@@ -50,6 +50,9 @@ class AuthViewModel(
     private val googleOldLoginUseCase: GoogleOldLogin,
     private val googleIdOption: GetGoogleIdOption
 ): ViewModel() {
+    private val _step = MutableStateFlow(0)
+    val step = _step.asStateFlow()
+
     private val _loginUiState = MutableStateFlow(LoginUiState())
     val loginUiState = _loginUiState.asStateFlow()
 
@@ -70,7 +73,7 @@ class AuthViewModel(
 
     fun onAction(action: Action) {
         when(action) {
-            is Action.GoToLogin -> {
+            is GoToLogin -> {
                 sendEvent(AuthNavigate(NavRoutes.Login))
                 viewModelScope.launch {
                     val result = accountManager.signIn()
@@ -81,7 +84,7 @@ class AuthViewModel(
                     }
                 }
             }
-            is Action.GoToSignup -> {
+            is GoToSignup -> {
                 sendEvent(AuthNavigate(NavRoutes.Signup))
                 viewModelScope.launch {
                     val result = accountManager.signIn()
@@ -96,13 +99,13 @@ class AuthViewModel(
                     }
                 }
             }
-            is Action.GoToGoogleLogin -> {
+            is GoToGoogleLogin -> {
 //                viewModelScope.launch {
 //                    googleLoginUseCase(accountManager.googleSignIn())
 //                }
                 sendEvent(LaunchGoogleSignIn)
             }
-            is Action.GoToForgotPassword -> {
+            is GoToForgotPassword -> {
                 sendEvent(AuthNavigate(NavRoutes.ForgotPassword))
             }
             is Action.Login -> {
@@ -129,8 +132,8 @@ class AuthViewModel(
                             password = _loginUiState.value.password
                         )
                     ).onSuccess {
-//                        if (!accountManager.checkCredentials(_loginUiState.value.email, _loginUiState.value.password))
-//                            accountManager.signUp(_loginUiState.value.email, _loginUiState.value.password)
+                        if (!accountManager.checkCredentials(_loginUiState.value.email, _loginUiState.value.password))
+                            accountManager.signUp(_loginUiState.value.email, _loginUiState.value.password)
                         loggedIn(it.client)
                     }.onError {
                         println(it)
@@ -141,7 +144,7 @@ class AuthViewModel(
                     }
                 }
             }
-            is Action.Signup -> {
+            is Signup -> {
                 val inputError = ValidateInput.validateSignup(
                     _signupUiState.value.email,
                     _signupUiState.value.password,
@@ -209,94 +212,94 @@ class AuthViewModel(
                     }
                 }
             }
-            is Action.Send -> {
+            is Send -> {
                 viewModelScope.launch {
                     resetPasswordUseCase(_resetPasswordUiState.value.email)
                 }
             }
-            is Action.SetResetPasswordEmail -> {
+            is SetResetPasswordEmail -> {
                 _resetPasswordUiState.update {
                     it.copy(email = action.email)
                 }
             }
-            is Action.SetCode -> {
+            is SetCode -> {
                 _resetPasswordUiState.update {
                     it.copy(code = action.code)
                 }
             }
-            is Action.SetLoginEmail -> {
+            is SetLoginEmail -> {
                 _loginUiState.update {
                     it.copy(email = action.email)
                 }
             }
-            is Action.SetLoginPassword -> {
+            is SetLoginPassword -> {
                 _loginUiState.update {
                     it.copy(password = action.password)
                 }
             }
 
-            is Action.SetSignupConfirmPassword -> {
+            is SetSignupConfirmPassword -> {
                 _signupUiState.update {
                     it.copy(confirmPassword = action.confirmPassword)
                 }
             }
-            is Action.SetSignupEmail -> {
+            is SetSignupEmail -> {
                 _signupUiState.update {
                     it.copy(email = action.email)
                 }
             }
-            is Action.SetSignupFullName -> {
+            is SetSignupFullName -> {
                 _signupUiState.update {
                     it.copy(fullName = action.fullName)
                 }
             }
-            is Action.SetSignupImage -> {
+            is SetSignupImage -> {
                 _signupUiState.update {
                     it.copy(image = action.image)
                 }
             }
-            is Action.SetSignupPassword -> {
+            is SetSignupPassword -> {
                 _signupUiState.update {
                     it.copy(password = action.password)
                 }
             }
 
-            is Action.SetSignupPhoneNumber -> {
+            is SetSignupPhoneNumber -> {
                 _signupUiState.update {
                     it.copy(phoneNumber = action.phoneNumber)
                 }
             }
-            is Action.SetVerifyEmailCode -> {
+            is SetVerifyEmailCode -> {
                 _signupUiState.update {
                     it.copy(verifyEmailCode = action.code)
                 }
             }
-            Action.ToggleLoginPasswordHidden -> {
+            ToggleLoginPasswordHidden -> {
                 _loginUiState.update {
                     it.copy(passwordHidden = !it.passwordHidden)
                 }
             }
-            Action.ToggleSignupConfirmPasswordHidden -> {
+            ToggleSignupConfirmPasswordHidden -> {
                 _signupUiState.update {
                     it.copy(confirmPasswordHidden = !it.confirmPasswordHidden)
                 }
             }
-            Action.ToggleSignupPasswordHidden -> {
+            ToggleSignupPasswordHidden -> {
                 _signupUiState.update {
                     it.copy(passwordHidden = !it.passwordHidden)
                 }
             }
-            is Action.ShowAuthError -> {
+            is ShowAuthError -> {
                 _authUiState.update {
                     it.copy(errorDialogVisible = true, error = action.error)
                 }
             }
-            Action.HideAuthError -> {
+            HideAuthError -> {
                 _authUiState.update {
                     it.copy(errorDialogVisible = false, error = null)
                 }
             }
-            Action.SkipVerification -> {
+            SkipVerification -> {
                 sendEvent(LaunchMainActivity)
             }
             is Action.GoogleLogin -> {
@@ -318,6 +321,16 @@ class AuthViewModel(
                             onAction(ShowAuthError(it))
                         }
                 }
+            }
+
+            NextStep -> {
+                _step.value++;
+            }
+            PreviousStep -> {
+                _step.value--;
+            }
+            Skip -> {
+                _step.value = 3;
             }
         }
     }

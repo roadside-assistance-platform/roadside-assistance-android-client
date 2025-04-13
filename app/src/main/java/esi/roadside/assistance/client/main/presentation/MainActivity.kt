@@ -7,20 +7,15 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
-import esi.roadside.assistance.client.core.data.SettingsDataStore
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
 import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.presentation.util.Event.MainNavigate
 import esi.roadside.assistance.client.core.util.composables.CollectEvents
 import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
 import esi.roadside.assistance.client.main.util.CollectNotifications
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
-import kotlin.getValue
 
 class MainActivity : ComponentActivity() {
-    val settingsDataStore by inject<SettingsDataStore>()
     lateinit var permissionsManager: PermissionsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +37,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             SetSystemBarColors()
             val navController = rememberNavController()
-           /* val mainViewModel = get<MainViewModel>()*/
             val mainViewModel : MainViewModel = koinViewModel()
             CollectEvents {
                 when(it) {

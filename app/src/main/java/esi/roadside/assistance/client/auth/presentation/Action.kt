@@ -5,6 +5,10 @@ import androidx.credentials.GetCredentialResponse
 import esi.roadside.assistance.client.auth.util.AuthError
 
 sealed interface Action {
+    data object NextStep: Action
+    data object PreviousStep: Action
+    data object Skip: Action
+
     data class SetLoginEmail(val email: String): Action
     data class SetLoginPassword(val password: String): Action
     data object ToggleLoginPasswordHidden: Action

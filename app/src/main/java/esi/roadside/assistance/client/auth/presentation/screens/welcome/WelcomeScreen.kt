@@ -17,12 +17,10 @@ import esi.roadside.assistance.client.auth.presentation.Action
 
 @Composable
 fun WelcomeScreen(
+    step: Int,
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var step by rememberSaveable { mutableIntStateOf(0) }
-    val onNext = { if (step < 3) step++ }
-    val onSkip = { step = 3 }
     AnimatedContent(
         step,
         Modifier.fillMaxSize(),
@@ -40,8 +38,9 @@ fun WelcomeScreen(
                 title = R.string.welcome_title_1,
                 text = R.string.welcome_text_1,
                 modifier = modifier,
-                onSkip = onSkip,
-                onNext = onNext
+                showNavigationIcon = false,
+                onSkip = { onAction(Action.Skip) },
+                onNext = { onAction(Action.NextStep) }
             )
             1 -> WelcomeScreenTemplate(
                 background = R.drawable.welcome_background_2,
@@ -49,8 +48,8 @@ fun WelcomeScreen(
                 title = R.string.welcome_title_2,
                 text = R.string.welcome_text_2,
                 modifier = modifier,
-                onSkip = onSkip,
-                onNext = onNext
+                onSkip = { onAction(Action.Skip) },
+                onNext = { onAction(Action.NextStep) }
             )
             2 -> WelcomeScreenTemplate(
                 background = R.drawable.welcome_background_3,
@@ -58,13 +57,13 @@ fun WelcomeScreen(
                 title = R.string.welcome_title_3,
                 text = R.string.welcome_text_3,
                 modifier = modifier,
-                onSkip = onSkip,
-                onNext = onNext
+                onSkip = { onAction(Action.Skip) },
+                onNext = { onAction(Action.NextStep) }
             )
             3 -> GetStartedScreen(onAction)
         }
     }
-    BackHandler((step < 3) and (step > 0)) {
-        step--
+    BackHandler(step in 0..3) {
+        onAction(Action.PreviousStep)
     }
 }

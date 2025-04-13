@@ -110,4 +110,5 @@ dependencies {
     implementation(libs.amqp.client)
     implementation(libs.play.services.auth)
     implementation(libs.compose.markdown)
+    implementation(libs.androidx.browser)
 }

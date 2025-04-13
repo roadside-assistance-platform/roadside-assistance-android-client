@@ -1,6 +1,7 @@
 [versions]
-agp = "8.7.3"
+agp = "8.9.0"
 amqpClient = "5.15.0"
+browser = "1.8.0"
 cloudinaryAndroid = "3.0.2"
 composeMarkdown = "0.5.7"
 googleid = "1.1.1"
@@ -40,6 +41,7 @@ slf4jSimple = "2.0.9"
 
 [libraries]
 amqp-client = { module = "com.rabbitmq:amqp-client", version.ref = "amqpClient" }
+androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 cloudinary-android = { module = "com.cloudinary:cloudinary-android", version.ref = "cloudinaryAndroid" }

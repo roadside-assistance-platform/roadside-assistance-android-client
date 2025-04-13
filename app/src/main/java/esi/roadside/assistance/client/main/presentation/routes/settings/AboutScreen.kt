@@ -1,7 +1,6 @@
 package esi.roadside.assistance.client.main.presentation.routes.settings
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,10 +12,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.DesignServices
-import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Mail
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,14 +27,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.core.util.getAppVersion
 import esi.roadside.assistance.client.main.presentation.constants.Settings
@@ -86,7 +81,7 @@ fun AboutScreen(modifier: Modifier = Modifier) {
             }
             item {
                 Text(
-                    "Roadside Assistance Client",
+                    stringResource(R.string.app_name),
                     Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.headlineLarge,
                     textAlign = TextAlign.Center,
@@ -129,7 +124,7 @@ fun AboutScreen(modifier: Modifier = Modifier) {
                 ) {
                     with(
                         Intent(Intent.ACTION_SENDTO).apply {
-                            data = Uri.parse("mailto:")
+                            data = "mailto:".toUri()
                             putExtra(
                                 Intent.EXTRA_EMAIL,
                                 arrayOf("younes.bouhouche12@gmail.com"),
