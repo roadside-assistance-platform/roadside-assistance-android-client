@@ -80,11 +80,7 @@ fun RequestAssistance(
             },
             modifier = Modifier,
             sheetState = sheetState,
-            dragHandle = {
-                Box(Modifier.background(background)) {
-                    BottomSheetDefaults.DragHandle(color = textColor)
-                }
-            }
+            dragHandle = null
         ) {
             LazyColumn(
                 Modifier.fillMaxWidth(),
@@ -92,7 +88,7 @@ fun RequestAssistance(
             ) {
                 item {
                     Box(
-                        modifier = modifier.height(200.dp),
+                        modifier = modifier.height(240.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
@@ -101,6 +97,10 @@ fun RequestAssistance(
                             Modifier.fillMaxSize(),
                             contentScale = ContentScale.FillBounds,
                             colorFilter = colorFilter
+                        )
+                        BottomSheetDefaults.DragHandle(
+                            color = textColor,
+                            modifier = Modifier.align(Alignment.TopCenter)
                         )
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
