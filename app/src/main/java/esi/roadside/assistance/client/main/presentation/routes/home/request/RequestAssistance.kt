@@ -20,19 +20,14 @@ import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,11 +46,9 @@ import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.util.Button
 import esi.roadside.assistance.client.auth.presentation.util.ToggleOutlineButton
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
-import esi.roadside.assistance.client.core.presentation.theme.lightScheme
 import esi.roadside.assistance.client.core.presentation.util.isDark
 import esi.roadside.assistance.client.main.domain.Categories
 import esi.roadside.assistance.client.main.presentation.Action
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,9 +60,6 @@ fun RequestAssistance(
 ) {
     val isDark by isDark()
     val colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceContainer).takeIf { isDark }
-    val background =
-        if (isDark) MaterialTheme.colorScheme.surfaceContainer
-        else Color(323232)
     val textColor =
         if (isDark) contentColorFor(MaterialTheme.colorScheme.surfaceContainer)
         else MaterialTheme.colorScheme.surfaceContainer
