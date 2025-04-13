@@ -6,13 +6,21 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
@@ -32,6 +40,7 @@ import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.util.composables.CollectEvents
 import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
 import esi.roadside.assistance.client.main.presentation.MainActivity
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinContext
 import soup.compose.material.motion.animation.materialFadeThroughIn
@@ -49,8 +58,9 @@ class WelcomeActivity : ComponentActivity() {
                 val step by viewModel.step.collectAsState()
                 val loginUiState by viewModel.loginUiState.collectAsState()
                 val signupUiState by viewModel.signupUiState.collectAsState()
-                val authUiState by viewModel.authUiState.collectAsState()
                 val resetPasswordUiState by viewModel.resetPasswordUiState.collectAsState()
+                val snackbarHostState = remember { SnackbarHostState() }
+                val scope = rememberCoroutineScope()
                 LaunchedEffect(Unit) {
                     viewModel.createAccountManager(this@WelcomeActivity)
                 }
@@ -58,6 +68,11 @@ class WelcomeActivity : ComponentActivity() {
                     when (event) {
                         is Event.AuthNavigate -> {
                             navController.navigate(event.route)
+                        }
+                        is Event.AuthShowError -> {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(getString(event.error.text))
+                            }
                         }
                         Event.LaunchMainActivity -> {
                             startActivity(Intent(this, MainActivity::class.java))
@@ -78,13 +93,19 @@ class WelcomeActivity : ComponentActivity() {
                     }
                 }
                 AppTheme {
-                    Surface(Modifier.fillMaxSize()) {
+                    Scaffold(
+                        Modifier.fillMaxSize(),
+                        snackbarHost = {
+                            SnackbarHost(hostState = snackbarHostState)
+                        },
+                        contentWindowInsets = WindowInsets(0, 0, 0, 0)
+                    ) {
                         NavHost(
                             navController = navController,
                             startDestination = NavRoutes.Welcome,
                             enterTransition = { materialFadeThroughIn() },
                             exitTransition = { materialFadeThroughOut() },
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxSize().padding(it),
                         ) {
                             composable<NavRoutes.Welcome> {
                                 WelcomeScreen(step, viewModel::onAction)
@@ -102,13 +123,6 @@ class WelcomeActivity : ComponentActivity() {
                                 ResetPasswordScreen(resetPasswordUiState, viewModel::onAction)
                             }
                         }
-                        IconDialog(
-                            authUiState.errorDialogVisible,
-                            { viewModel.onAction(Action.HideAuthError) },
-                            Icons.Outlined.ErrorOutline,
-                            stringResource(R.string.error),
-                            authUiState.error?.text?.let { stringResource(it) } ?: "",
-                        )
                     }
                 }
             }

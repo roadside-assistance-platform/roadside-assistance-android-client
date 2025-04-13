@@ -290,9 +290,7 @@ class AuthViewModel(
                 }
             }
             is ShowAuthError -> {
-                _authUiState.update {
-                    it.copy(errorDialogVisible = true, error = action.error)
-                }
+                sendEvent(AuthShowError(action.error))
             }
             HideAuthError -> {
                 _authUiState.update {
