@@ -6,6 +6,8 @@ import esi.roadside.assistance.client.main.presentation.models.ClientUi
 
 sealed interface Action {
         data class Navigate(val route: NavRoutes): Action
+        data object ShowRequestAssistance: Action
+        data object HideRequestAssistance: Action
         data class SetLocation(val location: Point?): Action
         data class SelectCategory(val category: Categories): Action
         data class SetDescription(val description: String): Action

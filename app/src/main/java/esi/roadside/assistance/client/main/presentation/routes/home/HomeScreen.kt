@@ -44,7 +44,6 @@ import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.plugin.viewport.data.FollowPuckViewportStateOptions
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.main.presentation.Action
-import esi.roadside.assistance.client.main.presentation.NavRoutes
 import soup.compose.material.motion.animation.materialSharedAxisZIn
 import soup.compose.material.motion.animation.materialSharedAxisZOut
 
@@ -92,7 +91,7 @@ fun HomeScreen(
                 ) {
                     ExtendedFloatingActionButton(
                         onClick = {
-                            onAction(Action.Navigate(NavRoutes.RequestAssistance))
+                            onAction(Action.ShowRequestAssistance)
                         },
                         icon = { Icon(Icons.Outlined.Edit, null) },
                         text = { Text(stringResource(R.string.request_service)) },

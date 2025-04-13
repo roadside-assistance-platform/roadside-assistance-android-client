@@ -3,13 +3,10 @@ package esi.roadside.assistance.client.main.presentation
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import esi.roadside.assistance.client.auth.UserPreferences
-import esi.roadside.assistance.client.auth.domain.models.UpdateModel
 import esi.roadside.assistance.client.auth.domain.use_case.Update
 import esi.roadside.assistance.client.auth.util.dataStore
 import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess
-import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.presentation.util.Event.*
 import esi.roadside.assistance.client.core.presentation.util.Field
 import esi.roadside.assistance.client.core.presentation.util.ValidateInput
@@ -142,6 +139,18 @@ class MainViewModel(
                 _profileUiState.update {
                     it.copy(editClient = action.client)
                 }
+            }
+            Action.ShowRequestAssistance -> {
+                _requestAssistanceState.update {
+                    it.copy(sheetVisible = true)
+                }
+                sendEvent(ShowRequestAssistance)
+            }
+            Action.HideRequestAssistance -> {
+                _requestAssistanceState.update {
+                    it.copy(sheetVisible = false)
+                }
+                sendEvent(ShowRequestAssistance)
             }
         }
     }

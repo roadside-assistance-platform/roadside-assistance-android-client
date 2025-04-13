@@ -12,4 +12,6 @@ sealed interface Event {
     data object ImageUploadError: Event
     data object LaunchMainActivity: Event
     data class ShowMainActivityToast(val text: Int): Event
+    data object ShowRequestAssistance: Event
+    data object HideRequestAssistance: Event
 }
