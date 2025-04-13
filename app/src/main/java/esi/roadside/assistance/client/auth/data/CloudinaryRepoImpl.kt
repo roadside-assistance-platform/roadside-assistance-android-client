@@ -13,7 +13,8 @@ class CloudinaryRepoImpl(
         image: Uri,
         onSuccess: (String) -> Unit,
         onProgress: (Float) -> Unit,
-        onFailure: (ErrorInfo?) -> Unit
+        onFailure: (ErrorInfo?) -> Unit,
+        onFinished: () -> Unit,
     ) {
         mediaManager
             .upload(image)
@@ -21,6 +22,7 @@ class CloudinaryRepoImpl(
             .callback(object : UploadCallback {
                 override fun onSuccess(requestId: String?, resultData: MutableMap<Any?, Any?>?) {
                     onSuccess(resultData?.get("secure_url") as String)
+                    onFinished()
                 }
 
                 override fun onProgress(requestId: String?, bytes: Long, totalBytes: Long) {
@@ -28,11 +30,11 @@ class CloudinaryRepoImpl(
                 }
 
                 override fun onReschedule(requestId: String?, error: ErrorInfo?) {
-
                 }
 
                 override fun onError(requestId: String?, error: ErrorInfo?) {
                     onFailure(error)
+                    onFinished()
                 }
 
                 override fun onStart(requestId: String?) {

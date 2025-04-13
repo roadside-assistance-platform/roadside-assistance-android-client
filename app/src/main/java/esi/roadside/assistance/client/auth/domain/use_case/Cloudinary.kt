@@ -9,6 +9,7 @@ class Cloudinary(private val cloudinaryRepo: CloudinaryRepo) {
         image: Uri,
         onSuccess: (String) -> Unit,
         onProgress: (Float) -> Unit,
-        onFailure: (ErrorInfo?) -> Unit
-    ) = cloudinaryRepo.uploadImage(image, onSuccess, onProgress, onFailure)
+        onFailure: (ErrorInfo?) -> Unit,
+        onFinished: () -> Unit,
+    ) = cloudinaryRepo.uploadImage(image, onSuccess, onProgress, onFailure, onFinished)
 }

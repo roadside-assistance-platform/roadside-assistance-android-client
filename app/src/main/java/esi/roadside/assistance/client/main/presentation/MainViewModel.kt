@@ -53,7 +53,8 @@ class MainViewModel(
                 _profileUiState.update {
                     it.copy(
                         client = userPreferences.client.toClientModel().toClientUi(),
-                        editClient = userPreferences.client.toClientModel().toClientUi()
+                        editClient = userPreferences.client.toClientModel().toClientUi(),
+                        photo = userPreferences.client.photo
                     )
                 }
             }

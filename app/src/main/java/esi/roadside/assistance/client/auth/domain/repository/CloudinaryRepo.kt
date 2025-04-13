@@ -8,6 +8,7 @@ interface CloudinaryRepo {
         image: Uri,
         onSuccess: (String) -> Unit,
         onProgress: (Float) -> Unit,
-        onFailure: (ErrorInfo?) -> Unit
+        onFailure: (ErrorInfo?) -> Unit,
+        onFinished: () -> Unit,
     )
 }

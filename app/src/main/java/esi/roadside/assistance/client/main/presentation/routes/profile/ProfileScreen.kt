@@ -33,7 +33,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -58,8 +61,15 @@ fun ProfileScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val focusRequester = remember { FocusRequester() }
+    var image by remember { mutableStateOf<Any?>(null) }
     LaunchedEffect(state.enableEditing) {
         if (state.enableEditing) focusRequester.requestFocus()
+    }
+    LaunchedEffect(state.editClient.photo) {
+        if (state.enableEditing) image = state.editClient.photo
+    }
+    LaunchedEffect(state.photo) {
+        if (!state.enableEditing) image = state.photo
     }
     Scaffold(
         modifier = modifier,
@@ -133,12 +143,16 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             ProfilePicturePicker(
-                state.editClient.photo,
+                image = image,
                 icon = Icons.Default.Person,
                 enabled = state.enableEditing,
                 modifier = Modifier.padding(bottom = 24.dp)
             ) {
-
+                onAction(Action.EditClient(
+                    state.editClient.copy(
+                        photo = it
+                    )
+                ))
             }
             InformationCard(
                 icon = Icons.Outlined.Title,

@@ -2,12 +2,12 @@ package esi.roadside.assistance.client.auth.presentation
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
-import esi.roadside.assistance.client.auth.domain.models.UpdateModel
 import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
 import esi.roadside.assistance.client.auth.domain.use_case.GoogleLogin
 import esi.roadside.assistance.client.auth.domain.use_case.GoogleOldLogin
@@ -16,7 +16,33 @@ import esi.roadside.assistance.client.auth.domain.use_case.Login
 import esi.roadside.assistance.client.auth.domain.use_case.ResetPassword
 import esi.roadside.assistance.client.auth.domain.use_case.SignUp
 import esi.roadside.assistance.client.auth.domain.use_case.Update
-import esi.roadside.assistance.client.auth.presentation.Action.*
+import esi.roadside.assistance.client.auth.presentation.Action.GoToForgotPassword
+import esi.roadside.assistance.client.auth.presentation.Action.GoToGoogleLogin
+import esi.roadside.assistance.client.auth.presentation.Action.GoToLogin
+import esi.roadside.assistance.client.auth.presentation.Action.GoToSignup
+import esi.roadside.assistance.client.auth.presentation.Action.HideAuthError
+import esi.roadside.assistance.client.auth.presentation.Action.Initiate
+import esi.roadside.assistance.client.auth.presentation.Action.NextStep
+import esi.roadside.assistance.client.auth.presentation.Action.PreviousStep
+import esi.roadside.assistance.client.auth.presentation.Action.Send
+import esi.roadside.assistance.client.auth.presentation.Action.SetCode
+import esi.roadside.assistance.client.auth.presentation.Action.SetLoginEmail
+import esi.roadside.assistance.client.auth.presentation.Action.SetLoginPassword
+import esi.roadside.assistance.client.auth.presentation.Action.SetResetPasswordEmail
+import esi.roadside.assistance.client.auth.presentation.Action.SetSignupConfirmPassword
+import esi.roadside.assistance.client.auth.presentation.Action.SetSignupEmail
+import esi.roadside.assistance.client.auth.presentation.Action.SetSignupFullName
+import esi.roadside.assistance.client.auth.presentation.Action.SetSignupImage
+import esi.roadside.assistance.client.auth.presentation.Action.SetSignupPassword
+import esi.roadside.assistance.client.auth.presentation.Action.SetSignupPhoneNumber
+import esi.roadside.assistance.client.auth.presentation.Action.SetVerifyEmailCode
+import esi.roadside.assistance.client.auth.presentation.Action.ShowAuthError
+import esi.roadside.assistance.client.auth.presentation.Action.Signup
+import esi.roadside.assistance.client.auth.presentation.Action.Skip
+import esi.roadside.assistance.client.auth.presentation.Action.SkipVerification
+import esi.roadside.assistance.client.auth.presentation.Action.ToggleLoginPasswordHidden
+import esi.roadside.assistance.client.auth.presentation.Action.ToggleSignupConfirmPasswordHidden
+import esi.roadside.assistance.client.auth.presentation.Action.ToggleSignupPasswordHidden
 import esi.roadside.assistance.client.auth.presentation.screens.AuthUiState
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginUiState
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordUiState
@@ -27,7 +53,11 @@ import esi.roadside.assistance.client.auth.util.dataStore
 import esi.roadside.assistance.client.core.domain.model.ClientModel
 import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess
-import esi.roadside.assistance.client.core.presentation.util.Event.*
+import esi.roadside.assistance.client.core.presentation.util.Event.AuthNavigate
+import esi.roadside.assistance.client.core.presentation.util.Event.AuthShowError
+import esi.roadside.assistance.client.core.presentation.util.Event.ImageUploadError
+import esi.roadside.assistance.client.core.presentation.util.Event.LaunchGoogleSignIn
+import esi.roadside.assistance.client.core.presentation.util.Event.LaunchMainActivity
 import esi.roadside.assistance.client.core.presentation.util.Field
 import esi.roadside.assistance.client.core.presentation.util.ValidateInput
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
@@ -178,47 +208,47 @@ class AuthViewModel(
                     it.copy(loading = true)
                 }
                 viewModelScope.launch {
-                    signUpUseCase(
-                        SignupModel(
-                            email = _signupUiState.value.email,
-                            password = _signupUiState.value.password,
-                            fullName = _signupUiState.value.fullName,
-                            phone = _signupUiState.value.phoneNumber,
-                            photo = "_"
-                        )
-                    ).onSuccess { client ->
-                        accountManager.signUp(client.email, _signupUiState.value.password)
-                        var url: String? = null
-                        println("Signup image is null = ${_signupUiState.value.image == null}")
-                        _signupUiState.value.image?.let {
-                            cloudinaryUseCase(
-                                it,
-                                { url = it },
-                                { progress ->
-                                    _signupUiState.update {
-                                        it.copy(uploadProgress = progress)
-                                    }
-                                },
-                                {
-                                    sendEvent(ImageUploadError)
+                    var url: String? = null
+                    _signupUiState.value.image?.let {
+                        cloudinaryUseCase(
+                            image = it,
+                            onSuccess = {
+                                Log.i("Welcome", "Image uploaded successfully: $it")
+                                url = it
+                            },
+                            onProgress = { progress ->
+                                _signupUiState.update {
+                                    it.copy(uploadProgress = progress)
                                 }
-                            )
-                        }
-                        updateUseCase(
-                             UpdateModel(
-                                id = client.id,
-                                fullName = _signupUiState.value.fullName,
-                                phone = _signupUiState.value.phoneNumber,
-                                email = _signupUiState.value.email,
-                                photo = url
-                            )
+                            },
+                            onFailure = {
+                                sendEvent(ImageUploadError)
+                            },
+                            onFinished = {
+                                Log.i("Welcome", "Signup: $it")
+                                viewModelScope.launch {
+                                    signUpUseCase(
+                                        SignupModel(
+                                            email = _signupUiState.value.email,
+                                            password = _signupUiState.value.password,
+                                            fullName = _signupUiState.value.fullName,
+                                            phone = _signupUiState.value.phoneNumber,
+                                            photo = url ?: "_"
+                                        )
+                                    ).onSuccess { client ->
+                                        accountManager.signUp(client.email, _signupUiState.value.password)
+                                        _signupUiState.update { it.copy(loading = false) }
+                                        loggedIn(client, false)
+                                        sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
+                                    }.onError {
+                                        _signupUiState.update {
+                                            it.copy(loading = false)
+                                        }
+                                        onAction(ShowAuthError(it))
+                                    }
+                                }
+                            }
                         )
-                        loggedIn(client, false)
-                        sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
-                    }.onError {
-                        _signupUiState.update {
-                            it.copy(loading = false)
-                        }
                     }
                 }
             }
@@ -332,18 +362,18 @@ class AuthViewModel(
             }
 
             NextStep -> {
-                _step.value++;
+                _step.value++
             }
             PreviousStep -> {
-                _step.value--;
+                _step.value--
             }
             Skip -> {
-                _step.value = 3;
+                _step.value = 3
             }
         }
     }
 
-    private suspend fun loggedIn(client: ClientModel, launchMainActivity: Boolean = true) {
+    private fun loggedIn(client: ClientModel, launchMainActivity: Boolean = true) {
         saveClient(context, client)
         if (launchMainActivity) sendEvent(LaunchMainActivity)
     }

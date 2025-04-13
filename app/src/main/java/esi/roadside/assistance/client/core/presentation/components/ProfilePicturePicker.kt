@@ -9,11 +9,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
@@ -25,11 +27,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun ProfilePicturePicker(
-    image: Uri?,
+    image: Any?,
     modifier: Modifier = Modifier,
     icon: ImageVector = Icons.Default.AddAPhoto,
     enabled: Boolean = true,
@@ -53,19 +57,34 @@ fun ProfilePicturePicker(
             },
         contentAlignment = Alignment.Center,
     ) {
-        Icon(
-            icon,
-            null,
-            Modifier.size(48.dp),
-            MaterialTheme.colorScheme.onSurface,
+        SubcomposeAsyncImage(
+            model = image,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+            loading = {
+                Box(
+                    Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(Modifier.fillMaxSize(.5f))
+                }
+            },
+            error = {
+                Box(
+                    Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        if (enabled) Icons.Default.AddAPhoto else icon,
+                        null,
+                        Modifier.size(48.dp),
+                        MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+            }
         )
-        image?.let {
-            Image(
-                painter = rememberAsyncImagePainter(it),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
-            )
+        if (enabled && image != null)
             SmallFloatingActionButton(
                 { onImageChange(null) },
                 Modifier
@@ -74,6 +93,5 @@ fun ProfilePicturePicker(
             ) {
                 Icon(Icons.Default.Delete, null)
             }
-        }
     }
 }
