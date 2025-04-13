@@ -9,32 +9,26 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginScreen
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordScreen
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupScreen
 import esi.roadside.assistance.client.auth.presentation.screens.signup.VerifyEmailScreen
 import esi.roadside.assistance.client.auth.presentation.screens.welcome.WelcomeScreen
 import esi.roadside.assistance.client.core.data.networking.constructUrl
-import esi.roadside.assistance.client.core.presentation.components.IconDialog
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
 import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.util.composables.CollectEvents
@@ -62,12 +56,19 @@ class WelcomeActivity : ComponentActivity() {
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
                 LaunchedEffect(Unit) {
+                    viewModel.onAction(Action.Initiate)
                     viewModel.createAccountManager(this@WelcomeActivity)
                 }
                 CollectEvents { event ->
                     when (event) {
                         is Event.AuthNavigate -> {
-                            navController.navigate(event.route)
+                            navController.navigate(event.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }
                         is Event.AuthShowError -> {
                             scope.launch {
