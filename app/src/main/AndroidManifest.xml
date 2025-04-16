@@ -27,7 +27,7 @@
         android:persistent="true"
         tools:targetApi="33">
         <activity
-            android:name=".auth.presentation.WelcomeActivity"
+            android:name=".auth.presentation.AuthActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:noHistory="true"

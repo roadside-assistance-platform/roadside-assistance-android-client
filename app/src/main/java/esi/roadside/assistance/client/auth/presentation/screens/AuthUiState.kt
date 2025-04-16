@@ -1,8 +1,10 @@
 package esi.roadside.assistance.client.auth.presentation.screens
 
-import esi.roadside.assistance.client.auth.util.AuthError
+import esi.roadside.assistance.client.core.data.networking.DomainError
 
 data class AuthUiState(
     val errorDialogVisible: Boolean = false,
-    val error: AuthError? = null,
+    val error: DomainError? = null,
+    val loading: Boolean = true,
+    val action: Pair<Int, () -> Unit>? = null,
 )

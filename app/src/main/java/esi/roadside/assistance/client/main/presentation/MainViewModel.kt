@@ -1,8 +1,12 @@
 package esi.roadside.assistance.client.main.presentation
 
 import android.content.Context
+import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import esi.roadside.assistance.client.R
+import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
 import esi.roadside.assistance.client.auth.domain.use_case.Update
 import esi.roadside.assistance.client.auth.util.dataStore
 import esi.roadside.assistance.client.core.domain.util.onError
@@ -12,6 +16,8 @@ import esi.roadside.assistance.client.core.presentation.util.Field
 import esi.roadside.assistance.client.core.presentation.util.ValidateInput
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import esi.roadside.assistance.client.main.domain.models.NotificationModel
+import esi.roadside.assistance.client.main.domain.models.SubmitRequestModel
+import esi.roadside.assistance.client.main.domain.use_cases.SubmitRequest
 import esi.roadside.assistance.client.main.presentation.models.ClientUi
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeUiState
 import esi.roadside.assistance.client.main.presentation.routes.home.request.RequestAssistanceState
@@ -25,7 +31,9 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val context: Context,
-    val updateUseCase: Update
+    val cloudinary: Cloudinary,
+    val updateUseCase: Update,
+    val submitRequestUseCase: SubmitRequest,
 ): ViewModel() {
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState = _homeUiState.asStateFlow()
@@ -79,7 +87,25 @@ class MainViewModel(
                 }
             }
             Action.SubmitRequest -> {
-
+                viewModelScope.launch {
+                    submitRequestUseCase(
+                        SubmitRequestModel(
+                            description = _requestAssistanceState.value.description,
+                            serviceCategory = _requestAssistanceState.value.category,
+                            serviceLocation = _homeUiState.value.location?.let {
+                                "${it.latitude()},${it.longitude()}"
+                            } ?: "",
+                            price = 0
+                        )
+                    ).onSuccess {
+                        sendEvent(ShowMainActivityMessage(R.string.request_submitted))
+                    }.onError {
+                        sendEvent(ShowMainActivityMessage(it.text))
+                    }
+                    _requestAssistanceState.update {
+                        it.copy(sheetVisible = false)
+                    }
+                }
             }
             Action.ConfirmProfileEditing -> {
                 val inputError = ValidateInput.validateUpdateProfile(
@@ -98,30 +124,43 @@ class MainViewModel(
                 else {
                     _profileUiState.update { it.copy(loading = true) }
                     viewModelScope.launch {
-                        updateUseCase(_profileUiState.value.editClient.toUpdateModel())
-                            .onSuccess {
-                                saveClient(context, it)
+                        cloudinary(
+                            _profileUiState.value.editClient.photo ?: "".toUri(),
+                            onSuccess = { url ->
                                 _profileUiState.update {
                                     it.copy(
-                                        enableEditing = false,
-                                        fullNameError = null,
-                                        emailError = null,
-                                        phoneError = null
+                                        photo = url,
                                     )
                                 }
-                            }
-                            .onError {
-                                _profileUiState.update {
-                                    it.copy(
-                                        enableEditing = false,
-                                        fullNameError = null,
-                                        emailError = null,
-                                        phoneError = null
-                                    )
+                            },
+                            onFailure = {
+                                sendEvent(ShowMainActivityMessage(R.string.error))
+                            },
+                            onFinished = {
+                                viewModelScope.launch {
+                                    updateUseCase(_profileUiState.value.editClient.toUpdateModel().copy(
+                                        photo = _profileUiState.value.photo
+                                    ))
+                                        .onSuccess {
+                                            saveClient(context, it)
+                                        }
+                                        .onError {
+                                            sendEvent(ShowMainActivityMessage(it.text))
+                                        }
+
+                                    _profileUiState.update {
+                                        it.copy(
+                                            enableEditing = false,
+                                            fullNameError = null,
+                                            emailError = null,
+                                            phoneError = null
+                                        )
+                                    }
+                                    _profileUiState.update { it.copy(loading = false) }
                                 }
-                                sendEvent(ShowMainActivityToast(it.text))
-                            }
-                        _profileUiState.update { it.copy(loading = false) }
+                            },
+                            onProgress = {}
+                        )
                     }
                 }
             }

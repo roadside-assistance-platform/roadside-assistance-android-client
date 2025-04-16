@@ -1,11 +1,12 @@
 package esi.roadside.assistance.client.main.presentation
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.rememberNavController
 import com.mapbox.android.core.permissions.PermissionsListener
@@ -45,11 +46,14 @@ class MainActivity : ComponentActivity() {
             val mainViewModel : MainViewModel = koinViewModel()
             val bottomSheetState = rememberModalBottomSheetState(true)
             val scope = rememberCoroutineScope()
+            val snackbarHostState = remember { SnackbarHostState() }
             CollectEvents {
                 when(it) {
                     is MainNavigate -> navController.navigate(it.route)
-                    is Event.ShowMainActivityToast ->
-                        Toast.makeText(this, getString(it.text), Toast.LENGTH_SHORT).show()
+                    is Event.ShowMainActivityMessage ->
+                        scope.launch {
+                            snackbarHostState.showSnackbar(message = getString(it.text))
+                        }
                     Event.ShowRequestAssistance -> scope.launch {
                         bottomSheetState.show()
                     }
@@ -65,6 +69,7 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 NavigationScreen(
                     navController = navController,
+                    snackbarHostState = snackbarHostState,
                     mainViewModel = mainViewModel,
                     bottomSheetState = bottomSheetState,
                     onAction = mainViewModel::onAction

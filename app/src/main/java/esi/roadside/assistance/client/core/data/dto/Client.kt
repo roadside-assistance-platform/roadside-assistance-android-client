@@ -26,7 +26,15 @@ data class Client(
         phone = phone,
         photo = photo,
         services = services.map { it.toServiceModel() },
-        createdAt = OffsetDateTime.parse(createdAt).toLocalDateTime().atZone(ZoneId.systemDefault()),
-        updatedAt = OffsetDateTime.parse(updatedAt).toLocalDateTime().atZone(ZoneId.systemDefault())
+        createdAt = try {
+            OffsetDateTime.parse(createdAt)
+        } catch(_: Exception) {
+            OffsetDateTime.now()
+        }.toLocalDateTime().atZone(ZoneId.systemDefault()),
+        updatedAt = try {
+            OffsetDateTime.parse(updatedAt)
+        } catch(_: Exception) {
+            OffsetDateTime.now()
+        }.toLocalDateTime().atZone(ZoneId.systemDefault())
     )
 }

@@ -48,6 +48,7 @@ fun LoginScreen(
                 },
                 label = stringResource(R.string.email),
                 placeholder = stringResource(R.string.email_placeholder),
+                enabled = !uiState.loading,
                 error = uiState.emailError,
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Email,
@@ -63,6 +64,7 @@ fun LoginScreen(
                 },
                 label = stringResource(R.string.password),
                 placeholder = stringResource(R.string.password_placeholder),
+                enabled = !uiState.loading,
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Password,
                 error = uiState.passwordError,
@@ -71,7 +73,7 @@ fun LoginScreen(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton({ onAction(Action.GoToForgotPassword) }) {
+                TextButton({ onAction(Action.GoToForgotPassword) }, enabled = !uiState.loading) {
                     Text(stringResource(R.string.forgot_password))
                 }
             }
@@ -86,6 +88,7 @@ fun LoginScreen(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.tertiary
                     ),
+                    enabled = !uiState.loading,
                 ) {
                     Text(stringResource(R.string.sign_up))
                 }

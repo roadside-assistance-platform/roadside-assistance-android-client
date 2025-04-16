@@ -18,6 +18,7 @@ import esi.roadside.assistance.client.auth.presentation.Action
 @Composable
 fun WelcomeScreen(
     step: Int,
+    loading: Boolean,
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -38,6 +39,7 @@ fun WelcomeScreen(
                 title = R.string.welcome_title_1,
                 text = R.string.welcome_text_1,
                 modifier = modifier,
+                loading = loading,
                 showNavigationIcon = false,
                 onSkip = { onAction(Action.Skip) },
                 onNext = { onAction(Action.NextStep) }
@@ -48,6 +50,7 @@ fun WelcomeScreen(
                 title = R.string.welcome_title_2,
                 text = R.string.welcome_text_2,
                 modifier = modifier,
+                loading = loading,
                 onSkip = { onAction(Action.Skip) },
                 onNext = { onAction(Action.NextStep) }
             )
@@ -57,6 +60,7 @@ fun WelcomeScreen(
                 title = R.string.welcome_title_3,
                 text = R.string.welcome_text_3,
                 modifier = modifier,
+                loading = loading,
                 onSkip = { onAction(Action.Skip) },
                 onNext = { onAction(Action.NextStep) }
             )

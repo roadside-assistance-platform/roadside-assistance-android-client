@@ -1,23 +1,41 @@
 package esi.roadside.assistance.client.auth.presentation
 
+import esi.roadside.assistance.client.R
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.SecureFlagPolicy
 import androidx.core.net.toUri
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -41,7 +59,8 @@ import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 
 
-class WelcomeActivity : ComponentActivity() {
+class AuthActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -50,6 +69,7 @@ class WelcomeActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val viewModel: AuthViewModel = koinViewModel()
                 val step by viewModel.step.collectAsState()
+                val authUiState by viewModel.authUiState.collectAsState()
                 val loginUiState by viewModel.loginUiState.collectAsState()
                 val signupUiState by viewModel.signupUiState.collectAsState()
                 val resetPasswordUiState by viewModel.resetPasswordUiState.collectAsState()
@@ -57,7 +77,7 @@ class WelcomeActivity : ComponentActivity() {
                 val scope = rememberCoroutineScope()
                 LaunchedEffect(Unit) {
                     viewModel.onAction(Action.Initiate)
-                    viewModel.createAccountManager(this@WelcomeActivity)
+                    viewModel.createAccountManager(this@AuthActivity)
                 }
                 CollectEvents { event ->
                     when (event) {
@@ -79,16 +99,11 @@ class WelcomeActivity : ComponentActivity() {
                             startActivity(Intent(this, MainActivity::class.java))
                         }
                         Event.ImageUploadError -> {
-                            Toast.makeText(
-                                this,
-                                "Error occurred when uploading your image",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        Event.LaunchGoogleSignIn -> {
-                            val url = constructUrl("/auth/google/client")
-                            val intent = CustomTabsIntent.Builder().build()
-                            intent.launchUrl(this, url.toUri())
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = getString(R.string.error_uploading_image)
+                                )
+                            }
                         }
                         else -> Unit
                     }
@@ -109,7 +124,7 @@ class WelcomeActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize().padding(it),
                         ) {
                             composable<NavRoutes.Welcome> {
-                                WelcomeScreen(step, viewModel::onAction)
+                                WelcomeScreen(step, authUiState.loading, viewModel::onAction)
                             }
                             composable<NavRoutes.Login> {
                                 LoginScreen(loginUiState, viewModel::onAction)
@@ -124,6 +139,65 @@ class WelcomeActivity : ComponentActivity() {
                                 ResetPasswordScreen(resetPasswordUiState, viewModel::onAction)
                             }
                         }
+                        if (authUiState.errorDialogVisible)
+                            ModalBottomSheet(
+                                onDismissRequest = {},
+                                sheetState = rememberModalBottomSheetState(true) {
+                                    it != SheetValue.Hidden
+                                },
+                                properties = ModalBottomSheetProperties(
+                                    securePolicy = SecureFlagPolicy.SecureOn,
+                                    shouldDismissOnBackPress = false
+                                ),
+                                dragHandle = null,
+                            ) {
+                                LazyColumn(
+                                    verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    contentPadding = PaddingValues(vertical = 60.dp)
+                                ) {
+                                    authUiState.error?.let { error ->
+                                        error.icon?.let {
+                                            item {
+                                                Icon(
+                                                    imageVector = it,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(100.dp)
+                                                )
+                                            }
+                                        }
+                                        item {
+                                            Text(
+                                                text = stringResource(error.text),
+                                                modifier = Modifier.fillMaxWidth(),
+                                                style = MaterialTheme.typography.titleLarge,
+                                                textAlign = TextAlign.Center
+                                            )
+                                        }
+                                        error.description?.let {
+                                            item {
+                                                Text(
+                                                    text = stringResource(it),
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    textAlign = TextAlign.Center,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                )
+                                            }
+                                        }
+                                        authUiState.action?.let {
+                                            item {
+                                                Button(it.second, enabled = !authUiState.loading) {
+                                                    Text(
+                                                        text = stringResource(it.first),
+                                                        style = MaterialTheme.typography.labelLarge
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                     }
                 }
             }

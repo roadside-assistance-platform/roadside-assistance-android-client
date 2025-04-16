@@ -274,12 +274,11 @@
     <string name="designer">Designer</string>
     <string name="designer_name">Nadjet Bannaceur</string>
     <string name="error">Error</string>
-    <string name="server_error">Server Error</string>
-    <string name="server_error_message">Server Error</string>
+    <string name="server_error">Server Error, please try again later</string>
     <string name="user_exists_error">User already Exists</string>
     <string name="serialization_error">Serialization Error</string>
     <string name="unknown_error">Unknown error</string>
-    <string name="no_internet_error">No internet error</string>
+    <string name="no_internet_error">No internet connection</string>
     <string name="empty_field_error">This field can\'t be empty</string>
     <string name="invalid_field_error">Invalid value</string>
     <string name="short_field_error">Short value</string>
@@ -310,4 +309,8 @@
     <string name="welcome_title_3">Reliable and affordable!</string>
     <string name="welcome_text_3">Trusted service providers and great prices !</string>
     <string name="skip">Skip</string>
+    <string name="no_internet_error_descr">Check your internet connection and try again</string>
+    <string name="retry">Retry</string>
+    <string name="error_uploading_image">Error uploading image</string>
+    <string name="request_submitted">Request submitted successfully</string>
 </resources>

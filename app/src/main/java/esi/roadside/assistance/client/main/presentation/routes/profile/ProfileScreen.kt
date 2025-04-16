@@ -157,6 +157,7 @@ fun ProfileScreen(
             InformationCard(
                 icon = Icons.Outlined.Title,
                 title = R.string.full_name,
+                text = state.client.fullName,
                 value = state.editClient.fullName,
                 onValueChange = { onAction(Action.EditClient(
                     state.editClient.copy(
@@ -170,6 +171,7 @@ fun ProfileScreen(
             InformationCard(
                 icon = Icons.Outlined.Email,
                 title = R.string.email_adress,
+                text = state.client.email,
                 value = state.editClient.email,
                 onValueChange = { onAction(Action.EditClient(
                     state.editClient.copy(
@@ -182,6 +184,7 @@ fun ProfileScreen(
             InformationCard(
                 icon = Icons.Outlined.Phone,
                 title = R.string.phone_number,
+                text = state.client.phone,
                 value = state.editClient.phone,
                 onValueChange = { onAction(Action.EditClient(
                     state.editClient.copy(
