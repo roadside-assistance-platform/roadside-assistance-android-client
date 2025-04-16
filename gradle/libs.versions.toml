@@ -1,39 +1,38 @@
 [versions]
-agp = "8.9.0"
+agp = "8.9.1"
 amqpClient = "5.15.0"
-browser = "1.8.0"
 cloudinaryAndroid = "3.0.2"
 composeMarkdown = "0.5.7"
 googleid = "1.1.1"
 credentials = "1.5.0"
 mapboxAndroid = "11.9.1"
 kotlin = "2.1.0"
-coreKtx = "1.15.0"
+coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
-composeBom = "2025.03.00"
+composeBom = "2025.04.00"
 mapboxMapsCompose = "11.9.1"
 material-icons-extended = "1.7.8"
-material3 = "1.3.1"
+material3 = "1.3.2"
 materialKolor = "2.0.0"
 playServicesAuth = "21.3.0"
 playServicesLocation = "21.3.0"
 navigation-compose = "2.8.9"
 serialization = "1.8.0"
 material-motion-compose-navigation = "1.1.3"
-roomRuntime = "2.6.1"
+roomRuntime = "2.7.0"
 gson = "2.11.0"
 appcompat = "1.7.0"
-datastore-preferences = "1.1.3"
+datastore-preferences = "1.1.4"
 converterGson = "2.11.0"
 coilCompose = "2.7.0"
 kmpalette = "3.1.0"
 ksp = "2.1.0-1.0.29"
 koin-bom = "4.0.2"
-material3AdaptiveNavigationSuite = "1.3.1"
+material3AdaptiveNavigationSuite = "1.3.2"
 desugar-jdk-libs = "2.1.5"
 ktor = "3.0.3"
 truth = "1.4.4"
@@ -41,7 +40,6 @@ slf4jSimple = "2.0.9"
 
 [libraries]
 amqp-client = { module = "com.rabbitmq:amqp-client", version.ref = "amqpClient" }
-androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 cloudinary-android = { module = "com.cloudinary:cloudinary-android", version.ref = "cloudinaryAndroid" }
@@ -93,6 +91,7 @@ ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negoti
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4jSimple" }
 
@@ -109,5 +108,5 @@ ktor = [
     "ktor-client-content-negotiation",
     "ktor-client-core",
     "ktor-client-logging",
-    "ktor-serialization-kotlinx-json"
+    "ktor-serialization-kotlinx-json",
 ]

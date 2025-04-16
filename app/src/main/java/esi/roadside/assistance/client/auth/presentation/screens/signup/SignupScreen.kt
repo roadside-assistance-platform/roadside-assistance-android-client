@@ -72,7 +72,7 @@ fun SignupScreen(
                     color = lightScheme.background
                 )
                 Spacer(Modifier.height(18.dp))
-                ProfilePicturePicker(uiState.image) {
+                ProfilePicturePicker(uiState.image, enabled = !uiState.loading) {
                     onAction(Action.SetSignupImage(it))
                 }
             }
@@ -88,6 +88,7 @@ fun SignupScreen(
                     },
                     label = stringResource(R.string.full_name),
                     placeholder = stringResource(R.string.full_name_placeholder),
+                    enabled = !uiState.loading
                 )
                 MyTextField(
                     uiState.phoneNumber,
@@ -97,6 +98,7 @@ fun SignupScreen(
                     label = stringResource(R.string.phone_number),
                     placeholder = stringResource(R.string.phone_number_placeholder),
                     error = uiState.phoneNumberError,
+                    enabled = !uiState.loading
                 )
                 MyTextField(
                     uiState.email,
@@ -106,6 +108,7 @@ fun SignupScreen(
                     label = stringResource(R.string.email),
                     placeholder = stringResource(R.string.email_placeholder),
                     error = uiState.emailError,
+                    enabled = !uiState.loading
                 )
                 PasswordTextField(
                     uiState.password,
@@ -117,6 +120,7 @@ fun SignupScreen(
                         onAction(Action.ToggleSignupPasswordHidden)
                     },
                     error = uiState.passwordError,
+                    enabled = !uiState.loading
                 )
                 PasswordTextField(
                     uiState.confirmPassword,
@@ -129,7 +133,8 @@ fun SignupScreen(
                     },
                     error = uiState.confirmPasswordError,
                     label = stringResource(R.string.confirm_password),
-                    placeholder = stringResource(R.string.confirm_password_placeholder)
+                    placeholder = stringResource(R.string.confirm_password_placeholder),
+                    enabled = !uiState.loading
                 )
                 Button(
                     stringResource(R.string.continue_text),
@@ -148,6 +153,7 @@ fun SignupScreen(
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.tertiary
                         ),
+                        enabled = !uiState.loading,
                     ) {
                         Text(stringResource(R.string.log_in))
                     }

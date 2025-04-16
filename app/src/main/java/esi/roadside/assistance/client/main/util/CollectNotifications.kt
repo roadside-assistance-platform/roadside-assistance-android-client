@@ -15,6 +15,9 @@ fun CollectNotifications(
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current.lifecycle
     LaunchedEffect(key1 = lifecycleOwner) {
+//        NotificationListener.listenForNotifications {
+//
+//        }
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             NotificationListener.notifications.collect(callback)
         }

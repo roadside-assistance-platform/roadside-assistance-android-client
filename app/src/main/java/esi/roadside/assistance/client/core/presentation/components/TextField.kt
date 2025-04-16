@@ -31,6 +31,7 @@ fun MyTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     label: String = "",
     placeholder: String = "",
     leadingIcon: ImageVector? = null,
@@ -53,6 +54,7 @@ fun MyTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier.fillMaxWidth(),
+        enabled = enabled,
         label = { Text(label) },
         interactionSource = interactionSource,
         placeholder = { Text(placeholder) },
@@ -66,7 +68,7 @@ fun MyTextField(
             keyboardType = keyboardType
         ),
         keyboardActions = keyboardActions,
-        singleLine = singleLine
+        singleLine = singleLine,
     )
 }
 
@@ -77,6 +79,7 @@ fun PasswordTextField(
     passwordHidden: Boolean,
     onPasswordHiddenChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     label: String = stringResource(R.string.password),
     placeholder: String = stringResource(R.string.password_placeholder),
     leadingIcon: ImageVector? = null,
@@ -96,18 +99,19 @@ fun PasswordTextField(
     singleLine: Boolean = true
 ) {
     MyTextField(
-        value,
-        onValueChange,
-        modifier,
-        label,
-        placeholder,
-        leadingIcon,
-        trailingIcon,
-        error,
-        if (passwordHidden) PasswordVisualTransformation() else VisualTransformation. None,
-        imeAction,
-        keyboardType,
-        keyboardActions,
-        singleLine
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        enabled = enabled,
+        label = label,
+        placeholder = placeholder,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
+        error = error,
+        visualTransformation = if (passwordHidden) PasswordVisualTransformation() else VisualTransformation. None,
+        imeAction = imeAction,
+        keyboardType = keyboardType,
+        keyboardActions = keyboardActions,
+        singleLine = singleLine
     )
 }

@@ -7,36 +7,38 @@ import androidx.credentials.PublicKeyCredential
 import esi.roadside.assistance.client.auth.data.dto.LoginRequest
 import esi.roadside.assistance.client.auth.data.dto.LoginResponse
 import esi.roadside.assistance.client.auth.domain.models.GoogleLoginRequestModel
-import esi.roadside.assistance.client.auth.domain.models.HomeRequestModel
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
 import esi.roadside.assistance.client.auth.domain.models.LoginResponseModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
 import esi.roadside.assistance.client.auth.domain.models.UpdateModel
 import esi.roadside.assistance.client.auth.domain.repository.AuthRepo
-import esi.roadside.assistance.client.auth.util.AuthError
-import esi.roadside.assistance.client.auth.util.AuthType
-import esi.roadside.assistance.client.auth.util.safeAuth
+import esi.roadside.assistance.client.core.data.networking.DomainError
 import esi.roadside.assistance.client.core.data.dto.Client
+import esi.roadside.assistance.client.core.data.networking.CallType
 import esi.roadside.assistance.client.core.data.networking.constructUrl
+import esi.roadside.assistance.client.core.data.networking.safeCall
 import esi.roadside.assistance.client.core.domain.model.ClientModel
 import esi.roadside.assistance.client.core.domain.util.Result
 import esi.roadside.assistance.client.core.domain.util.map
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
 
 class AuthRepoImpl(
+    private val persistentCookieStorage: PersistentCookieStorage,
     private val client: HttpClient,
 ) : AuthRepo {
-    override suspend fun login(request: LoginRequestModel): Result<LoginResponseModel, AuthError> {
+    override suspend fun login(request: LoginRequestModel): Result<LoginResponseModel, DomainError> {
         val remote = request.toLoginRequest()
-        return safeAuth<LoginResponse>(AuthType.LOGIN) {
+        return safeCall<LoginResponse>(CallType.LOGIN) {
             client.post(constructUrl("/client/login")) {
                 setBody(remote)
             }.body()
@@ -45,24 +47,25 @@ class AuthRepoImpl(
         }
     }
 
-    override suspend fun signup(request: SignupModel): Result<ClientModel, AuthError> {
+    override suspend fun signup(request: SignupModel): Result<LoginResponseModel, DomainError> {
         val remote = request.toSignupRequest()
-        return safeAuth<Client>(AuthType.SIGNUP) {
+        return safeCall<LoginResponse>(CallType.SIGNUP) {
             client.post(constructUrl("/client/signup")) {
                 setBody(remote)
             }.body()
         }.map { response ->
-            response.toClientModel()
+            response.toLoginResponseModel()
         }
     }
 
-    override suspend fun resetPassword(email: String): Result<ClientModel, AuthError> {
+    override suspend fun resetPassword(email: String): Result<ClientModel, DomainError> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun update(request: UpdateModel): Result<ClientModel, AuthError> {
+    override suspend fun update(request: UpdateModel): Result<ClientModel, DomainError> {
+        persistentCookieStorage.logAllCookies()
         val remote = request.toUpdateRequest()
-        return safeAuth<Client>(AuthType.UPDATE) {
+        return safeCall<Client>(CallType.UPDATE) {
             client.put(constructUrl("/client/update/${request.id}")) {
                 setBody(remote)
             }.body()
@@ -71,19 +74,19 @@ class AuthRepoImpl(
         }
     }
 
-    override suspend fun home(): Result<Boolean, AuthError> {
-        return safeAuth<String>(AuthType.HOME) {
-            client.get(constructUrl("/")).body()
+    override suspend fun authHome(): Result<Boolean, DomainError> {
+        return safeCall<String>(CallType.HOME) {
+            client.get(constructUrl("/home"))
         }.map { response ->
             response == "Success! You are in home."
         }
     }
 
-    override suspend fun googleLogin(result: GetCredentialResponse): Result<ClientModel, AuthError> {
+    override suspend fun googleLogin(result: GetCredentialResponse): Result<ClientModel, DomainError> {
         val credential = result.credential
         return when (credential) {
             is PublicKeyCredential -> {
-                safeAuth<ClientModel>(AuthType.GOOGLE) {
+                safeCall<ClientModel>(CallType.GOOGLE) {
                     client.post(constructUrl("/google/verify")) {
                         setBody(credential.authenticationResponseJson)
                     }.body()
@@ -93,21 +96,21 @@ class AuthRepoImpl(
                 val username = credential.id
                 val password = credential.password
                 Log.d("AuthRepoImpl", "Username: $username, Password: $password")
-                safeAuth<ClientModel>(AuthType.GOOGLE) {
+                safeCall<ClientModel>(CallType.GOOGLE) {
                     client.post(constructUrl("/client/login")) {
                         setBody(LoginRequest(username, password))
                     }.body()
                 }
             }
             else -> {
-                Result.Error(AuthError.GOOGLE_UNEXPECTED_ERROR)
+                Result.Error(DomainError.GOOGLE_UNEXPECTED_ERROR)
             }
         }
     }
 
-    override suspend fun googleOldLogin(idToken: String): Result<LoginResponseModel, AuthError> {
+    override suspend fun googleOldLogin(idToken: String): Result<LoginResponseModel, DomainError> {
         val remote = GoogleLoginRequestModel(idToken)
-        return safeAuth<LoginResponse>(AuthType.GOOGLE) {
+        return safeCall<LoginResponse>(CallType.GOOGLE) {
             client.post(constructUrl("/google/verify")) {
                 setBody(remote)
             }.body()

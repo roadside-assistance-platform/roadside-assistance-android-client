@@ -6,5 +6,6 @@ enum class NetworkError: Error {
     NO_INTERNET,
     SERVER_ERROR,
     SERIALIZATION_ERROR,
+    INVALID_CREDENTIALS,
     UNKNOWN
 }

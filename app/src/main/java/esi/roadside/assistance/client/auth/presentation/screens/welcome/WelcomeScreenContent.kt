@@ -1,5 +1,6 @@
 package esi.roadside.assistance.client.auth.presentation.screens.welcome
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -40,6 +42,7 @@ fun WelcomeScreenTemplate(
     text: Int,
     modifier: Modifier = Modifier,
     showNavigationIcon: Boolean = true,
+    loading: Boolean = false,
     onNext: () -> Unit,
     onSkip: () -> Unit
 ) {
@@ -92,27 +95,32 @@ fun WelcomeScreenTemplate(
                     )
                 }
             }
-            Row(
-                Modifier.padding(horizontal = 24.dp).fillMaxWidth().align(Alignment.BottomCenter),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                OutlinedButton(
-                    onSkip,
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = MaterialTheme.colorScheme.tertiary
-                    )
-                ) {
-                    Text(stringResource(R.string.skip))
-                }
-                Button(
-                    onNext,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.onTertiary
-                    )
-                ) {
-                    Text(stringResource(R.string.next))
-                }
+            AnimatedContent(loading, Modifier.fillMaxWidth().align(Alignment.BottomCenter)) {
+                if (it)
+                    LinearProgressIndicator(Modifier.fillMaxWidth().padding(24.dp))
+                else
+                    Row(
+                        Modifier.padding(horizontal = 24.dp).fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        OutlinedButton(
+                            onSkip,
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = MaterialTheme.colorScheme.tertiary
+                            )
+                        ) {
+                            Text(stringResource(R.string.skip))
+                        }
+                        Button(
+                            onNext,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.tertiary,
+                                contentColor = MaterialTheme.colorScheme.onTertiary
+                            )
+                        ) {
+                            Text(stringResource(R.string.next))
+                        }
+                    }
             }
         }
     }

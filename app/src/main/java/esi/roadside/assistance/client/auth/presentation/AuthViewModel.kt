@@ -1,23 +1,24 @@
 package esi.roadside.assistance.client.auth.presentation
 
+import esi.roadside.assistance.client.R
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
+import esi.roadside.assistance.client.auth.domain.use_case.AuthHome
 import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
 import esi.roadside.assistance.client.auth.domain.use_case.GoogleLogin
 import esi.roadside.assistance.client.auth.domain.use_case.GoogleOldLogin
-import esi.roadside.assistance.client.auth.domain.use_case.Home
 import esi.roadside.assistance.client.auth.domain.use_case.Login
 import esi.roadside.assistance.client.auth.domain.use_case.ResetPassword
 import esi.roadside.assistance.client.auth.domain.use_case.SignUp
 import esi.roadside.assistance.client.auth.domain.use_case.Update
 import esi.roadside.assistance.client.auth.presentation.Action.GoToForgotPassword
-import esi.roadside.assistance.client.auth.presentation.Action.GoToGoogleLogin
 import esi.roadside.assistance.client.auth.presentation.Action.GoToLogin
 import esi.roadside.assistance.client.auth.presentation.Action.GoToSignup
 import esi.roadside.assistance.client.auth.presentation.Action.HideAuthError
@@ -47,6 +48,7 @@ import esi.roadside.assistance.client.auth.presentation.screens.AuthUiState
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginUiState
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordUiState
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupUiState
+import esi.roadside.assistance.client.core.data.networking.DomainError
 import esi.roadside.assistance.client.auth.util.account.AccountManager
 import esi.roadside.assistance.client.auth.util.account.SignInResult
 import esi.roadside.assistance.client.auth.util.dataStore
@@ -74,11 +76,9 @@ class AuthViewModel(
     private val loginUseCase: Login,
     private val signUpUseCase: SignUp,
     private val updateUseCase: Update,
-    private val homeUseCase: Home,
     private val resetPasswordUseCase: ResetPassword,
-    private val googleLoginUseCase: GoogleLogin,
-    private val googleOldLoginUseCase: GoogleOldLogin,
-    private val googleIdOption: GetGoogleIdOption
+    private val authHomeUseCase: AuthHome,
+    private val googleIdOption: GetGoogleIdOption,
 ): ViewModel() {
     private val _step = MutableStateFlow(0)
     val step = _step.asStateFlow()
@@ -104,13 +104,33 @@ class AuthViewModel(
     fun onAction(action: Action) {
         when(action) {
             Initiate -> {
+                _authUiState.update {
+                    it.copy(loading = true)
+                }
                 viewModelScope.launch {
                     context.dataStore.data.firstOrNull()?.let { userPreferences ->
-                        homeUseCase()
+                        authHomeUseCase()
                             .onSuccess {
+                                _authUiState.update {
+                                    it.copy(
+                                        error = null,
+                                        errorDialogVisible = false,
+                                        loading = false
+                                    )
+                                }
                                 if (it) loggedIn(userPreferences.client.toClientModel())
-                            }.onError {
-                                println(it)
+                            }.onError { error ->
+                                _authUiState.update {
+                                    it.copy(
+                                        error = error,
+                                        errorDialogVisible = error == DomainError.NO_INTERNET,
+                                        loading = false,
+                                        action = R.string.retry to {
+                                            onAction(Initiate)
+                                        }
+                                    )
+                                }
+                                println(error)
                             }
                     }
                 }
@@ -140,12 +160,6 @@ class AuthViewModel(
                         }
                     }
                 }
-            }
-            is GoToGoogleLogin -> {
-//                viewModelScope.launch {
-//                    googleLoginUseCase(accountManager.googleSignIn())
-//                }
-                sendEvent(LaunchGoogleSignIn)
             }
             is GoToForgotPassword -> {
                 sendEvent(AuthNavigate(NavRoutes.ForgotPassword))
@@ -209,47 +223,47 @@ class AuthViewModel(
                 }
                 viewModelScope.launch {
                     var url: String? = null
-                    _signupUiState.value.image?.let {
-                        cloudinaryUseCase(
-                            image = it,
-                            onSuccess = {
-                                Log.i("Welcome", "Image uploaded successfully: $it")
-                                url = it
-                            },
-                            onProgress = { progress ->
-                                _signupUiState.update {
-                                    it.copy(uploadProgress = progress)
-                                }
-                            },
-                            onFailure = {
-                                sendEvent(ImageUploadError)
-                            },
-                            onFinished = {
-                                Log.i("Welcome", "Signup: $it")
-                                viewModelScope.launch {
-                                    signUpUseCase(
-                                        SignupModel(
-                                            email = _signupUiState.value.email,
-                                            password = _signupUiState.value.password,
-                                            fullName = _signupUiState.value.fullName,
-                                            phone = _signupUiState.value.phoneNumber,
-                                            photo = url ?: "_"
-                                        )
-                                    ).onSuccess { client ->
-                                        accountManager.signUp(client.email, _signupUiState.value.password)
-                                        _signupUiState.update { it.copy(loading = false) }
-                                        loggedIn(client, false)
-                                        sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
-                                    }.onError {
-                                        _signupUiState.update {
-                                            it.copy(loading = false)
-                                        }
-                                        onAction(ShowAuthError(it))
+                    cloudinaryUseCase(
+                        image = _signupUiState.value.image ?: "".toUri(),
+                        onSuccess = {
+                            Log.i("Welcome", "Image uploaded successfully: $it")
+                            url = it
+                        },
+                        onProgress = { progress ->
+                            _signupUiState.update {
+                                it.copy(uploadProgress = progress)
+                            }
+                        },
+                        onFailure = {
+                            sendEvent(ImageUploadError)
+                        },
+                        onFinished = {
+                            viewModelScope.launch {
+                                signUpUseCase(
+                                    SignupModel(
+                                        email = _signupUiState.value.email,
+                                        password = _signupUiState.value.password,
+                                        fullName = _signupUiState.value.fullName,
+                                        phone = _signupUiState.value.phoneNumber,
+                                        photo = url ?: "_"
+                                    )
+                                ).onSuccess { response ->
+                                    accountManager.signUp(
+                                        _signupUiState.value.email,
+                                        _signupUiState.value.password
+                                    )
+                                    _signupUiState.update { it.copy(loading = false) }
+                                    loggedIn(response.client, false)
+                                    sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
+                                }.onError {
+                                    _signupUiState.update {
+                                        it.copy(loading = false)
                                     }
+                                    onAction(ShowAuthError(it))
                                 }
                             }
-                        )
-                    }
+                        }
+                    )
                 }
             }
             is Send -> {
@@ -339,26 +353,6 @@ class AuthViewModel(
             }
             SkipVerification -> {
                 sendEvent(LaunchMainActivity)
-            }
-            is Action.GoogleLogin -> {
-                viewModelScope.launch {
-                    googleLoginUseCase(action.result)
-                        .onSuccess {
-                            loggedIn(it)
-                        }.onError {
-                            onAction(ShowAuthError(it))
-                        }
-                }
-            }
-            is Action.GoogleOldLogin -> {
-                viewModelScope.launch {
-                    googleOldLoginUseCase(action.idToken)
-                        .onSuccess {
-                            loggedIn(it.client)
-                        }.onError {
-                            onAction(ShowAuthError(it))
-                        }
-                }
             }
 
             NextStep -> {

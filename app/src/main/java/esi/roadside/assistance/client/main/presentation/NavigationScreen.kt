@@ -12,6 +12,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,6 +45,7 @@ import soup.compose.material.motion.animation.materialFadeThroughOut
 @Composable
 fun NavigationScreen(
     navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
     mainViewModel: MainViewModel,
     modifier: Modifier = Modifier,
     bottomSheetState: SheetState,
@@ -75,6 +78,9 @@ fun NavigationScreen(
 
     Scaffold(
         modifier = modifier,
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             AnimatedVisibility(

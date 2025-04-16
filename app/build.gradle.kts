@@ -72,9 +72,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.datastore.preferences)
     testImplementation(libs.junit)
-    // Koin for Tests
     testImplementation(libs.koin.test.junit4)
-    // this for logger in ktor
     implementation(libs.slf4j.simple)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -100,15 +98,14 @@ dependencies {
     implementation(libs.play.services.location)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.bundles.ktor)
+    implementation(libs.ktor.client.auth)
     testImplementation(libs.truth)
     implementation(libs.cloudinary.android)
     implementation(libs.cloudinary.android.download)
-   // implementation(libs.kotlin.url.gen)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
     implementation(libs.amqp.client)
     implementation(libs.play.services.auth)
     implementation(libs.compose.markdown)
-    implementation(libs.androidx.browser)
 }

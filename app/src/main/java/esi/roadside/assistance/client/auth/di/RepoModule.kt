@@ -5,15 +5,14 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import esi.roadside.assistance.client.BuildConfig
 import esi.roadside.assistance.client.auth.data.AuthRepoImpl
 import esi.roadside.assistance.client.auth.data.CloudinaryRepoImpl
+import esi.roadside.assistance.client.auth.data.PersistentCookieStorage
 import esi.roadside.assistance.client.auth.domain.repository.AuthRepo
 import esi.roadside.assistance.client.auth.domain.repository.CloudinaryRepo
-import esi.roadside.assistance.client.core.data.networking.HttpClientFactory
-import io.ktor.client.engine.cio.CIO
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val RepoModule = module {
-    single { HttpClientFactory.create(CIO.create()) }
+    single { PersistentCookieStorage(androidContext()) }
     single<MediaManager> {
         var config: HashMap<String, String> = HashMap()
         config.put("cloud_name", "dsvlwomdq")
@@ -29,6 +28,6 @@ val RepoModule = module {
             .setAutoSelectEnabled(true)
             .build()
     }
-    single<AuthRepo> { AuthRepoImpl(get()) }
+    single<AuthRepo> { AuthRepoImpl(get(), get()) }
     single<CloudinaryRepo> { CloudinaryRepoImpl(get()) }
 }

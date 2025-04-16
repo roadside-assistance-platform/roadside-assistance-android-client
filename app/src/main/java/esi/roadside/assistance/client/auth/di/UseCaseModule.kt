@@ -1,5 +1,6 @@
 package esi.roadside.assistance.client.auth.di
 
+import esi.roadside.assistance.client.auth.domain.use_case.AuthHome
 import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
 import esi.roadside.assistance.client.auth.domain.use_case.GoogleLogin
 import esi.roadside.assistance.client.auth.domain.use_case.GoogleOldLogin
@@ -19,4 +20,5 @@ val useCaseModule = module {
      factory { GoogleLogin(get()) }
      factory { GoogleOldLogin(get()) }
      factory { Cloudinary(get()) }
+     factory { AuthHome(get()) }
 }

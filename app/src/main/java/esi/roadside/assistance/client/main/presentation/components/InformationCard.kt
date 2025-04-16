@@ -43,6 +43,7 @@ import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 fun InformationCard(
     @StringRes title: Int,
     icon: ImageVector,
+    text: String,
     value: String,
     onValueChange: (String) -> Unit,
     enabled: Boolean,
@@ -62,7 +63,7 @@ fun InformationCard(
                     }
                 },
                 modifier = modifier
-                    .padding(8.dp)
+                    .padding(horizontal = 8.dp)
                     .fillMaxWidth()
                     .focusRequester(focusRequester),
                 interactionSource = interactionSource,
@@ -102,7 +103,7 @@ fun InformationCard(
                             style = MaterialTheme.typography.bodyMedium
                         )
                         Text(
-                            text = value,
+                            text = text,
                             style = MaterialTheme.typography.bodyLarge.copy(
                                 fontWeight = FontWeight.Medium
                             ),
@@ -121,6 +122,7 @@ private fun InformationCardPreview() {
         InformationCard(
             R.string.email,
             Icons.Default.Email,
+            "",
             "",
             {},
             enabled,

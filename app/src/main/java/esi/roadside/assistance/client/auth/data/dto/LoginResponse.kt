@@ -5,12 +5,18 @@ import esi.roadside.assistance.client.core.data.dto.Client
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class ResponseData(
+    val user: Client,
+)
+
+@Serializable
 data class LoginResponse(
-    val message: String,
-    val Client: Client
+    val status: String,
+    val message: String? = null,
+    val data: ResponseData
 ) {
     fun toLoginResponseModel() = LoginResponseModel(
         message = message,
-        client = Client.toClientModel()
+        client = data.user.toClientModel()
     )
 }
