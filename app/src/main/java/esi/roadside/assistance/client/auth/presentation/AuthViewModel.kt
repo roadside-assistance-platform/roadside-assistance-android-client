@@ -12,8 +12,6 @@ import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
 import esi.roadside.assistance.client.auth.domain.use_case.AuthHome
 import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
-import esi.roadside.assistance.client.auth.domain.use_case.GoogleLogin
-import esi.roadside.assistance.client.auth.domain.use_case.GoogleOldLogin
 import esi.roadside.assistance.client.auth.domain.use_case.Login
 import esi.roadside.assistance.client.auth.domain.use_case.ResetPassword
 import esi.roadside.assistance.client.auth.domain.use_case.SignUp
@@ -58,7 +56,6 @@ import esi.roadside.assistance.client.core.domain.util.onSuccess
 import esi.roadside.assistance.client.core.presentation.util.Event.AuthNavigate
 import esi.roadside.assistance.client.core.presentation.util.Event.AuthShowError
 import esi.roadside.assistance.client.core.presentation.util.Event.ImageUploadError
-import esi.roadside.assistance.client.core.presentation.util.Event.LaunchGoogleSignIn
 import esi.roadside.assistance.client.core.presentation.util.Event.LaunchMainActivity
 import esi.roadside.assistance.client.core.presentation.util.Field
 import esi.roadside.assistance.client.core.presentation.util.ValidateInput
@@ -188,7 +185,7 @@ class AuthViewModel(
                             password = _loginUiState.value.password
                         )
                     ).onSuccess {
-                        loggedIn(it.client)
+                        loggedIn(it.user)
                     }.onError {
                         println(it)
                         onAction(ShowAuthError(it))
@@ -253,7 +250,7 @@ class AuthViewModel(
                                         _signupUiState.value.password
                                     )
                                     _signupUiState.update { it.copy(loading = false) }
-                                    loggedIn(response.client, false)
+                                    loggedIn(response.user, false)
                                     sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
                                 }.onError {
                                     _signupUiState.update {

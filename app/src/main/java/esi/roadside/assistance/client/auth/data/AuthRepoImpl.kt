@@ -5,10 +5,10 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.PasswordCredential
 import androidx.credentials.PublicKeyCredential
 import esi.roadside.assistance.client.auth.data.dto.LoginRequest
-import esi.roadside.assistance.client.auth.data.dto.LoginResponse
+import esi.roadside.assistance.client.auth.data.dto.AuthResponse
 import esi.roadside.assistance.client.auth.domain.models.GoogleLoginRequestModel
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
-import esi.roadside.assistance.client.auth.domain.models.LoginResponseModel
+import esi.roadside.assistance.client.auth.domain.models.AuthResponseModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
 import esi.roadside.assistance.client.auth.domain.models.UpdateModel
 import esi.roadside.assistance.client.auth.domain.repository.AuthRepo
@@ -23,12 +23,10 @@ import esi.roadside.assistance.client.core.domain.util.map
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
 
@@ -36,9 +34,9 @@ class AuthRepoImpl(
     private val persistentCookieStorage: PersistentCookieStorage,
     private val client: HttpClient,
 ) : AuthRepo {
-    override suspend fun login(request: LoginRequestModel): Result<LoginResponseModel, DomainError> {
+    override suspend fun login(request: LoginRequestModel): Result<AuthResponseModel, DomainError> {
         val remote = request.toLoginRequest()
-        return safeCall<LoginResponse>(CallType.LOGIN) {
+        return safeCall<AuthResponse>(CallType.LOGIN) {
             client.post(constructUrl("/client/login")) {
                 setBody(remote)
             }.body()
@@ -47,9 +45,9 @@ class AuthRepoImpl(
         }
     }
 
-    override suspend fun signup(request: SignupModel): Result<LoginResponseModel, DomainError> {
+    override suspend fun signup(request: SignupModel): Result<AuthResponseModel, DomainError> {
         val remote = request.toSignupRequest()
-        return safeCall<LoginResponse>(CallType.SIGNUP) {
+        return safeCall<AuthResponse>(CallType.SIGNUP) {
             client.post(constructUrl("/client/signup")) {
                 setBody(remote)
             }.body()
@@ -77,9 +75,7 @@ class AuthRepoImpl(
     override suspend fun authHome(): Result<Boolean, DomainError> {
         return safeCall<String>(CallType.HOME) {
             client.get(constructUrl("/home"))
-        }.map { response ->
-            response == "Success! You are in home."
-        }
+        }.map { true }
     }
 
     override suspend fun googleLogin(result: GetCredentialResponse): Result<ClientModel, DomainError> {
@@ -108,9 +104,9 @@ class AuthRepoImpl(
         }
     }
 
-    override suspend fun googleOldLogin(idToken: String): Result<LoginResponseModel, DomainError> {
+    override suspend fun googleOldLogin(idToken: String): Result<AuthResponseModel, DomainError> {
         val remote = GoogleLoginRequestModel(idToken)
-        return safeCall<LoginResponse>(CallType.GOOGLE) {
+        return safeCall<AuthResponse>(CallType.GOOGLE) {
             client.post(constructUrl("/google/verify")) {
                 setBody(remote)
             }.body()
