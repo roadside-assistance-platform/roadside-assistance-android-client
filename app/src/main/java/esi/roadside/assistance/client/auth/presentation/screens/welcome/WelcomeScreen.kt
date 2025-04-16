@@ -41,8 +41,8 @@ fun WelcomeScreen(
                 modifier = modifier,
                 loading = loading,
                 showNavigationIcon = false,
-                onSkip = { onAction(Action.Skip) },
-                onNext = { onAction(Action.NextStep) }
+                onSkip = { if (!this.transition.isRunning) onAction(Action.Skip) },
+                onNext = { if (!this.transition.isRunning) onAction(Action.NextStep) }
             )
             1 -> WelcomeScreenTemplate(
                 background = R.drawable.welcome_background_2,
@@ -51,8 +51,8 @@ fun WelcomeScreen(
                 text = R.string.welcome_text_2,
                 modifier = modifier,
                 loading = loading,
-                onSkip = { onAction(Action.Skip) },
-                onNext = { onAction(Action.NextStep) }
+                onSkip = { if (!this.transition.isRunning) onAction(Action.Skip) },
+                onNext = { if (!this.transition.isRunning) onAction(Action.NextStep) }
             )
             2 -> WelcomeScreenTemplate(
                 background = R.drawable.welcome_background_3,
@@ -61,13 +61,13 @@ fun WelcomeScreen(
                 text = R.string.welcome_text_3,
                 modifier = modifier,
                 loading = loading,
-                onSkip = { onAction(Action.Skip) },
-                onNext = { onAction(Action.NextStep) }
+                onSkip = { if (!this.transition.isRunning) onAction(Action.Skip) },
+                onNext = { if (!this.transition.isRunning) onAction(Action.NextStep) }
             )
             3 -> GetStartedScreen(onAction)
         }
-    }
-    BackHandler(step in 0..3) {
-        onAction(Action.PreviousStep)
+        BackHandler(step in 0..3) {
+            if (!this.transition.isRunning) onAction(Action.PreviousStep)
+        }
     }
 }
