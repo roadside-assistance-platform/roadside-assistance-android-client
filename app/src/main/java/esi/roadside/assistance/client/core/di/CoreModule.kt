@@ -3,8 +3,6 @@ package esi.roadside.assistance.client.core.di
 import android.util.Log
 import esi.roadside.assistance.client.BuildConfig
 import esi.roadside.assistance.client.auth.data.PersistentCookieStorage
-import esi.roadside.assistance.client.auth.data.PersistentCookieStorage.SerializableCookie
-import esi.roadside.assistance.client.auth.presentation.AuthViewModel
 import esi.roadside.assistance.client.core.data.SettingsDataStore
 import esi.roadside.assistance.client.core.data.networking.constructUrl
 import io.ktor.client.HttpClient
@@ -22,11 +20,7 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.set
 
 val coreModule = module {
     single {
@@ -55,24 +49,7 @@ val coreModule = module {
             install(HttpCookies) {
                 storage = get<PersistentCookieStorage>()
             }
-//            install(Auth) {
-//                bearer {
-//                    refreshTokens {
-//                        val token = client.get {
-//                            markAsRefreshTokenRequest()
-//                            url("refreshToken")
-//                            parameter("refreshToken", get<LocalService>().getRefreshToken())
-//                        }.body<Token>()
-//                        BearerTokens(
-//                            accessToken = token.bearerToken,
-//                            refreshToken = token.refreshToken
-//                        )
-//                    }
-//                }
-//            }
         }
     }
     single { SettingsDataStore(androidContext()) }
-    // not here ,impl in authModule
-    //viewModelOf(::AuthViewModel)
 }

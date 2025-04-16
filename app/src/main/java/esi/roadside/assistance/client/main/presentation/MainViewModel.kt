@@ -15,6 +15,7 @@ import esi.roadside.assistance.client.core.presentation.util.Event.*
 import esi.roadside.assistance.client.core.presentation.util.Field
 import esi.roadside.assistance.client.core.presentation.util.ValidateInput
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
+import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.domain.models.NotificationModel
 import esi.roadside.assistance.client.main.domain.models.SubmitRequestModel
 import esi.roadside.assistance.client.main.domain.use_cases.SubmitRequest
@@ -88,22 +89,22 @@ class MainViewModel(
             }
             Action.SubmitRequest -> {
                 viewModelScope.launch {
-                    submitRequestUseCase(
-                        SubmitRequestModel(
-                            description = _requestAssistanceState.value.description,
-                            serviceCategory = _requestAssistanceState.value.category,
-                            serviceLocation = _homeUiState.value.location?.let {
-                                "${it.latitude()},${it.longitude()}"
-                            } ?: "",
-                            price = 0
-                        )
-                    ).onSuccess {
-                        sendEvent(ShowMainActivityMessage(R.string.request_submitted))
-                    }.onError {
-                        sendEvent(ShowMainActivityMessage(it.text))
-                    }
-                    _requestAssistanceState.update {
-                        it.copy(sheetVisible = false)
+                    _homeUiState.value.location?.let { location ->
+                        submitRequestUseCase(
+                            SubmitRequestModel(
+                                description = _requestAssistanceState.value.description,
+                                serviceCategory = _requestAssistanceState.value.category,
+                                serviceLocation = LocationModel.fromPoint(location),
+                                price = 0
+                            )
+                        ).onSuccess {
+                            sendEvent(ShowMainActivityMessage(R.string.request_submitted))
+                        }.onError {
+                            sendEvent(ShowMainActivityMessage(it.text))
+                        }
+                        _requestAssistanceState.update {
+                            it.copy(sheetVisible = false)
+                        }
                     }
                 }
             }

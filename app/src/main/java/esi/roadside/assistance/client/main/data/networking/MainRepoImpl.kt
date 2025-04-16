@@ -18,7 +18,7 @@ class MainRepoImpl(
     override suspend fun submitRequest(request: SubmitRequestModel): Result<SubmitResponseModel, DomainError> =
         safeCall<SubmitResponseModel> {
             client.post(constructUrl("/service/create")) {
-                setBody(request)
+                setBody(request.toSubmitRequest())
             }.body()
         }
 }

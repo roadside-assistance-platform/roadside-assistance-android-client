@@ -98,7 +98,6 @@ dependencies {
     implementation(libs.play.services.location)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.bundles.ktor)
-    implementation(libs.ktor.client.auth)
     testImplementation(libs.truth)
     implementation(libs.cloudinary.android)
     implementation(libs.cloudinary.android.download)
