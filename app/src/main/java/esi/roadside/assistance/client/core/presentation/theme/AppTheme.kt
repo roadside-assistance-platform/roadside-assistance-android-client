@@ -22,7 +22,7 @@ internal fun AppTheme(
     content: @Composable() () -> Unit,
 ) {
     val datastore = SettingsDataStore(LocalContext.current)
-    val theme by datastore.theme.collectAsState(initial = "system")
+    val theme by datastore.theme.collectAsState(initial = "light")
     val extraDark by datastore.extraDark.collectAsState(initial = false)
     val isDark =
         when (theme) {
@@ -65,7 +65,7 @@ internal fun PreviewAppTheme(
     content: @Composable() () -> Unit,
 ) {
     val datastore = SettingsDataStore(LocalContext.current)
-    val theme by datastore.theme.collectAsState(initial = "system")
+    val theme by datastore.theme.collectAsState(initial = "light")
     val extraDark by datastore.extraDark.collectAsState(initial = false)
     val isDark =
         when (theme) {

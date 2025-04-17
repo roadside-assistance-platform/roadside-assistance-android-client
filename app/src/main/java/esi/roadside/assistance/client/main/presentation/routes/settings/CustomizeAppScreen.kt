@@ -47,7 +47,7 @@ fun CustomizeAppScreen(modifier: Modifier = Modifier) {
     val isDark by isDark()
     val dynamicColorsChecked by dataStore.dynamicColors.collectAsState(initial = true)
     val extraDarkChecked by dataStore.extraDark.collectAsState(initial = true)
-    val theme by dataStore.theme.collectAsState(initial = "system")
+    val theme by dataStore.theme.collectAsState(initial = "light")
     val scope = rememberCoroutineScope()
     val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Scaffold(

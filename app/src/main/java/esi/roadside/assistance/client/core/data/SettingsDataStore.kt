@@ -20,7 +20,7 @@ class SettingsDataStore(private val context: Context) {
         val EXTRA_DARK_KEY = booleanPreferencesKey("extra_dark")
     }
 
-    val theme = dataFlow(context.dataStore, THEME_KEY, "system")
+    val theme = dataFlow(context.dataStore, THEME_KEY, "light")
     val dynamicColors = dataFlow(context.dataStore, DYNAMIC_KEY, false)
     val extraDark = dataFlow(context.dataStore, EXTRA_DARK_KEY, false)
     val language = dataFlow(context.dataStore, LANGUAGE_KEY, "system")

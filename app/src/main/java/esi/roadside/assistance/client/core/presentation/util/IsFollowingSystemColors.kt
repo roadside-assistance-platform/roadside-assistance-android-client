@@ -9,4 +9,4 @@ import org.koin.compose.koinInject
 
 @Composable
 fun isFollowingSystemColors() =
-    koinInject<SettingsDataStore>().theme.map { it == "system" }.collectAsStateWithLifecycle(false)
+    koinInject<SettingsDataStore>().theme.map { it == "light" }.collectAsStateWithLifecycle(false)
