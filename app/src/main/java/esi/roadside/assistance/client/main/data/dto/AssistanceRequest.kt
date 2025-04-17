@@ -4,7 +4,7 @@ import esi.roadside.assistance.client.main.domain.Categories
 import kotlinx.serialization.Serializable
 
 @Serializable
-class SubmitRequest(
+class AssistanceRequest(
     val description: String = "",
     val serviceCategory: Categories,
     val serviceLocation: String,

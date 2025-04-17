@@ -1,7 +1,6 @@
 package esi.roadside.assistance.client.main.presentation
 
 import android.content.Context
-import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +16,8 @@ import esi.roadside.assistance.client.core.presentation.util.ValidateInput
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.domain.models.NotificationModel
-import esi.roadside.assistance.client.main.domain.models.SubmitRequestModel
+import esi.roadside.assistance.client.main.domain.models.AssistanceRequestModel
+import esi.roadside.assistance.client.main.domain.use_cases.Logout
 import esi.roadside.assistance.client.main.domain.use_cases.SubmitRequest
 import esi.roadside.assistance.client.main.presentation.models.ClientUi
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeUiState
@@ -35,6 +35,7 @@ class MainViewModel(
     val cloudinary: Cloudinary,
     val updateUseCase: Update,
     val submitRequestUseCase: SubmitRequest,
+    val logoutUseCase: Logout,
 ): ViewModel() {
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState = _homeUiState.asStateFlow()
@@ -91,7 +92,7 @@ class MainViewModel(
                 viewModelScope.launch {
                     _homeUiState.value.location?.let { location ->
                         submitRequestUseCase(
-                            SubmitRequestModel(
+                            AssistanceRequestModel(
                                 description = _requestAssistanceState.value.description,
                                 serviceCategory = _requestAssistanceState.value.category,
                                 serviceLocation = LocationModel.fromPoint(location),
@@ -192,6 +193,13 @@ class MainViewModel(
                     it.copy(sheetVisible = false)
                 }
                 sendEvent(ShowRequestAssistance)
+            }
+
+            Action.Logout -> {
+                viewModelScope.launch {
+                    logoutUseCase()
+                    sendEvent(ExitToAuthActivity)
+                }
             }
         }
     }

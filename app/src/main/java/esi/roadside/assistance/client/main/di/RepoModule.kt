@@ -5,5 +5,5 @@ import esi.roadside.assistance.client.main.domain.repository.MainRepo
 import org.koin.dsl.module
 
 val repoModule = module {
-    single<MainRepo> { MainRepoImpl(get()) }
+    single<MainRepo> { MainRepoImpl(get(), get()) }
 }

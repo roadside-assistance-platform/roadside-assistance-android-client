@@ -136,7 +136,7 @@ fun NavigationScreen(
             }
             navigation<NavRoutes.Settings>(NavRoutes.SettingsList) {
                 composable<NavRoutes.SettingsList> {
-                    SettingsScreen(navController)
+                    SettingsScreen(navController, mainViewModel::onAction)
                 }
                 composable<NavRoutes.ChangePassword> {
                     // ChangePasswordScreen()

@@ -3,6 +3,9 @@ package esi.roadside.assistance.client.main.presentation.constants
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.InsertDriveFile
 import androidx.compose.material.icons.automirrored.outlined.Logout
+import androidx.compose.material.icons.filled.Android
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.outlined.Android
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DesignServices
@@ -32,9 +35,9 @@ object Settings {
 
     val themeOptions =
         listOf(
-            "light" to R.string.light,
-            "system" to R.string.default_theme,
-            "dark" to R.string.dark,
+            "light" to (R.string.light to Icons.Default.LightMode),
+            "dark" to (R.string.dark to Icons.Default.DarkMode),
+            "system" to (R.string.default_theme to Icons.Default.Android),
         )
     val colors =
         listOf(
@@ -52,10 +55,6 @@ object Settings {
                 R.string.change_password,
                 Icons.Outlined.Password,
                 NavRoutes.ChangePassword
-            ),
-            LargeSettingsItem(
-                R.string.logout,
-                Icons.AutoMirrored.Outlined.Logout
             ),
             LargeSettingsItem(
                 R.string.delete_account,

@@ -1,5 +1,6 @@
 package esi.roadside.assistance.client.main.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.rememberNavController
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
+import esi.roadside.assistance.client.auth.presentation.AuthActivity
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
 import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.presentation.util.Event.MainNavigate
@@ -59,6 +61,10 @@ class MainActivity : ComponentActivity() {
                     }
                     Event.HideRequestAssistance -> scope.launch {
                         bottomSheetState.hide()
+                    }
+                    Event.ExitToAuthActivity -> {
+                        startActivity(Intent(this, AuthActivity::class.java))
+                        finish()
                     }
                     else -> Unit
                 }
