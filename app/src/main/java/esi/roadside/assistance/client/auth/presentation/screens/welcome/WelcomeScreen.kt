@@ -62,8 +62,8 @@ fun WelcomeScreen(
             )
             3 -> GetStartedScreen(onAction)
         }
-        BackHandler(step in 0..3) {
-            if (!this.transition.isRunning) onAction(Action.PreviousStep)
-        }
+    }
+    BackHandler(step in 0..3) {
+        onAction(Action.PreviousStep)
     }
 }

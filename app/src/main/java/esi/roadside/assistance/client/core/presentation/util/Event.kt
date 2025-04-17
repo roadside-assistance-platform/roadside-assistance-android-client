@@ -1,11 +1,13 @@
 package esi.roadside.assistance.client.core.presentation.util
 
+import android.app.Activity
 import esi.roadside.assistance.client.auth.presentation.NavRoutes
 import esi.roadside.assistance.client.core.data.networking.DomainError
 import esi.roadside.assistance.client.main.presentation.NavRoutes as MainNavRoutes
 
 sealed interface Event {
     data class AuthNavigate(val route: NavRoutes): Event
+    data object ExitToAuthActivity: Event
     data object AuthShowNoInternet: Event
     data object LaunchGoogleSignIn: Event
     data class AuthShowError(val error: DomainError): Event

@@ -20,8 +20,8 @@ class PersistentCookieStorage(context: Context) : CookiesStorage {
 
     init {
         // Load cookies from SharedPreferences
-        sharedPreferences.all.forEach { (url, cookiesJson) ->
-            cookie = Json.decodeFromString<SerializableCookie>(cookiesJson as String).toCookie()
+        sharedPreferences.getString("cookie", "")?.takeIf { it.isNotBlank() }?.let { cookiesJson ->
+            cookie = Json.decodeFromString<SerializableCookie>(cookiesJson).toCookie()
         }
     }
 
@@ -38,7 +38,15 @@ class PersistentCookieStorage(context: Context) : CookiesStorage {
         this.cookie = fixedCookie
         val serializableCookies = SerializableCookie.fromCookie(fixedCookie)
         sharedPreferences.edit {
-            putString(urlString, Json.encodeToString(serializableCookies))
+            putString("cookie", Json.encodeToString(serializableCookies))
+        }
+        logAllCookies()
+    }
+
+    suspend fun deleteCookie() = mutex.withLock {
+        this.cookie = null
+        sharedPreferences.edit {
+            remove("cookie")
         }
         logAllCookies()
     }

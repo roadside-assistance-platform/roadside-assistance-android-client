@@ -16,6 +16,11 @@ class CloudinaryRepoImpl(
         onFailure: (ErrorInfo?) -> Unit,
         onFinished: () -> Unit,
     ) {
+        if (image == Uri.EMPTY) {
+            onSuccess("")
+            onFinished()
+            return
+        }
         mediaManager
             .upload(image)
             .unsigned("MyPreset")

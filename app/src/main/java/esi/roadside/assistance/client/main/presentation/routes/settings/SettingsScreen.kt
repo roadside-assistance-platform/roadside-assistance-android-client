@@ -1,6 +1,7 @@
 package esi.roadside.assistance.client.main.presentation.routes.settings
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -20,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
+import esi.roadside.assistance.client.main.presentation.Action
 import esi.roadside.assistance.client.main.presentation.components.TopAppBar
 import esi.roadside.assistance.client.main.presentation.constants.Settings
 import esi.roadside.assistance.client.settings.presentation.LargeSettingsGroup
@@ -29,6 +33,7 @@ import esi.roadside.assistance.client.settings.presentation.settingsLabel
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
+    onAction: (Action) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior =
@@ -61,6 +66,16 @@ fun SettingsScreen(
                     LargeSettingsGroup(it.list, navController)
                 }
             }
+            item {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    TextButton({ onAction(Action.Logout) }) {
+                        Text(stringResource(R.string.logout))
+                    }
+                }
+            }
         }
     }
 }
@@ -69,6 +84,6 @@ fun SettingsScreen(
 @Composable
 private fun SettingsPreview() {
     PreviewAppTheme {
-        SettingsScreen(rememberNavController())
+        SettingsScreen(rememberNavController(), {})
     }
 }
