@@ -2,7 +2,6 @@ package esi.roadside.assistance.client.main.presentation.constants
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.InsertDriveFile
-import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
