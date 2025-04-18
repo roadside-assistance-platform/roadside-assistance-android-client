@@ -95,6 +95,11 @@ class AuthActivity : ComponentActivity() {
                                 snackbarHostState.showSnackbar(getString(event.error.text))
                             }
                         }
+                        is Event.ShowAuthActivityMessage -> {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(getString(event.text))
+                            }
+                        }
                         Event.LaunchMainActivity -> {
                             startActivity(Intent(this, MainActivity::class.java))
                         }

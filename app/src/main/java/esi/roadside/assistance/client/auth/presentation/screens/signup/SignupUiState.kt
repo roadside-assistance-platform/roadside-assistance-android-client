@@ -17,6 +17,7 @@ data class SignupUiState(
     val confirmPasswordError: InputError? = null,
     val confirmPasswordHidden: Boolean = true,
     val image: Uri? = null,
+    val photo: String = "",
     val verifyEmailCode: String = "",
     val verifyEmailCodeError: InputError? = null,
     val uploadProgress: Float = 0f,

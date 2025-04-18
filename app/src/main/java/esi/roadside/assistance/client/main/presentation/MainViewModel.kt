@@ -64,7 +64,7 @@ class MainViewModel(
                     it.copy(
                         client = userPreferences.client.toClientModel().toClientUi(),
                         editClient = userPreferences.client.toClientModel().toClientUi(),
-                        photo = userPreferences.client.photo
+                        photo = userPreferences.client.photo ?: ""
                     )
                 }
             }

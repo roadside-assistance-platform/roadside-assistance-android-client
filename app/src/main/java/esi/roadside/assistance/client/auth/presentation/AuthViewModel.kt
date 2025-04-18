@@ -9,13 +9,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
+import esi.roadside.assistance.client.auth.domain.models.SendEmailModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
+import esi.roadside.assistance.client.auth.domain.models.VerifyEmailModel
 import esi.roadside.assistance.client.auth.domain.use_case.AuthHome
 import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
 import esi.roadside.assistance.client.auth.domain.use_case.Login
 import esi.roadside.assistance.client.auth.domain.use_case.ResetPassword
+import esi.roadside.assistance.client.auth.domain.use_case.SendEmail
 import esi.roadside.assistance.client.auth.domain.use_case.SignUp
 import esi.roadside.assistance.client.auth.domain.use_case.Update
+import esi.roadside.assistance.client.auth.domain.use_case.VerifyEmail
 import esi.roadside.assistance.client.auth.presentation.Action.GoToForgotPassword
 import esi.roadside.assistance.client.auth.presentation.Action.GoToLogin
 import esi.roadside.assistance.client.auth.presentation.Action.GoToSignup
@@ -24,6 +28,7 @@ import esi.roadside.assistance.client.auth.presentation.Action.Initiate
 import esi.roadside.assistance.client.auth.presentation.Action.NextStep
 import esi.roadside.assistance.client.auth.presentation.Action.PreviousStep
 import esi.roadside.assistance.client.auth.presentation.Action.Send
+import esi.roadside.assistance.client.auth.presentation.Action.SendCode
 import esi.roadside.assistance.client.auth.presentation.Action.SetCode
 import esi.roadside.assistance.client.auth.presentation.Action.SetLoginEmail
 import esi.roadside.assistance.client.auth.presentation.Action.SetLoginPassword
@@ -42,6 +47,7 @@ import esi.roadside.assistance.client.auth.presentation.Action.SkipVerification
 import esi.roadside.assistance.client.auth.presentation.Action.ToggleLoginPasswordHidden
 import esi.roadside.assistance.client.auth.presentation.Action.ToggleSignupConfirmPasswordHidden
 import esi.roadside.assistance.client.auth.presentation.Action.ToggleSignupPasswordHidden
+import esi.roadside.assistance.client.auth.presentation.Action.Verify
 import esi.roadside.assistance.client.auth.presentation.screens.AuthUiState
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginUiState
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordUiState
@@ -53,6 +59,7 @@ import esi.roadside.assistance.client.auth.util.dataStore
 import esi.roadside.assistance.client.core.domain.model.ClientModel
 import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess
+import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.presentation.util.Event.AuthNavigate
 import esi.roadside.assistance.client.core.presentation.util.Event.AuthShowError
 import esi.roadside.assistance.client.core.presentation.util.Event.ImageUploadError
@@ -75,6 +82,8 @@ class AuthViewModel(
     private val updateUseCase: Update,
     private val resetPasswordUseCase: ResetPassword,
     private val authHomeUseCase: AuthHome,
+    private val sendEmailUseCase: SendEmail,
+    private val verifyEmailUseCase: VerifyEmail,
     private val googleIdOption: GetGoogleIdOption,
 ): ViewModel() {
     private val _step = MutableStateFlow(0)
@@ -235,32 +244,70 @@ class AuthViewModel(
                             sendEvent(ImageUploadError)
                         },
                         onFinished = {
-                            viewModelScope.launch {
-                                signUpUseCase(
-                                    SignupModel(
-                                        email = _signupUiState.value.email,
-                                        password = _signupUiState.value.password,
-                                        fullName = _signupUiState.value.fullName,
-                                        phone = _signupUiState.value.phoneNumber,
-                                        photo = url ?: "_"
-                                    )
-                                ).onSuccess { response ->
-                                    accountManager.signUp(
-                                        _signupUiState.value.email,
-                                        _signupUiState.value.password
-                                    )
-                                    _signupUiState.update { it.copy(loading = false) }
-                                    loggedIn(response.user, false)
-                                    sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
-                                }.onError {
-                                    _signupUiState.update {
-                                        it.copy(loading = false)
-                                    }
-                                    onAction(ShowAuthError(it))
-                                }
+                            _signupUiState.update {
+                                it.copy(photo = url ?: "_")
                             }
+                            sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
+                            onAction(SendCode(_signupUiState.value.email))
                         }
                     )
+                }
+            }
+            is SendCode -> {
+                viewModelScope.launch {
+                    sendEmailUseCase(SendEmailModel(action.email))
+                        .onSuccess {
+                            sendEvent(Event.ShowAuthActivityMessage(R.string.verification_email_sent))
+                            _signupUiState.update {
+                                it.copy(loading = false)
+                            }
+                        }
+                        .onError {
+                            _signupUiState.update {
+                                it.copy(loading = false)
+                            }
+                            onAction(ShowAuthError(it))
+                        }
+                }
+            }
+            is Verify -> {
+                _signupUiState.update {
+                    it.copy(loading = true)
+                }
+                viewModelScope.launch {
+                    verifyEmailUseCase(
+                        VerifyEmailModel(
+                            _signupUiState.value.email,
+                            _signupUiState.value.verifyEmailCode
+                        )
+                    ).onSuccess {
+                        signUpUseCase(
+                            SignupModel(
+                                email = _signupUiState.value.email,
+                                password = _signupUiState.value.password,
+                                fullName = _signupUiState.value.fullName,
+                                phone = _signupUiState.value.phoneNumber,
+                                photo = _signupUiState.value.photo,
+                            )
+                        ).onSuccess { response ->
+                            accountManager.signUp(
+                                _signupUiState.value.email,
+                                _signupUiState.value.password
+                            )
+                            _signupUiState.update { it.copy(loading = false) }
+                            loggedIn(response.user)
+                        }.onError {
+                            _signupUiState.update {
+                                it.copy(loading = false)
+                            }
+                            onAction(ShowAuthError(it))
+                        }
+                    }.onError {
+                        _signupUiState.update {
+                            it.copy(loading = false)
+                        }
+                        onAction(ShowAuthError(it))
+                    }
                 }
             }
             is Send -> {
@@ -365,6 +412,7 @@ class AuthViewModel(
     }
 
     private fun loggedIn(client: ClientModel, launchMainActivity: Boolean = true) {
+        Log.i("Welcome", "Logged in successfully: $client")
         saveClient(context, client)
         if (launchMainActivity) sendEvent(LaunchMainActivity)
     }

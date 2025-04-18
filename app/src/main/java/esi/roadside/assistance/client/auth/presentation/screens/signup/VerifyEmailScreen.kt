@@ -46,11 +46,12 @@ fun VerifyEmailScreen(
                 label = stringResource(R.string.verification_code),
                 placeholder = stringResource(R.string.enter_the_code),
                 error = uiState.verifyEmailCodeError,
+                enabled = !uiState.loading
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(R.string.didn_t_receive_anything))
                 TextButton(
-                    { onAction(Action.GoToSignup) },
+                    { onAction(Action.SendCode(uiState.email)) },
                     contentPadding = PaddingValues(horizontal = 8.dp),
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.tertiary
@@ -59,15 +60,9 @@ fun VerifyEmailScreen(
                     Text(stringResource(R.string.send_code_again))
                 }
             }
-            Button(stringResource(R.string.sign_up), Modifier.fillMaxWidth()) {
-                onAction(Action.Signup)
+            Button(stringResource(R.string.sign_up), Modifier.fillMaxWidth(), enabled = !uiState.loading) {
+                onAction(Action.Verify)
             }
-        }
-        TextButton(
-            { onAction(Action.SkipVerification) },
-            Modifier.padding(48.dp)
-        ) {
-            Text(stringResource(R.string.skip_verification))
         }
     }
 }

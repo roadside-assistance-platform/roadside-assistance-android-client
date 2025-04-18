@@ -18,7 +18,9 @@ suspend inline fun <reified T> responseToResult(
         CallType.UPDATE -> DomainError.USER_NOT_FOUND
         CallType.GOOGLE -> DomainError.UNKNOWN
         CallType.HOME -> DomainError.UNKNOWN
-        null -> DomainError.UNKNOWN
+        CallType.SEND_EMAIL -> DomainError.EMAIL_ERROR
+        CallType.VERIFY_EMAIL -> DomainError.INCORRECT_VERIFICATION_CODE
+        null -> TODO()
     }
     val error401 = when (callType) {
         CallType.SIGNUP -> DomainError.USER_ALREADY_EXISTS
@@ -27,7 +29,7 @@ suspend inline fun <reified T> responseToResult(
         CallType.UPDATE -> DomainError.INTERNAL_ERROR
         CallType.GOOGLE -> DomainError.UNKNOWN
         CallType.HOME -> DomainError.UNKNOWN
-        null -> DomainError.UNKNOWN
+        else -> DomainError.UNKNOWN
     }
     return when (response.status.value) {
         in 200..299 -> {
