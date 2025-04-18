@@ -136,7 +136,7 @@ fun LazyListScope.settingsItem(
                         color = MaterialTheme.colorScheme.outline,
                     )
                 }
-                if (trailingContent != null) trailingContent(this)
+                trailingContent?.invoke(this)
             }
         }
 }

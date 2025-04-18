@@ -1,6 +1,7 @@
 package esi.roadside.assistance.client.core.data.networking
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.ui.graphics.vector.ImageVector
 import esi.roadside.assistance.client.R
@@ -16,5 +17,7 @@ enum class DomainError(val text: Int, val description: Int? = null, val icon: Im
     SERIALIZATION_ERROR(R.string.serialization_error),
     UNKNOWN(R.string.unknown_error),
     NO_INTERNET(R.string.no_internet_error, R.string.no_internet_error_descr, Icons.Default.WifiOff),
+    EMAIL_ERROR(R.string.email_not_verified_error, icon = Icons.Default.Email),
+    INCORRECT_VERIFICATION_CODE(R.string.incorrect_code, icon = Icons.Default.Email),
     GOOGLE_UNEXPECTED_ERROR(R.string.google_unexpected_error),
 }

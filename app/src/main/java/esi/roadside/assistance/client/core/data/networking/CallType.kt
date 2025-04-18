@@ -7,4 +7,6 @@ enum class CallType {
     UPDATE,
     HOME,
     GOOGLE,
+    SEND_EMAIL,
+    VERIFY_EMAIL,
 }

@@ -313,4 +313,6 @@
     <string name="retry">Retry</string>
     <string name="error_uploading_image">Error uploading image</string>
     <string name="request_submitted">Request submitted successfully</string>
+    <string name="email_not_verified_error">Email not verified</string>
+    <string name="verification_email_sent">Verification email sent</string>
 </resources>

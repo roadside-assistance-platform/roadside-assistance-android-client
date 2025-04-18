@@ -13,7 +13,7 @@ data class Client(
     val email: String = "",
     val password: String = "",
     val phone: String = "",
-    val photo: String = "",
+    val photo: String? = "",
     val services: List<Service> = emptyList(),
     val createdAt: String = "",
     val updatedAt: String = "",
@@ -24,7 +24,7 @@ data class Client(
         email = email,
         password = password,
         phone = phone,
-        photo = photo,
+        photo = photo ?: "",
         services = services.map { it.toServiceModel() },
         createdAt = try {
             OffsetDateTime.parse(createdAt)
