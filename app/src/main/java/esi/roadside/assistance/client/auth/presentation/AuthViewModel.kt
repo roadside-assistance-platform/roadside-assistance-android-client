@@ -51,6 +51,7 @@ import esi.roadside.assistance.client.auth.presentation.Action.Verify
 import esi.roadside.assistance.client.auth.presentation.screens.AuthUiState
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginUiState
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordUiState
+import esi.roadside.assistance.client.auth.presentation.screens.signup.OtpState
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupUiState
 import esi.roadside.assistance.client.core.data.networking.DomainError
 import esi.roadside.assistance.client.auth.util.account.AccountManager
@@ -95,6 +96,9 @@ class AuthViewModel(
     private val _signupUiState = MutableStateFlow(SignupUiState())
     val signupUiState = _signupUiState.asStateFlow()
 
+    private val _otpUiState = MutableStateFlow(OtpState())
+    val otpUiState = _otpUiState.asStateFlow()
+
     private val _authUiState = MutableStateFlow(AuthUiState())
     val authUiState = _authUiState.asStateFlow()
 
@@ -105,6 +109,94 @@ class AuthViewModel(
 
     fun createAccountManager(activity: Activity) {
         accountManager = AccountManager(activity, googleIdOption)
+    }
+
+    fun onOtpAction(action: OtpAction) {
+        when(action) {
+            is OtpAction.OnChangeFieldFocused -> {
+                _otpUiState.update { it.copy(
+                    focusedIndex = action.index
+                ) }
+            }
+            is OtpAction.OnEnterNumber -> {
+                enterNumber(action.number, action.index)
+            }
+            OtpAction.OnKeyboardBack -> {
+                val previousIndex = getPreviousFocusedIndex(_otpUiState.value.focusedIndex)
+                _otpUiState.update { it.copy(
+                    code = it.code.mapIndexed { index, number ->
+                        if(index == previousIndex) {
+                            null
+                        } else {
+                            number
+                        }
+                    },
+                    focusedIndex = previousIndex
+                ) }
+            }
+        }
+    }
+
+    private fun enterNumber(number: Int?, index: Int) {
+        val newCode = _otpUiState.value.code.mapIndexed { currentIndex, currentNumber ->
+            if(currentIndex == index) {
+                number
+            } else {
+                currentNumber
+            }
+        }
+        val wasNumberRemoved = number == null
+        _otpUiState.update { it.copy(
+            code = newCode,
+            focusedIndex = if(wasNumberRemoved || it.code.getOrNull(index) != null) {
+                it.focusedIndex
+            } else {
+                getNextFocusedTextFieldIndex(
+                    currentCode = it.code,
+                    currentFocusedIndex = it.focusedIndex
+                )
+            }
+        ) }
+        if (_otpUiState.value.code.none { it == null }) {
+            onAction(Verify)
+        }
+    }
+
+    private fun getPreviousFocusedIndex(currentIndex: Int?): Int? {
+        return currentIndex?.minus(1)?.coerceAtLeast(0)
+    }
+
+    private fun getNextFocusedTextFieldIndex(
+        currentCode: List<Int?>,
+        currentFocusedIndex: Int?
+    ): Int? {
+        if(currentFocusedIndex == null) {
+            return null
+        }
+
+        if(currentFocusedIndex == _otpUiState.value.code.size - 1) {
+            return currentFocusedIndex
+        }
+
+        return getFirstEmptyFieldIndexAfterFocusedIndex(
+            code = currentCode,
+            currentFocusedIndex = currentFocusedIndex
+        )
+    }
+
+    private fun getFirstEmptyFieldIndexAfterFocusedIndex(
+        code: List<Int?>,
+        currentFocusedIndex: Int
+    ): Int {
+        code.forEachIndexed { index, number ->
+            if(index <= currentFocusedIndex) {
+                return@forEachIndexed
+            }
+            if(number == null) {
+                return index
+            }
+        }
+        return currentFocusedIndex
     }
 
     fun onAction(action: Action) {
@@ -253,6 +345,7 @@ class AuthViewModel(
                     )
                 }
             }
+            is Action.SendCodeToEmail -> onAction(SendCode(_signupUiState.value.email))
             is SendCode -> {
                 viewModelScope.launch {
                     sendEmailUseCase(SendEmailModel(action.email))
@@ -278,7 +371,7 @@ class AuthViewModel(
                     verifyEmailUseCase(
                         VerifyEmailModel(
                             _signupUiState.value.email,
-                            _signupUiState.value.verifyEmailCode
+                            _otpUiState.value.code.filterNotNull().joinToString(""),
                         )
                     ).onSuccess {
                         signUpUseCase(
