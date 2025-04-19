@@ -8,4 +8,5 @@ object Endpoints {
     const val HOME = "/home"
     const val SEND_EMAIL = "/email/send-code"
     const val VERIFY_EMAIL = "/email/verify-code"
+    const val SERVICE_CREATE = "/service/create"
 }

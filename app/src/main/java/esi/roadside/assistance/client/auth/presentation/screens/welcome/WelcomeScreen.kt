@@ -63,7 +63,7 @@ fun WelcomeScreen(
             3 -> GetStartedScreen(onAction)
         }
     }
-    BackHandler(step in 0..3) {
+    BackHandler(step in 1..3) {
         onAction(Action.PreviousStep)
     }
 }
