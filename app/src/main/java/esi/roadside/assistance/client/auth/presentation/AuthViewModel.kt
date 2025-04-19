@@ -314,35 +314,35 @@ class AuthViewModel(
                             phoneNumberError = inputError.takeIf { inputError.field == Field.PHONE_NUMBER }
                         )
                     }
-                    return
-                }
-                _signupUiState.update {
-                    it.copy(loading = true)
-                }
-                viewModelScope.launch {
-                    var url: String? = null
-                    cloudinaryUseCase(
-                        image = _signupUiState.value.image ?: "".toUri(),
-                        onSuccess = {
-                            Log.i("Welcome", "Image uploaded successfully: $it")
-                            url = it
-                        },
-                        onProgress = { progress ->
-                            _signupUiState.update {
-                                it.copy(uploadProgress = progress)
+                } else {
+                    _signupUiState.update {
+                        it.copy(loading = true)
+                    }
+                    viewModelScope.launch {
+                        var url: String? = null
+                        cloudinaryUseCase(
+                            image = _signupUiState.value.image ?: "".toUri(),
+                            onSuccess = {
+                                Log.i("Welcome", "Image uploaded successfully: $it")
+                                url = it
+                            },
+                            onProgress = { progress ->
+                                _signupUiState.update {
+                                    it.copy(uploadProgress = progress)
+                                }
+                            },
+                            onFailure = {
+                                sendEvent(ImageUploadError)
+                            },
+                            onFinished = {
+                                _signupUiState.update {
+                                    it.copy(photo = url ?: "_")
+                                }
+                                sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
+                                onAction(SendCode(_signupUiState.value.email))
                             }
-                        },
-                        onFailure = {
-                            sendEvent(ImageUploadError)
-                        },
-                        onFinished = {
-                            _signupUiState.update {
-                                it.copy(photo = url ?: "_")
-                            }
-                            sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
-                            onAction(SendCode(_signupUiState.value.email))
-                        }
-                    )
+                        )
+                    }
                 }
             }
             is Action.SendCodeToEmail -> onAction(SendCode(_signupUiState.value.email))

@@ -12,9 +12,10 @@ import java.time.LocalDateTime
 
 object NotificationListener {
     private val _notifications = Channel<NotificationModel>()
+    private var id = 0
     val notifications = _notifications.receiveAsFlow()
 
-    fun listenForNotifications(userId: String, callback: (NotificationModel) -> Unit) {
+    fun listenForNotifications(userId: String) {
         val factory = ConnectionFactory()
         factory.setUri(BuildConfig.CLOUDAMPQ_URL)
 
@@ -34,10 +35,17 @@ object NotificationListener {
                     properties: AMQP.BasicProperties?,
                     body: ByteArray?
                 ) {
-                    val message = body?.let { String(it) }
-                    println("Received notification: $message")
-                    message?.let {
-                        callback(it.toNotificationModel(LocalDateTime.now()))
+                    body?.let { String(it) }?.let { message ->
+                        _notifications.trySend(
+                            NotificationModel(
+                                id = "${id++}",
+                                title = "Notification $id",
+                                text = message,
+                                isWarning = false,
+                                image = null,
+                                createdAt = LocalDateTime.now()
+                            )
+                        )
                     }
                 }
             }

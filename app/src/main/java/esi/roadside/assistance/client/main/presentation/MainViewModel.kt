@@ -23,6 +23,7 @@ import esi.roadside.assistance.client.main.presentation.models.ClientUi
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeUiState
 import esi.roadside.assistance.client.main.presentation.routes.home.request.RequestAssistanceState
 import esi.roadside.assistance.client.main.presentation.routes.profile.ProfileUiState
+import esi.roadside.assistance.client.main.util.NotificationListener
 import esi.roadside.assistance.client.main.util.saveClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -53,11 +54,7 @@ class MainViewModel(
     val notifications = _notifications.asStateFlow()
 
     init {
-//        NotificationListener.listenForNotifications("") {
-//            viewModelScope.launch {
-//
-//            }
-//        }
+        NotificationListener.listenForNotifications(_client.value.id)
         viewModelScope.launch {
             context.dataStore.data.collectLatest { userPreferences ->
                 _profileUiState.update {

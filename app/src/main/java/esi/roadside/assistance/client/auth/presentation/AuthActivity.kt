@@ -1,6 +1,5 @@
 package esi.roadside.assistance.client.auth.presentation
 
-import esi.roadside.assistance.client.R
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -36,17 +35,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.SecureFlagPolicy
-import androidx.core.net.toUri
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginScreen
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordScreen
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupScreen
 import esi.roadside.assistance.client.auth.presentation.screens.signup.VerifyEmailScreen
 import esi.roadside.assistance.client.auth.presentation.screens.welcome.WelcomeScreen
-import esi.roadside.assistance.client.core.data.networking.constructUrl
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
 import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.util.composables.CollectEvents
