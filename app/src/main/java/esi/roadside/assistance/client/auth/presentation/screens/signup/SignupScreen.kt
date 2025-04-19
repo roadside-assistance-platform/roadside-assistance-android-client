@@ -88,7 +88,8 @@ fun SignupScreen(
                     },
                     label = stringResource(R.string.full_name),
                     placeholder = stringResource(R.string.full_name_placeholder),
-                    enabled = !uiState.loading
+                    enabled = !uiState.loading,
+                    error = uiState.fullNameError
                 )
                 MyTextField(
                     uiState.phoneNumber,
@@ -98,7 +99,7 @@ fun SignupScreen(
                     label = stringResource(R.string.phone_number),
                     placeholder = stringResource(R.string.phone_number_placeholder),
                     error = uiState.phoneNumberError,
-                    enabled = !uiState.loading
+                    enabled = !uiState.loading,
                 )
                 MyTextField(
                     uiState.email,

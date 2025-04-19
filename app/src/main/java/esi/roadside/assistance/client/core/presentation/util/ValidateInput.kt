@@ -34,7 +34,6 @@ object ValidateInput {
             fullName.isBlank() -> {
                 InputError.Empty(Field.FULL_NAME, R.string.error_empty_full_name)
             }
-            // fullName shouldn't contain numbers, special characters, or multiple spaces
             !fullName.matches(Regex("^[a-zA-Z\\s]+$")) -> {
                 InputError.Invalid(Field.FULL_NAME, R.string.error_invalid_full_name)
             }
