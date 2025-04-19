@@ -8,9 +8,7 @@ import androidx.compose.runtime.getValue
 
 @Composable
 fun navigationBarItemColors(): NavigationBarItemColors {
-    val isFollowingSystemColors by isFollowingSystemColors()
-    return if (isFollowingSystemColors) NavigationBarItemDefaults.colors()
-    else NavigationBarItemDefaults.colors(
+    return NavigationBarItemDefaults.colors(
         selectedIconColor = MaterialTheme.colorScheme.background,
         selectedTextColor = MaterialTheme.colorScheme.onBackground,
         indicatorColor = MaterialTheme.colorScheme.onBackground,
