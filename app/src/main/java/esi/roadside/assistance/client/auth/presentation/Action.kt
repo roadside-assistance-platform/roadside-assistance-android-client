@@ -32,6 +32,7 @@ sealed interface Action {
     data object Login: Action
     data object Signup: Action
     data object Verify: Action
+    data object SendCodeToEmail: Action
     data class SendCode(val email: String): Action
     data object Send: Action
 

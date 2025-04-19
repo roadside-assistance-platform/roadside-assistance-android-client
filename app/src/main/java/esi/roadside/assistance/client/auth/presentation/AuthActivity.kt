@@ -72,6 +72,7 @@ class AuthActivity : ComponentActivity() {
                 val authUiState by viewModel.authUiState.collectAsState()
                 val loginUiState by viewModel.loginUiState.collectAsState()
                 val signupUiState by viewModel.signupUiState.collectAsState()
+                val otpUiState by viewModel.otpUiState.collectAsState()
                 val resetPasswordUiState by viewModel.resetPasswordUiState.collectAsState()
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
@@ -138,7 +139,14 @@ class AuthActivity : ComponentActivity() {
                                 SignupScreen(signupUiState, viewModel::onAction)
                             }
                             composable<NavRoutes.VerifyEmail> {
-                                VerifyEmailScreen(signupUiState, viewModel::onAction)
+                                VerifyEmailScreen(
+                                    otpUiState,
+                                    signupUiState.loading,
+                                    viewModel::onOtpAction,
+                                    onResend = { viewModel.onAction(Action.SendCodeToEmail) },
+                                    onConfirm = { viewModel.onAction(Action.Verify) },
+                                    modifier = Modifier.fillMaxSize()
+                                )
                             }
                             composable<NavRoutes.ForgotPassword> {
                                 ResetPasswordScreen(resetPasswordUiState, viewModel::onAction)
