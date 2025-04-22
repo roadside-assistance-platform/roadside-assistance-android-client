@@ -25,7 +25,7 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "BASE_URL", "\"http://localhost:8080/\"")
-            buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://your-cloudamqp-url\"")
+            buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://xcikzbue:mEXrzOw8yh9B4vwXggUbhIhQj2XjPIES@rat.rmq2.cloudamqp.com/xcikzbue\"")
             buildConfigField("String", "WEB_CLIENT_ID", "\"469116526388-l4fltok5uk1qo6gf4jup9eu57m558h6v.apps.googleusercontent.com\"")
         }
         release {
@@ -107,4 +107,5 @@ dependencies {
     implementation(libs.amqp.client)
     implementation(libs.play.services.auth)
     implementation(libs.compose.markdown)
+    implementation(libs.androidx.core.splashscreen)
 }

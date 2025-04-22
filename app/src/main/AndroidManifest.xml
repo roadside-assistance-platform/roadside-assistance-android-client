@@ -21,7 +21,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.RoadsideAssistanceClient"
+        android:theme="@style/Theme.App.Starting"
         android:name=".App"
         android:enableOnBackInvokedCallback="true"
         android:persistent="true"
@@ -31,8 +31,7 @@
             android:exported="true"
             android:launchMode="singleTop"
             android:noHistory="true"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|navigation"
-            android:theme="@style/Theme.RoadsideAssistanceClient">
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|navigation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
