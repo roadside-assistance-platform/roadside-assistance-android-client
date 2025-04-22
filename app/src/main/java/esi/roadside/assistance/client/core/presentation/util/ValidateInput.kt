@@ -15,6 +15,17 @@ object ValidateInput {
             else -> null
         }
 
+    fun validateLoginPassword(password: String): InputError? =
+        when {
+            password.isBlank() -> {
+                InputError.Empty(Field.PASSWORD, R.string.error_empty_password)
+            }
+            password.length < 6 -> {
+                InputError.Short(Field.PASSWORD, R.string.error_short_password)
+            }
+            else -> null
+        }
+
     fun validatePassword(password: String): InputError? =
         when {
             password.isBlank() -> {
@@ -23,7 +34,7 @@ object ValidateInput {
             password.length < 6 -> {
                 InputError.Short(Field.PASSWORD, R.string.error_short_password)
             }
-            !password.matches(Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$")) -> {
+            !password.contains(Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$")) -> {
                 InputError.Weak(Field.PASSWORD, R.string.error_weak_password)
             }
             else -> null
@@ -64,7 +75,7 @@ object ValidateInput {
 
     fun validateLogin(email: String, password: String): Pair<Field, InputError?>? {
         val emailError = validateEmail(email)
-        val passwordError = validatePassword(password)
+        val passwordError = validateLoginPassword(password)
 
         return when {
             emailError != null -> {
