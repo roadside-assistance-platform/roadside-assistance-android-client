@@ -25,7 +25,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -35,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.SecureFlagPolicy
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -66,12 +66,12 @@ class AuthActivity : ComponentActivity() {
                 SetSystemBarColors()
                 val navController = rememberNavController()
                 val viewModel: AuthViewModel = koinViewModel()
-                val step by viewModel.step.collectAsState()
-                val authUiState by viewModel.authUiState.collectAsState()
-                val loginUiState by viewModel.loginUiState.collectAsState()
-                val signupUiState by viewModel.signupUiState.collectAsState()
-                val otpUiState by viewModel.otpUiState.collectAsState()
-                val resetPasswordUiState by viewModel.resetPasswordUiState.collectAsState()
+                val step by viewModel.step.collectAsStateWithLifecycle()
+                val authUiState by viewModel.authUiState.collectAsStateWithLifecycle()
+                val loginUiState by viewModel.loginUiState.collectAsStateWithLifecycle()
+                val signupUiState by viewModel.signupUiState.collectAsStateWithLifecycle()
+                val otpUiState by viewModel.otpUiState.collectAsStateWithLifecycle()
+                val resetPasswordUiState by viewModel.resetPasswordUiState.collectAsStateWithLifecycle()
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
                 LaunchedEffect(Unit) {

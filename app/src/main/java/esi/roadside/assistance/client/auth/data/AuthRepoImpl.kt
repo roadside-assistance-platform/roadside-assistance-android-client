@@ -23,6 +23,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
+import kotlinx.coroutines.runBlocking
 
 class AuthRepoImpl(
     private val persistentCookieStorage: PersistentCookieStorage,
@@ -86,5 +87,11 @@ class AuthRepoImpl(
         return safeCall<String>(CallType.HOME) {
             client.get(constructUrl(Endpoints.HOME))
         }.map { true }
+    }
+}
+
+fun main() {
+    runBlocking{
+
     }
 }
