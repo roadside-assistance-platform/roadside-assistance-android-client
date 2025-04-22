@@ -263,10 +263,7 @@ class AuthViewModel(
                 sendEvent(AuthNavigate(NavRoutes.ForgotPassword))
             }
             is Action.Login -> {
-                val inputError = ValidateInput.validateLogin(
-                    _loginUiState.value.email,
-                    _loginUiState.value.password
-                )
+                val inputError = ValidateInput.validateLogin(_loginUiState.value.email, _loginUiState.value.password)
                 if (inputError != null) {
                     _loginUiState.update {
                         it.copy(
@@ -323,7 +320,6 @@ class AuthViewModel(
                         cloudinaryUseCase(
                             image = _signupUiState.value.image ?: "".toUri(),
                             onSuccess = {
-                                Log.i("Welcome", "Image uploaded successfully: $it")
                                 url = it
                             },
                             onProgress = { progress ->
@@ -336,7 +332,7 @@ class AuthViewModel(
                             },
                             onFinished = {
                                 _signupUiState.update {
-                                    it.copy(photo = url ?: "_")
+                                    it.copy(photo = url ?: "_", loading = false)
                                 }
                                 sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
                                 onAction(SendCode(_signupUiState.value.email))

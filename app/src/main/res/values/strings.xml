@@ -316,5 +316,5 @@
     <string name="email_not_verified_error">Email not verified</string>
     <string name="verification_email_sent">Verification email sent</string>
     <string name="error_invalid_full_name">Full name can\'t contain numbers, special characters, or multiple spaces</string>
-    <string name="error_weak_password">Password must contain at least: one lowercase letter, one uppercase letter, one digit, and one of these special characters: @, $, !, %, *, ?, and &amp;.</string>
+    <string name="error_weak_password">Password must contain at least: one lowercase letter, one uppercase letter, one digit, and one of these special characters: @, #, $, !, %, *, ?, and &amp;.</string>
 </resources>
