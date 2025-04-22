@@ -78,7 +78,7 @@ fun OutlinedButton(
     interactionSource: MutableInteractionSource? = null,
     onClick: () -> Unit,
 ) {
-    androidx.compose.material3.OutlinedButton(
+    OutlinedButton(
         onClick,
         modifier,
         enabled,

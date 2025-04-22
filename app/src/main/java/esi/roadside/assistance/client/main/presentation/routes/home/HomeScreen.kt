@@ -44,6 +44,7 @@ import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.maps.plugin.viewport.data.FollowPuckViewportStateOptions
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.main.presentation.Action
+import esi.roadside.assistance.client.main.presentation.ClientState
 import soup.compose.material.motion.animation.materialSharedAxisZIn
 import soup.compose.material.motion.animation.materialSharedAxisZOut
 
@@ -66,37 +67,43 @@ fun HomeScreen(
         modifier = modifier,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         floatingActionButton = {
-            Column(
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+            AnimatedVisibility(
+                uiState.clientState == ClientState.IDLE,
+                enter = materialSharedAxisZIn(true),
+                exit = materialSharedAxisZOut(true)
             ) {
-                FloatingActionButton(
-                    {
-                        followLocation(state) {
-                            it?.let {
-                                onAction(Action.SetLocation(it))
-                                point = null
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    FloatingActionButton(
+                        {
+                            followLocation(state) {
+                                it?.let {
+                                    onAction(Action.SetLocation(it))
+                                    point = null
+                                }
                             }
-                        }
-                    },
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = contentColorFor(MaterialTheme.colorScheme.tertiaryContainer)
-                ) {
-                    Icon(Icons.Default.LocationOn, null)
-                }
-                AnimatedVisibility(
-                    uiState.location != null,
-                    enter = materialSharedAxisZIn(true),
-                    exit = materialSharedAxisZOut(true)
-                ) {
-                    ExtendedFloatingActionButton(
-                        onClick = {
-                            onAction(Action.ShowRequestAssistance)
                         },
-                        icon = { Icon(Icons.Outlined.Edit, null) },
-                        text = { Text(stringResource(R.string.request_service)) },
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        contentColor = contentColorFor(MaterialTheme.colorScheme.tertiaryContainer)
+                    ) {
+                        Icon(Icons.Default.LocationOn, null)
+                    }
+                    AnimatedVisibility(
+                        uiState.location != null,
+                        enter = materialSharedAxisZIn(true),
+                        exit = materialSharedAxisZOut(true)
+                    ) {
+                        ExtendedFloatingActionButton(
+                            onClick = {
+                                onAction(Action.ShowRequestAssistance)
+                            },
+                            icon = { Icon(Icons.Outlined.Edit, null) },
+                            text = { Text(stringResource(R.string.request_service)) },
+                            containerColor = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
         }

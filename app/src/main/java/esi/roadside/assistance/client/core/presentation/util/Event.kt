@@ -16,6 +16,8 @@ sealed interface Event {
     data object LaunchMainActivity: Event
     data class ShowAuthActivityMessage(val text: Int): Event
     data class ShowMainActivityMessage(val text: Int): Event
+    data class DismissSnackbar(val text: Int): Event
+    data class ShowMainActivityActionSnackbar(val text: Int, val actionText: Int, val callback: () -> Unit): Event
     data object ShowRequestAssistance: Event
     data object HideRequestAssistance: Event
 }

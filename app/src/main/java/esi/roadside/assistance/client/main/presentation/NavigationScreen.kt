@@ -37,7 +37,6 @@ import esi.roadside.assistance.client.main.presentation.routes.settings.Language
 import esi.roadside.assistance.client.main.presentation.routes.settings.PrivacyPolicyScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.SettingsScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.TermsOfServiceScreen
-import kotlinx.coroutines.launch
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 
@@ -49,7 +48,6 @@ fun NavigationScreen(
     mainViewModel: MainViewModel,
     modifier: Modifier = Modifier,
     bottomSheetState: SheetState,
-    onAction: (Action) -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -74,7 +72,6 @@ fun NavigationScreen(
     val profileUiState by mainViewModel.profileUiState.collectAsState()
     val notifications by mainViewModel.notifications.collectAsState()
     val navigationBarVisible = isParent and ((currentNavRoute != Routes.PROFILE) or !profileUiState.enableEditing)
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier,
@@ -115,7 +112,7 @@ fun NavigationScreen(
         ) {
             navigation<NavRoutes.Home>(NavRoutes.Map) {
                 composable<NavRoutes.Map> {
-                    HomeScreen(homeUiState, onAction)
+                    HomeScreen(homeUiState, mainViewModel::onAction)
                 }
             }
             navigation<NavRoutes.Notifications>(NavRoutes.NotificationsList) {
@@ -132,7 +129,7 @@ fun NavigationScreen(
                 }
             }
             composable<NavRoutes.Profile> {
-                ProfileScreen(profileUiState, onAction)
+                ProfileScreen(profileUiState, mainViewModel::onAction)
             }
             navigation<NavRoutes.Settings>(NavRoutes.SettingsList) {
                 composable<NavRoutes.SettingsList> {
@@ -165,5 +162,5 @@ fun NavigationScreen(
             }
         }
     }
-    RequestAssistance(bottomSheetState, requestAssistanceState, onAction)
+    RequestAssistance(bottomSheetState, requestAssistanceState, mainViewModel::onAction)
 }

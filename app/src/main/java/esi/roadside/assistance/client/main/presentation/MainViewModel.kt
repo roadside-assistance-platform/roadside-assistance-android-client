@@ -96,7 +96,16 @@ class MainViewModel(
                                 price = 0
                             )
                         ).onSuccess {
-                            sendEvent(ShowMainActivityMessage(R.string.request_submitted))
+                            sendEvent(
+                                ShowMainActivityActionSnackbar(
+                                    R.string.request_submitted,
+                                    R.string.cancel
+                                ) {
+                                    onAction(Action.CancelRequest)
+                                })
+                            _homeUiState.update {
+                                it.copy(clientState = ClientState.ASSISTANCE_REQUESTED)
+                            }
                         }.onError {
                             sendEvent(ShowMainActivityMessage(it.text))
                         }
@@ -197,6 +206,16 @@ class MainViewModel(
                     logoutUseCase()
                     sendEvent(ExitToAuthActivity)
                 }
+            }
+
+            Action.CancelRequest -> {
+                _homeUiState.update {
+                    it.copy(clientState = ClientState.IDLE)
+                }
+            }
+
+            is Action.CompleteRequest -> {
+
             }
         }
     }

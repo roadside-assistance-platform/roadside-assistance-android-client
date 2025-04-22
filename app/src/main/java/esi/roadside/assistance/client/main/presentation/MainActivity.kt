@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,9 +53,26 @@ class MainActivity : ComponentActivity() {
             CollectEvents {
                 when(it) {
                     is MainNavigate -> navController.navigate(it.route)
+                    is Event.DismissSnackbar -> {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                    }
                     is Event.ShowMainActivityMessage ->
                         scope.launch {
+                            snackbarHostState.currentSnackbarData?.dismiss()
                             snackbarHostState.showSnackbar(message = getString(it.text))
+                        }
+                    is Event.ShowMainActivityActionSnackbar ->
+                        scope.launch {
+                            snackbarHostState.currentSnackbarData?.dismiss()
+                            val result = snackbarHostState
+                                .showSnackbar(
+                                    message = getString(it.text),
+                                    actionLabel = getString(it.actionText)
+                                )
+                            when (result) {
+                                SnackbarResult.ActionPerformed -> it.callback()
+                                SnackbarResult.Dismissed -> Unit
+                            }
                         }
                     Event.ShowRequestAssistance -> scope.launch {
                         bottomSheetState.show()
@@ -73,12 +91,11 @@ class MainActivity : ComponentActivity() {
                 // Handle notification
             }
             AppTheme {
-                NavigationScreen(
+                AppScreen(
                     navController = navController,
                     snackbarHostState = snackbarHostState,
                     mainViewModel = mainViewModel,
-                    bottomSheetState = bottomSheetState,
-                    onAction = mainViewModel::onAction
+                    bottomSheetState = bottomSheetState
                 )
             }
         }
