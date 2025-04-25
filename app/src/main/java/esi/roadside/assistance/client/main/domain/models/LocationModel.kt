@@ -15,5 +15,5 @@ data class LocationModel(
         )
     }
 
-    override fun toString() = "${latitude},${longitude}"
+    override fun toString() = "${longitude},${latitude}"
 }

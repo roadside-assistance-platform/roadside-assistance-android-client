@@ -1,5 +1,7 @@
 package esi.roadside.assistance.client.auth.presentation.screens.signup
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -137,14 +140,20 @@ fun SignupScreen(
                     placeholder = stringResource(R.string.confirm_password_placeholder),
                     enabled = !uiState.loading
                 )
-                Button(
-                    stringResource(R.string.continue_text),
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    enabled = !uiState.loading
+                AnimatedContent(
+                    uiState.loading,
+                    modifier = Modifier.padding(top = 16.dp)
                 ) {
-                    onAction(Action.Signup)
+                    if (it)
+                        LinearProgressIndicator(Modifier.padding(vertical = 30.dp).fillMaxWidth())
+                    else
+                        Button(
+                            stringResource(R.string.continue_text),
+                            Modifier.fillMaxWidth(),
+                            enabled = !uiState.loading
+                        ) {
+                            onAction(Action.Signup)
+                        }
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(stringResource(R.string.already_have_an_account))
@@ -167,6 +176,7 @@ fun SignupScreen(
             )
         }
     }
+    BackHandler(uiState.loading) {}
 }
 
 @Preview

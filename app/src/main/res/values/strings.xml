@@ -326,4 +326,5 @@
     <string name="assistance_completed_description">Thanks for using our service, would you leave a rating for the provider ?</string>
     <string name="close">Close</string>
     <string name="leave_review">How do you rate this experience ?</string>
+    <string name="timeout">Connection timed out</string>
 </resources>

@@ -1,5 +1,7 @@
 package esi.roadside.assistance.client.auth.presentation.screens.login
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -77,8 +80,13 @@ fun LoginScreen(
                     Text(stringResource(R.string.forgot_password))
                 }
             }
-            Button(stringResource(R.string.log_in), Modifier.fillMaxWidth(), enabled = !uiState.loading) {
-                onAction(Action.Login)
+            AnimatedContent(uiState.loading) {
+                if (it)
+                    LinearProgressIndicator(Modifier.padding(vertical = 30.dp).fillMaxWidth())
+                else
+                    Button(stringResource(R.string.log_in), Modifier.fillMaxWidth(), enabled = !uiState.loading) {
+                        onAction(Action.Login)
+                    }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(R.string.don_t_have_an_account))
@@ -95,6 +103,7 @@ fun LoginScreen(
             }
         }
     }
+    BackHandler(uiState.loading) {}
 }
 
 @PreviewScreenSizes

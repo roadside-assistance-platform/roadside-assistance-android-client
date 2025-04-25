@@ -1,5 +1,7 @@
 package esi.roadside.assistance.client.auth.presentation.screens.signup
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -26,7 +29,6 @@ import esi.roadside.assistance.client.auth.presentation.Action
 import esi.roadside.assistance.client.auth.presentation.OtpAction
 import esi.roadside.assistance.client.auth.presentation.util.Button
 import esi.roadside.assistance.client.auth.presentation.util.MyScreen
-import esi.roadside.assistance.client.core.presentation.components.MyTextField
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 
 @Composable
@@ -45,7 +47,9 @@ fun VerifyEmailScreen(
     val keyboardManager = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(loading) {
-        if (!loading) focusRequesters[0].requestFocus()
+        if (!loading)
+            focusRequesters[state.code.indexOfFirst { it == null }.takeUnless { it == -1 } ?: 5]
+                .requestFocus()
     }
 
     LaunchedEffect(state.focusedIndex) {
@@ -102,14 +106,20 @@ fun VerifyEmailScreen(
                     Text(stringResource(R.string.send_code_again))
                 }
             }
-            Button(
-                stringResource(R.string.sign_up),
-                Modifier.fillMaxWidth(),
-                enabled = !loading,
-                onClick = onConfirm
-            )
+            AnimatedContent(loading) {
+                if (it)
+                    LinearProgressIndicator(Modifier.padding(vertical = 30.dp).fillMaxWidth())
+                else
+                    Button(
+                        stringResource(R.string.sign_up),
+                        Modifier.fillMaxWidth(),
+                        enabled = !loading,
+                        onClick = onConfirm
+                    )
+            }
         }
     }
+    BackHandler(loading) {}
 }
 
 @Preview

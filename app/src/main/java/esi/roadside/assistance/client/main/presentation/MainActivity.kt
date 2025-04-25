@@ -33,11 +33,9 @@ class MainActivity : ComponentActivity() {
             permissionsManager = PermissionsManager(
                 object : PermissionsListener {
                     override fun onExplanationNeeded(permissionsToExplain: List<String>) {
-                        TODO("Not yet implemented")
                     }
 
                     override fun onPermissionResult(granted: Boolean) {
-                        TODO("Not yet implemented")
                     }
                 }
             )
@@ -86,9 +84,6 @@ class MainActivity : ComponentActivity() {
                     }
                     else -> Unit
                 }
-            }
-            CollectNotifications {
-                // Handle notification
             }
             AppTheme {
                 AppScreen(

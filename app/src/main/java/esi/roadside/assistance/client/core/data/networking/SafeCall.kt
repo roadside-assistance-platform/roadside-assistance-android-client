@@ -2,6 +2,7 @@ package esi.roadside.assistance.client.core.data.networking
 
 import esi.roadside.assistance.client.core.domain.util.Result
 import esi.roadside.assistance.client.core.domain.util.Result.Error
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.statement.HttpResponse
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.ensureActive
@@ -22,6 +23,8 @@ suspend inline fun <reified T> safeCall(
         return Error(DomainError.SERIALIZATION_ERROR)
     } catch (_: ConnectException) {
         return Error(DomainError.NO_INTERNET)
+    } catch (_: HttpRequestTimeoutException) {
+        return Error(DomainError.TIMEOUT)
     } catch (_: Exception) {
         coroutineContext.ensureActive()
         return Error(DomainError.UNKNOWN)

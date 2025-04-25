@@ -1,5 +1,6 @@
 package esi.roadside.assistance.client.auth.presentation.screens.reset_password
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement

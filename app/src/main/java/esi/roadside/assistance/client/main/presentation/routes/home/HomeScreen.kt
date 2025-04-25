@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mapbox.geojson.Point
@@ -37,6 +38,9 @@ import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.generated.CircleAnnotation
+import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
+import com.mapbox.maps.extension.compose.annotation.rememberIconImage
+import com.mapbox.maps.extension.style.layers.properties.generated.IconAnchor
 import com.mapbox.maps.plugin.PuckBearing
 import com.mapbox.maps.plugin.gestures.OnMapLongClickListener
 import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
@@ -63,6 +67,7 @@ fun HomeScreen(
             bearing(0.0)
         }
     }
+    val marker = rememberIconImage(R.drawable.baseline_location_pin_24)
     Scaffold(
         modifier = modifier,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -145,7 +150,7 @@ fun HomeScreen(
                 }
             ) {
                 point?.let {
-                    CircleAnnotation(point = it) {
+                    PointAnnotation(point = it) {
                         interactionsState.onClicked {
                             onAction(Action.SetLocation(it.point))
                             state.easeTo(
@@ -159,10 +164,9 @@ fun HomeScreen(
                             )
                             true
                         }
-                        circleRadius = 10.0
-                        circleColor = Color.Red
-                        circleStrokeWidth = 5.0
-                        circleStrokeColor = Color.White
+                        iconImage = marker
+                        iconAnchor = IconAnchor.BOTTOM
+                        iconImageCrossFade = 1.0
                     }
                 }
                 MapEffect(Unit) { mapView ->

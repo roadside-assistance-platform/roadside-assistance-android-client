@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 
 object NotificationListener {
@@ -23,7 +24,7 @@ object NotificationListener {
             val connection = factory.newConnection()
             val channel = connection.createChannel()
 
-            val queueName = "notifications_$userId"
+            val queueName = "provider-notifications"
             channel.queueDeclare(queueName, false, false, false, null)
 
             println("Waiting for notifications...")
@@ -52,5 +53,12 @@ object NotificationListener {
 
             channel.basicConsume(queueName, true, consumer)
         }
+    }
+}
+
+fun main() = runBlocking {
+    NotificationListener.listenForNotifications("userId")
+    NotificationListener.notifications.collect { notification ->
+        println("Received notification: $notification")
     }
 }
