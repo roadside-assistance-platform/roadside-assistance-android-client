@@ -1,13 +1,14 @@
 package esi.roadside.assistance.client.core.data.networking
 
-import esi.roadside.assistance.client.BuildConfig
+import esi.roadside.assistance.client.core.data.BaseUrls
 
 fun constructUrl(
-    url: String
+    url: String,
+    baseUrl: String = BaseUrls.API,
 ): String {
     return when {
-        url.contains(BuildConfig.BASE_URL) -> url
-        url.startsWith("/") -> "${BuildConfig.BASE_URL}${url.drop(1)}"
-        else -> "${BuildConfig.BASE_URL}$url"
+        url.contains(baseUrl) -> url
+        url.startsWith("/") -> "${baseUrl}${url.drop(1)}"
+        else -> "${baseUrl}$url"
     }
 }

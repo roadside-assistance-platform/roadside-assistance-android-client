@@ -13,6 +13,7 @@ sealed interface Action {
         data class SetDescription(val description: String): Action
         data object SubmitRequest: Action
         data object CancelRequest: Action
+        data object Timeout: Action
         data class CompleteRequest(val rating: Double?): Action
         data object EnableProfileEditing: Action
         data object CancelProfileEditing: Action

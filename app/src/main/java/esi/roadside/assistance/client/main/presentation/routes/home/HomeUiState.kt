@@ -5,5 +5,6 @@ import esi.roadside.assistance.client.main.presentation.ClientState
 
 data class HomeUiState(
     val clientState: ClientState = ClientState.IDLE,
+    val time: Long = 5 * 60 * 1000,
     val location: Point? = null,
 )

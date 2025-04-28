@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Badge
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarHost
@@ -18,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -68,6 +66,7 @@ fun NavigationScreen(
                 }
         } != false
     val homeUiState by mainViewModel.homeUiState.collectAsState()
+    val searchState by mainViewModel.searchState.collectAsState()
     val requestAssistanceState by mainViewModel.requestAssistanceState.collectAsState()
     val profileUiState by mainViewModel.profileUiState.collectAsState()
     val notifications by mainViewModel.notifications.collectAsState()
@@ -112,7 +111,12 @@ fun NavigationScreen(
         ) {
             navigation<NavRoutes.Home>(NavRoutes.Map) {
                 composable<NavRoutes.Map> {
-                    HomeScreen(homeUiState, mainViewModel::onAction)
+                    HomeScreen(
+                        homeUiState,
+                        searchState,
+                        mainViewModel::onAction,
+                        mainViewModel::onSearchEvent
+                    )
                 }
             }
             navigation<NavRoutes.Notifications>(NavRoutes.NotificationsList) {

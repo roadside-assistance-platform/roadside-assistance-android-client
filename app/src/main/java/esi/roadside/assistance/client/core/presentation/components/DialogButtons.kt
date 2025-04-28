@@ -20,6 +20,7 @@ fun DialogButtons(
     cancelListener: (() -> Unit)? = null,
     cancelText: String = stringResource(R.string.cancel),
     okListener: (() -> Unit)? = null,
+    okText: String = stringResource(R.string.ok),
     neutral: (@Composable () -> Unit)? = null,
 ) {
     Row(
@@ -51,7 +52,7 @@ fun DialogButtons(
                     onClick = okListener,
                     modifier = modifier,
                 ) {
-                    Text(stringResource(R.string.ok))
+                    Text(okText)
                 }
             }
         }

@@ -6,6 +6,8 @@ import esi.roadside.assistance.client.R
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
@@ -24,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import esi.roadside.assistance.client.core.presentation.components.Dialog
+import esi.roadside.assistance.client.core.presentation.components.IconDialog
 import esi.roadside.assistance.client.main.presentation.components.RatingBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,26 +47,23 @@ fun AppScreen(
     )
     val uiState by mainViewModel.homeUiState.collectAsState()
     var rating by remember { mutableDoubleStateOf(0.0) }
-    Dialog(
+    IconDialog(
         visible = uiState.clientState == ClientState.ASSISTANCE_FAILED,
         onDismissRequest = {
             mainViewModel.onAction(Action.CompleteRequest(null))
         },
         title = stringResource(R.string.assistance_failed),
+        text = stringResource(R.string.assistance_failed_description),
+        icon = Icons.Default.Error,
         okListener = {
             mainViewModel.onAction(Action.SubmitRequest)
         },
         cancelListener = {
             mainViewModel.onAction(Action.CancelRequest)
         },
-        cancelText = stringResource(R.string.close)
-    ) {
-        Text(
-            stringResource(R.string.assistance_failed_description),
-            Modifier.fillMaxWidth().padding(24.dp),
-            style = MaterialTheme.typography.bodyLarge
-        )
-    }
+        cancelText = stringResource(R.string.cancel),
+        okText = stringResource(R.string.retry),
+    )
     Dialog(
         visible = uiState.clientState == ClientState.ASSISTANCE_COMPLETED,
         onDismissRequest = {
@@ -76,7 +76,7 @@ fun AppScreen(
         cancelListener = {
             mainViewModel.onAction(Action.CompleteRequest(null))
         },
-        cancelText = stringResource(R.string.close)
+        cancelText = stringResource(R.string.close),
     ) {
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(

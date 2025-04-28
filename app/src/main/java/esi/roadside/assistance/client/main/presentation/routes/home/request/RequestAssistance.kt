@@ -1,5 +1,6 @@
 package esi.roadside.assistance.client.main.presentation.routes.home.request
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -203,8 +205,13 @@ fun RequestAssistance(
                             .padding(16.dp),
                         horizontalArrangement = Arrangement.Center,
                     ) {
-                        Button(stringResource(R.string.submit_req), Modifier.padding(10.dp)) {
-                            onAction(Action.SubmitRequest)
+                        AnimatedContent(state.loading) {
+                            if (it)
+                                LinearProgressIndicator(Modifier.padding(vertical = 30.dp).fillMaxWidth(.5f))
+                            else
+                                Button(stringResource(R.string.submit_req), Modifier.padding(10.dp)) {
+                                    onAction(Action.SubmitRequest)
+                                }
                         }
                     }
                 }

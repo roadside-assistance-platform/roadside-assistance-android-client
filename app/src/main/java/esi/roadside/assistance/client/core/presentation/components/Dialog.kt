@@ -1,6 +1,5 @@
 package esi.roadside.assistance.client.core.presentation.components
 
-import android.app.Dialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,8 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -46,6 +43,7 @@ fun Dialog(
     cancelListener: (() -> Unit)? = null,
     cancelText: String = stringResource(R.string.cancel),
     okListener: (() -> Unit)? = onDismissRequest,
+    okText: String = stringResource(R.string.ok),
     neutral: @Composable (() -> Unit)? = null,
     content: @Composable (ColumnScope.() -> Unit),
 ) {
@@ -96,7 +94,7 @@ fun Dialog(
                         header(this)
                     }
                     content(this)
-                    DialogButtons(cancelListener, cancelText, okListener, neutral)
+                    DialogButtons(cancelListener, cancelText, okListener, okText, neutral)
                 }
             }
         }
@@ -114,6 +112,7 @@ fun IconDialog(
     cancelListener: (() -> Unit)? = null,
     cancelText: String = stringResource(R.string.cancel),
     okListener: (() -> Unit)? = onDismissRequest,
+    okText: String = stringResource(R.string.retry),
     neutral: @Composable (() -> Unit)? = null,
 ) = Dialog(
     visible = visible,
@@ -142,6 +141,7 @@ fun IconDialog(
     cancelListener = cancelListener,
     cancelText = cancelText,
     okListener = okListener,
+    okText = okText,
     neutral = neutral,
     content = {
         Text(

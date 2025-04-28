@@ -34,7 +34,7 @@ object ValidateInput {
             password.length < 6 -> {
                 InputError.Short(Field.PASSWORD, R.string.error_short_password)
             }
-            !password.contains(Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$")) -> {
+            !password.matches(Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z0-9]).{12,}$")) -> {
                 InputError.Weak(Field.PASSWORD, R.string.error_weak_password)
             }
             else -> null

@@ -312,11 +312,12 @@
     <string name="no_internet_error_descr">Check your internet connection and try again</string>
     <string name="retry">Retry</string>
     <string name="error_uploading_image">Error uploading image</string>
-    <string name="request_submitted">Looking for providers…</string>
+    <string name="request_submitted">Request submitted</string>
+    <string name="looking_for_providers">Looking for providers…</string>
     <string name="email_not_verified_error">Email not verified</string>
     <string name="verification_email_sent">Verification email sent</string>
     <string name="error_invalid_full_name">Full name can\'t contain numbers, special characters, or multiple spaces</string>
-    <string name="error_weak_password">Password must contain at least: one lowercase letter, one uppercase letter, one digit, and one of these special characters: @, #, $, !, %, *, ?, and &amp;.</string>
+    <string name="error_weak_password">Password must contain at least: one lowercase letter, one uppercase letter, one digit, and one special character.</string>
     <string name="assistance_requested">Assistance requested</string>
     <string name="assistance_requested_description">We\'re looking for nearby service providers</string>
     <string name="assistance_in_progress">In progress</string>
@@ -327,4 +328,5 @@
     <string name="close">Close</string>
     <string name="leave_review">How do you rate this experience ?</string>
     <string name="timeout">Connection timed out</string>
+    <string name="timeout_descr">It seems you have a low internet connection, please try again later</string>
 </resources>

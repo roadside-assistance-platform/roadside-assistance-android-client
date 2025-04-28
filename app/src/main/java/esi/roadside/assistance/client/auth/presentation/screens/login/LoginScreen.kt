@@ -16,6 +16,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -55,6 +56,7 @@ fun LoginScreen(
                 error = uiState.emailError,
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Email,
+                autoCompleteContentType = ContentType.Username
             )
             PasswordTextField(
                 uiState.password,
@@ -71,6 +73,7 @@ fun LoginScreen(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Password,
                 error = uiState.passwordError,
+                autoCompleteContentType = ContentType.Password
             )
             Row(
                 Modifier.fillMaxWidth(),

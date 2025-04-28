@@ -5,5 +5,6 @@ import esi.roadside.assistance.client.main.domain.Categories
 data class RequestAssistanceState(
     val sheetVisible: Boolean = false,
     val category: Categories = Categories.TOWING,
+    val loading: Boolean = false,
     val description: String = ""
 )

@@ -11,10 +11,10 @@ data class AssistanceRequestModel(
     val price: Int,
 ) {
     fun toAssistanceRequest() = AssistanceRequest(
-        description = description,
-        serviceCategory = serviceCategory,
-        serviceLocation = serviceLocation.toString(),
-        providerId = providerId,
-        price = price,
+        description = this@AssistanceRequestModel.description,
+        serviceCategory = this@AssistanceRequestModel.serviceCategory,
+        serviceLocation = this@AssistanceRequestModel.serviceLocation.toString(),
+        providerId = this@AssistanceRequestModel.providerId,
+        price = this@AssistanceRequestModel.price,
     )
 }

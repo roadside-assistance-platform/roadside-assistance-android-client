@@ -221,7 +221,11 @@ class AuthViewModel(
                                 _authUiState.update {
                                     it.copy(
                                         error = error,
-                                        errorDialogVisible = error == DomainError.NO_INTERNET,
+                                        errorDialogVisible =
+                                            error in setOf(
+                                                DomainError.NO_INTERNET,
+                                                DomainError.TIMEOUT
+                                            ),
                                         loading = false,
                                         action = R.string.retry to {
                                             onAction(Initiate)
@@ -246,18 +250,6 @@ class AuthViewModel(
             }
             is GoToSignup -> {
                 sendEvent(AuthNavigate(NavRoutes.Signup))
-                viewModelScope.launch {
-                    val result = accountManager.signIn()
-                    if (result is SignInResult.Success) {
-                        _signupUiState.update {
-                            it.copy(
-                                email = result.username,
-                                password = result.password,
-                                confirmPassword = result.password
-                            )
-                        }
-                    }
-                }
             }
             is GoToForgotPassword -> {
                 sendEvent(AuthNavigate(NavRoutes.ForgotPassword))
@@ -334,7 +326,6 @@ class AuthViewModel(
                                 _signupUiState.update {
                                     it.copy(photo = url ?: "_", loading = false)
                                 }
-                                sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
                                 onAction(SendCode(_signupUiState.value.email))
                             }
                         )
@@ -343,13 +334,18 @@ class AuthViewModel(
             }
             is Action.SendCodeToEmail -> onAction(SendCode(_signupUiState.value.email))
             is SendCode -> {
+                _signupUiState.update {
+                    it.copy(loading = true)
+                }
                 viewModelScope.launch {
                     sendEmailUseCase(SendEmailModel(action.email))
                         .onSuccess {
-                            sendEvent(Event.ShowAuthActivityMessage(R.string.verification_email_sent))
                             _signupUiState.update {
                                 it.copy(loading = false)
                             }
+                            _otpUiState.value = OtpState()
+                            sendEvent(Event.ShowAuthActivityMessage(R.string.verification_email_sent))
+                            sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
                         }
                         .onError {
                             _signupUiState.update {

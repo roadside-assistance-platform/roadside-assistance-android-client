@@ -1,6 +1,7 @@
 package esi.roadside.assistance.client.main.presentation
 
 import android.content.Context
+import android.os.CountDownTimer
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,10 +18,13 @@ import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.domain.models.NotificationModel
 import esi.roadside.assistance.client.main.domain.models.AssistanceRequestModel
+import esi.roadside.assistance.client.main.domain.use_cases.Geocoding
 import esi.roadside.assistance.client.main.domain.use_cases.Logout
 import esi.roadside.assistance.client.main.domain.use_cases.SubmitRequest
 import esi.roadside.assistance.client.main.presentation.models.ClientUi
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeUiState
+import esi.roadside.assistance.client.main.presentation.routes.home.SearchEvent
+import esi.roadside.assistance.client.main.presentation.routes.home.SearchState
 import esi.roadside.assistance.client.main.presentation.routes.home.request.RequestAssistanceState
 import esi.roadside.assistance.client.main.presentation.routes.profile.ProfileUiState
 import esi.roadside.assistance.client.main.util.NotificationListener
@@ -37,9 +41,13 @@ class MainViewModel(
     val updateUseCase: Update,
     val submitRequestUseCase: SubmitRequest,
     val logoutUseCase: Logout,
+    val geocodingUseCase: Geocoding,
 ): ViewModel() {
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState = _homeUiState.asStateFlow()
+
+    private val _searchState = MutableStateFlow(SearchState())
+    val searchState = _searchState.asStateFlow()
 
     private val _client = MutableStateFlow(ClientUi())
     val client = _client.asStateFlow()
@@ -53,8 +61,20 @@ class MainViewModel(
     private val _notifications = MutableStateFlow(listOf<NotificationModel>())
     val notifications = _notifications.asStateFlow()
 
+    private val timer = object: CountDownTimer(5 * 60 * 1000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            _homeUiState.update {
+                it.copy(time = millisUntilFinished)
+            }
+        }
+
+        override fun onFinish() {
+            onAction(Action.Timeout)
+        }
+    }
+
     init {
-        NotificationListener.listenForNotifications(_client.value.id)
+        //NotificationListener.listenForNotifications(_client.value.id)
         viewModelScope.launch {
             context.dataStore.data.collectLatest { userPreferences ->
                 _profileUiState.update {
@@ -63,6 +83,40 @@ class MainViewModel(
                         editClient = userPreferences.client.toClientModel().toClientUi(),
                         photo = userPreferences.client.photo ?: ""
                     )
+                }
+            }
+        }
+    }
+
+    fun onSearchEvent(event: SearchEvent) {
+        when(event) {
+            SearchEvent.Collapse -> _searchState.update {
+                it.copy(expanded = false)
+            }
+            SearchEvent.Expand -> _searchState.update {
+                it.copy(expanded = true)
+            }
+            is SearchEvent.UpdateExpanded -> _searchState.update {
+                it.copy(expanded = event.expanded)
+            }
+            is SearchEvent.UpdateQuery -> {
+                _searchState.update {
+                    it.copy(query = event.query)
+                }
+                if (event.query.isEmpty())
+                    _searchState.update {
+                        it.copy(result = null)
+                    }
+                else {
+                    viewModelScope.launch {
+                        geocodingUseCase(event.query).onSuccess { result ->
+                            _searchState.update {
+                                it.copy(result = result)
+                            }
+                        }.onError {
+                            sendEvent(ShowMainActivityMessage(it.text))
+                        }
+                    }
                 }
             }
         }
@@ -86,6 +140,9 @@ class MainViewModel(
                 }
             }
             Action.SubmitRequest -> {
+                _requestAssistanceState.update {
+                    it.copy(loading = true)
+                }
                 viewModelScope.launch {
                     _homeUiState.value.location?.let { location ->
                         submitRequestUseCase(
@@ -96,21 +153,23 @@ class MainViewModel(
                                 price = 0
                             )
                         ).onSuccess {
-                            sendEvent(
-                                ShowMainActivityActionSnackbar(
-                                    R.string.request_submitted,
-                                    R.string.cancel
-                                ) {
-                                    onAction(Action.CancelRequest)
-                                })
+                            sendEvent(ShowMainActivityMessage(R.string.request_submitted))
+//                                ShowMainActivityActionSnackbar(
+//                                    R.string.request_submitted,
+//                                    R.string.cancel
+//                                ) {
+//                                    onAction(Action.CancelRequest)
+//                                }
                             _homeUiState.update {
                                 it.copy(clientState = ClientState.ASSISTANCE_REQUESTED)
                             }
+                            timer.cancel()
+                            timer.start()
                         }.onError {
                             sendEvent(ShowMainActivityMessage(it.text))
                         }
                         _requestAssistanceState.update {
-                            it.copy(sheetVisible = false)
+                            it.copy(sheetVisible = false, loading = false)
                         }
                     }
                 }
@@ -209,8 +268,16 @@ class MainViewModel(
             }
 
             Action.CancelRequest -> {
+                timer.cancel()
                 _homeUiState.update {
                     it.copy(clientState = ClientState.IDLE)
+                }
+            }
+
+            Action.Timeout -> {
+                timer.cancel()
+                _homeUiState.update {
+                    it.copy(clientState = ClientState.ASSISTANCE_FAILED)
                 }
             }
 
