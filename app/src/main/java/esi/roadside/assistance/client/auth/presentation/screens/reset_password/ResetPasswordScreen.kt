@@ -102,7 +102,7 @@ fun ResetPasswordScreen(
                 }
             }
             Button(stringResource(R.string.send_reset_code), Modifier.fillMaxWidth()) {
-                onAction(Action.Send)
+                onAction(Action.SendCode(uiState.email))
             }
             Spacer(Modifier.height(40.dp))
             TextButton(

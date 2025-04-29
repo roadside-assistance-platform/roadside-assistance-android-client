@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
+import esi.roadside.assistance.client.auth.domain.models.ResetPasswordModel
 import esi.roadside.assistance.client.auth.domain.models.SendEmailModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
 import esi.roadside.assistance.client.auth.domain.models.VerifyEmailModel
@@ -397,7 +398,8 @@ class AuthViewModel(
             }
             is Send -> {
                 viewModelScope.launch {
-                    resetPasswordUseCase(_resetPasswordUiState.value.email)
+                    resetPasswordUseCase(ResetPasswordModel(_resetPasswordUiState.value.email,
+                        _resetPasswordUiState.value.code))
                 }
             }
             is SetResetPasswordEmail -> {
