@@ -62,11 +62,15 @@ fun ServiceSheet(
     val textColor =
         if (isDark) contentColorFor(MaterialTheme.colorScheme.surfaceContainer)
         else MaterialTheme.colorScheme.surfaceContainer
-    if (clientState !in setOf(ClientState.IDLE, ClientState.ASSISTANCE_IN_PROGRESS, ClientState.ASSISTANCE_FAILED)) {
+    if (clientState !in
+        setOf(
+            ClientState.IDLE,
+            ClientState.ASSISTANCE_IN_PROGRESS,
+            ClientState.ASSISTANCE_FAILED
+        )
+    ) {
         ModalBottomSheet(
-            onDismissRequest = {
-                onAction(Action.HideRequestAssistance)
-            },
+            onDismissRequest = {},
             modifier = Modifier,
             sheetState = sheetState,
             dragHandle = null

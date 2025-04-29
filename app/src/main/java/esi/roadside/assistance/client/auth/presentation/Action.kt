@@ -1,7 +1,6 @@
 package esi.roadside.assistance.client.auth.presentation
 
 import android.net.Uri
-import androidx.credentials.GetCredentialResponse
 import esi.roadside.assistance.client.core.data.networking.DomainError
 
 sealed interface Action {

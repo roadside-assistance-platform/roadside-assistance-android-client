@@ -161,12 +161,6 @@ class MainViewModel(
                             )
                         ).onSuccess {
                             sendEvent(ShowMainActivityMessage(R.string.request_submitted))
-//                                ShowMainActivityActionSnackbar(
-//                                    R.string.request_submitted,
-//                                    R.string.cancel
-//                                ) {
-//                                    onAction(Action.CancelRequest)
-//                                }
                             _homeUiState.update {
                                 it.copy(clientState = ClientState.ASSISTANCE_REQUESTED)
                             }
