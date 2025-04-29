@@ -3,55 +3,52 @@ package esi.roadside.assistance.client.main.presentation
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class NavRoutes(val ordinal: Int) {
+sealed class NavRoutes {
     @Serializable
-    data object Home : NavRoutes(0)
+    data object Home : NavRoutes()
 
     @Serializable
-    data object Map : NavRoutes(1)
+    data object Map : NavRoutes()
 
     @Serializable
-    data object RequestAssistance : NavRoutes(1)
+    data object Notifications : NavRoutes()
 
     @Serializable
-    data object Notifications : NavRoutes(2)
+    data object NotificationsList : NavRoutes()
 
     @Serializable
-    data object NotificationsList : NavRoutes(3)
+    data class Notification(val id: String) : NavRoutes()
 
     @Serializable
-    data class Notification(val id: String) : NavRoutes(4)
+    data object Profile : NavRoutes()
 
     @Serializable
-    data object Profile : NavRoutes(5)
+    data object Settings : NavRoutes()
 
     @Serializable
-    data object Settings : NavRoutes(6)
+    data object SettingsList : NavRoutes()
 
     @Serializable
-    data object SettingsList : NavRoutes(7)
+    data object ChangePassword : NavRoutes()
 
     @Serializable
-    data object ChangePassword : NavRoutes(8)
+    data object DeleteAccount : NavRoutes()
 
     @Serializable
-    data object DeleteAccount : NavRoutes(8)
+    data object CustomizeApp : NavRoutes()
 
     @Serializable
-    data object CustomizeApp : NavRoutes(8)
+    data object Language : NavRoutes()
 
     @Serializable
-    data object Language : NavRoutes(8)
+    data object About : NavRoutes()
 
     @Serializable
-    data object About : NavRoutes(8)
+    data object TermsOfService : NavRoutes()
 
     @Serializable
-    data object TermsOfService : NavRoutes(8)
+    data object PrivacyPolicy : NavRoutes()
 
     @Serializable
-    data object PrivacyPolicy : NavRoutes(8)
-
-    @Serializable
-    data object Help : NavRoutes(8)
+    data object Help : NavRoutes()
 }

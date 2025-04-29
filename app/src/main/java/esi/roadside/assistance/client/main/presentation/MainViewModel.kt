@@ -18,6 +18,8 @@ import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.domain.models.NotificationModel
 import esi.roadside.assistance.client.main.domain.models.AssistanceRequestModel
+import esi.roadside.assistance.client.main.domain.models.ServiceModel
+import esi.roadside.assistance.client.main.domain.use_cases.FinishRequest
 import esi.roadside.assistance.client.main.domain.use_cases.Geocoding
 import esi.roadside.assistance.client.main.domain.use_cases.Logout
 import esi.roadside.assistance.client.main.domain.use_cases.SubmitRequest
@@ -26,6 +28,7 @@ import esi.roadside.assistance.client.main.presentation.routes.home.HomeUiState
 import esi.roadside.assistance.client.main.presentation.routes.home.SearchEvent
 import esi.roadside.assistance.client.main.presentation.routes.home.SearchState
 import esi.roadside.assistance.client.main.presentation.routes.home.request.RequestAssistanceState
+import esi.roadside.assistance.client.main.presentation.routes.home.request.ServiceSheetState
 import esi.roadside.assistance.client.main.presentation.routes.profile.ProfileUiState
 import esi.roadside.assistance.client.main.util.NotificationListener
 import esi.roadside.assistance.client.main.util.saveClient
@@ -40,11 +43,15 @@ class MainViewModel(
     val cloudinary: Cloudinary,
     val updateUseCase: Update,
     val submitRequestUseCase: SubmitRequest,
+    val finishRequestUseCase: FinishRequest,
     val logoutUseCase: Logout,
     val geocodingUseCase: Geocoding,
 ): ViewModel() {
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState = _homeUiState.asStateFlow()
+
+    private val _serviceState = MutableStateFlow(ServiceSheetState())
+    val serviceState = _serviceState.asStateFlow()
 
     private val _searchState = MutableStateFlow(SearchState())
     val searchState = _searchState.asStateFlow()
@@ -282,7 +289,15 @@ class MainViewModel(
             }
 
             is Action.CompleteRequest -> {
-
+                viewModelScope.launch {
+                    finishRequestUseCase(_serviceState.value.service.id, action.rating).onSuccess {
+                        _homeUiState.update {
+                            it.copy(clientState = ClientState.ASSISTANCE_COMPLETED)
+                        }
+                    }.onError {
+                        sendEvent(ShowMainActivityMessage(it.text))
+                    }
+                }
             }
         }
     }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Badge
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -25,7 +24,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navigation
 import esi.roadside.assistance.client.core.util.intUpDownTransSpec
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeScreen
-import esi.roadside.assistance.client.main.presentation.routes.home.request.RequestAssistance
 import esi.roadside.assistance.client.main.presentation.routes.notifications.NotificationDetails
 import esi.roadside.assistance.client.main.presentation.routes.notifications.NotificationsScreen
 import esi.roadside.assistance.client.main.presentation.routes.profile.ProfileScreen
@@ -45,7 +43,6 @@ fun NavigationScreen(
     snackbarHostState: SnackbarHostState,
     mainViewModel: MainViewModel,
     modifier: Modifier = Modifier,
-    bottomSheetState: SheetState,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -67,10 +64,10 @@ fun NavigationScreen(
         } != false
     val homeUiState by mainViewModel.homeUiState.collectAsState()
     val searchState by mainViewModel.searchState.collectAsState()
-    val requestAssistanceState by mainViewModel.requestAssistanceState.collectAsState()
     val profileUiState by mainViewModel.profileUiState.collectAsState()
     val notifications by mainViewModel.notifications.collectAsState()
-    val navigationBarVisible = isParent and ((currentNavRoute != Routes.PROFILE) or !profileUiState.enableEditing)
+    val navigationBarVisible = isParent and
+            ((currentNavRoute != Routes.PROFILE) or !profileUiState.enableEditing)
 
     Scaffold(
         modifier = modifier,
@@ -166,5 +163,4 @@ fun NavigationScreen(
             }
         }
     }
-    RequestAssistance(bottomSheetState, requestAssistanceState, mainViewModel::onAction)
 }

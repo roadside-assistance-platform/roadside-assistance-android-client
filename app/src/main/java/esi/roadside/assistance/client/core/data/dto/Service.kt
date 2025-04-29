@@ -1,6 +1,7 @@
 package esi.roadside.assistance.client.core.data.dto
 
 import esi.roadside.assistance.client.core.domain.Category
+import esi.roadside.assistance.client.main.domain.Categories
 import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.domain.models.ServiceModel
 import kotlinx.serialization.Serializable
@@ -17,7 +18,7 @@ data class Service(
     val serviceRating: Int,
     val serviceLocation: String,
     val done: Boolean,
-    val category: Category,
+    val category: Categories,
     val createdAt: Long,
     val updatedAt: Long,
     val comments: List<Comment>

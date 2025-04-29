@@ -18,7 +18,6 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.http.parameters
 
 class MainRepoImpl(
     private val context: Context,
@@ -31,6 +30,25 @@ class MainRepoImpl(
                 setBody(request.toAssistanceRequest())
             }.body()
         }
+
+    override suspend fun finishRequest(
+        serviceId: String,
+        rating: Double?
+    ): Result<Any, DomainError> {
+        return safeCall<Any> {
+            client.post(constructUrl("${Endpoints.SERVICE_UPDATE}$serviceId")) {
+                rating?.let {
+                    val json = """
+                        {
+                            "done": true,
+                            "rating": $it
+                        }
+                    """.trimIndent()
+                    setBody(json)
+                }
+            }.body()
+        }
+    }
 
     override suspend fun logout() = storage.deleteCookie()
     override suspend fun geocoding(query: String): Result<GeocodingResponseModel, DomainError> =

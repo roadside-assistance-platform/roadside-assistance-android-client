@@ -1,5 +1,6 @@
 package esi.roadside.assistance.client.main.di
 
+import esi.roadside.assistance.client.main.domain.use_cases.FinishRequest
 import esi.roadside.assistance.client.main.domain.use_cases.Geocoding
 import esi.roadside.assistance.client.main.domain.use_cases.Logout
 import esi.roadside.assistance.client.main.domain.use_cases.SubmitRequest
@@ -9,4 +10,5 @@ val useCaseModule = module {
     factory { SubmitRequest(get()) }
     factory { Logout(get()) }
     factory { Geocoding(get()) }
+    factory { FinishRequest(get()) }
 }

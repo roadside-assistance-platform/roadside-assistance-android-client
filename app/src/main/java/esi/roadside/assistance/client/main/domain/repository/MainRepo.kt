@@ -8,6 +8,7 @@ import esi.roadside.assistance.client.main.domain.models.geocoding.GeocodingResp
 
 interface MainRepo {
     suspend fun submitRequest(request: AssistanceRequestModel): Result<SubmitResponseModel, DomainError>
+    suspend fun finishRequest(serviceId: String, rating: Double?): Result<Any, DomainError>
     suspend fun logout()
     suspend fun geocoding(query: String): Result<GeocodingResponseModel, DomainError>
 }

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import esi.roadside.assistance.client.R
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +27,8 @@ import androidx.navigation.NavHostController
 import esi.roadside.assistance.client.core.presentation.components.Dialog
 import esi.roadside.assistance.client.core.presentation.components.IconDialog
 import esi.roadside.assistance.client.main.presentation.components.RatingBar
+import esi.roadside.assistance.client.main.presentation.routes.home.request.RequestAssistance
+import esi.roadside.assistance.client.main.presentation.routes.home.request.ServiceSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +36,8 @@ fun AppScreen(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     mainViewModel: MainViewModel,
-    bottomSheetState: SheetState,
+    requestSheetState: SheetState,
+    serviceSheetState: SheetState,
     modifier: Modifier = Modifier
 ) {
     NavigationScreen(
@@ -43,10 +45,11 @@ fun AppScreen(
         navController = navController,
         snackbarHostState = snackbarHostState,
         mainViewModel = mainViewModel,
-        bottomSheetState = bottomSheetState,
     )
+    val requestAssistanceState by mainViewModel.requestAssistanceState.collectAsState()
+    val serviceState by mainViewModel.serviceState.collectAsState()
+    val homeUiState by mainViewModel.homeUiState.collectAsState()
     val uiState by mainViewModel.homeUiState.collectAsState()
-    var rating by remember { mutableDoubleStateOf(0.0) }
     IconDialog(
         visible = uiState.clientState == ClientState.ASSISTANCE_FAILED,
         onDismissRequest = {
@@ -64,28 +67,37 @@ fun AppScreen(
         cancelText = stringResource(R.string.cancel),
         okText = stringResource(R.string.retry),
     )
-    Dialog(
-        visible = uiState.clientState == ClientState.ASSISTANCE_COMPLETED,
-        onDismissRequest = {
-            mainViewModel.onAction(Action.CompleteRequest(null))
-        },
-        title = stringResource(R.string.assistance_completed),
-        okListener = {
-            mainViewModel.onAction(Action.CompleteRequest(rating))
-        },
-        cancelListener = {
-            mainViewModel.onAction(Action.CompleteRequest(null))
-        },
-        cancelText = stringResource(R.string.close),
-    ) {
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(
-                stringResource(R.string.leave_review),
-                Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            RatingBar(rating, { rating = it })
-        }
-    }
+
+//    var rating by remember { mutableDoubleStateOf(0.0) }
+//    Dialog(
+//        visible = uiState.clientState == ClientState.ASSISTANCE_COMPLETED,
+//        onDismissRequest = {
+//            mainViewModel.onAction(Action.CompleteRequest(null))
+//        },
+//        title = stringResource(R.string.assistance_completed),
+//        okListener = {
+//            mainViewModel.onAction(Action.CompleteRequest(rating))
+//        },
+//        cancelListener = {
+//            mainViewModel.onAction(Action.CompleteRequest(null))
+//        },
+//        cancelText = stringResource(R.string.close),
+//    ) {
+//        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+//            Text(
+//                stringResource(R.string.leave_review),
+//                Modifier.fillMaxWidth(),
+//                textAlign = TextAlign.Center,
+//                style = MaterialTheme.typography.bodyLarge
+//            )
+//            RatingBar(rating, { rating = it })
+//        }
+//    }
+    RequestAssistance(requestSheetState, requestAssistanceState, mainViewModel::onAction)
+    ServiceSheet(
+        serviceState,
+        homeUiState.clientState,
+        serviceSheetState,
+        mainViewModel::onAction
+    )
 }

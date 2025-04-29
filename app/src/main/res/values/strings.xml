@@ -329,4 +329,6 @@
     <string name="leave_review">How do you rate this experience ?</string>
     <string name="timeout">Connection timed out</string>
     <string name="timeout_descr">It seems you have a low internet connection, please try again later</string>
+    <string name="provider_in_way">Provider is coming</string>
+    <string name="provider_in_way_descrption">"Estimated remaining time: "</string>
 </resources>

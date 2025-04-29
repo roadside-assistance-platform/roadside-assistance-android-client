@@ -19,7 +19,6 @@ import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.presentation.util.Event.MainNavigate
 import esi.roadside.assistance.client.core.util.composables.CollectEvents
 import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
-import esi.roadside.assistance.client.main.util.CollectNotifications
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -45,7 +44,8 @@ class MainActivity : ComponentActivity() {
             SetSystemBarColors()
             val navController = rememberNavController()
             val mainViewModel : MainViewModel = koinViewModel()
-            val bottomSheetState = rememberModalBottomSheetState(true)
+            val requestSheetState = rememberModalBottomSheetState(true)
+            val serviceSheetState = rememberModalBottomSheetState(true)
             val scope = rememberCoroutineScope()
             val snackbarHostState = remember { SnackbarHostState() }
             CollectEvents {
@@ -73,10 +73,10 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     Event.ShowRequestAssistance -> scope.launch {
-                        bottomSheetState.show()
+                        requestSheetState.show()
                     }
                     Event.HideRequestAssistance -> scope.launch {
-                        bottomSheetState.hide()
+                        requestSheetState.hide()
                     }
                     Event.ExitToAuthActivity -> {
                         startActivity(Intent(this, AuthActivity::class.java))
@@ -90,7 +90,8 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     snackbarHostState = snackbarHostState,
                     mainViewModel = mainViewModel,
-                    bottomSheetState = bottomSheetState
+                    requestSheetState = requestSheetState,
+                    serviceSheetState = serviceSheetState
                 )
             }
         }
