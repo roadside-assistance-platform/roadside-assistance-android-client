@@ -26,6 +26,7 @@ android {
         debug {
             buildConfigField("String", "BASE_URL", "\"https://roadside-assistance-backend.onrender.com/\"")
             buildConfigField("String", "MAPBOX_GEOCODING", "\"https://api.mapbox.com/search/geocode/v6/\"")
+            buildConfigField("String", "MAPBOX_DRIVING", "\"https://api.mapbox.com/directions/v5/mapbox/\"")
             buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://xcikzbue:mEXrzOw8yh9B4vwXggUbhIhQj2XjPIES@rat.rmq2.cloudamqp.com/xcikzbue\"")
             buildConfigField("String", "WEB_CLIENT_ID", "\"469116526388-l4fltok5uk1qo6gf4jup9eu57m558h6v.apps.googleusercontent.com\"")
         }
@@ -38,6 +39,7 @@ android {
             )
             buildConfigField("String", "BASE_URL", "\"https://roadside-assistance-backend.onrender.com/\"")
             buildConfigField("String", "MAPBOX_GEOCODING", "\"https://api.mapbox.com/search/geocode/v6/\"")
+            buildConfigField("String", "MAPBOX_DRIVING", "\"https://api.mapbox.com/directions/v5/mapbox/\"")
             buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://xcikzbue:mEXrzOw8yh9B4vwXggUbhIhQj2XjPIES@rat.rmq2.cloudamqp.com/xcikzbue\"")
             buildConfigField("String", "WEB_CLIENT_ID", "\"469116526388-l4fltok5uk1qo6gf4jup9eu57m558h6v.apps.googleusercontent.com\"")
         }

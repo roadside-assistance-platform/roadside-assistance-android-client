@@ -1,6 +1,7 @@
 package esi.roadside.assistance.client.core.data.dto
 
 import esi.roadside.assistance.client.core.domain.model.ClientModel
+import esi.roadside.assistance.client.main.domain.models.ClientInfo
 import esi.roadside.assistance.client.main.presentation.models.ClientUi
 import kotlinx.serialization.Serializable
 import java.time.OffsetDateTime
@@ -36,5 +37,14 @@ data class Client(
         } catch(_: Exception) {
             OffsetDateTime.now()
         }.toLocalDateTime().atZone(ZoneId.systemDefault())
+    )
+    fun toClientInfo() = ClientInfo(
+        id = id,
+        fullName = fullName,
+        phone = phone,
+        photo = photo ?: "",
+        email = email,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
     )
 }

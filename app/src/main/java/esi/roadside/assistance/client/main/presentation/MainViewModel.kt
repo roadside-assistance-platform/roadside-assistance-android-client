@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mapbox.geojson.Point
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
 import esi.roadside.assistance.client.auth.domain.use_case.Update
@@ -15,23 +16,28 @@ import esi.roadside.assistance.client.core.presentation.util.Event.*
 import esi.roadside.assistance.client.core.presentation.util.Field
 import esi.roadside.assistance.client.core.presentation.util.ValidateInput
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
+import esi.roadside.assistance.client.main.domain.PolymorphicNotification
 import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.domain.models.NotificationModel
 import esi.roadside.assistance.client.main.domain.models.AssistanceRequestModel
+import esi.roadside.assistance.client.main.domain.models.ClientInfo
 import esi.roadside.assistance.client.main.domain.models.ServiceModel
+import esi.roadside.assistance.client.main.domain.models.toLocationModel
+import esi.roadside.assistance.client.main.domain.use_cases.DirectionsUseCase
 import esi.roadside.assistance.client.main.domain.use_cases.FinishRequest
 import esi.roadside.assistance.client.main.domain.use_cases.Geocoding
 import esi.roadside.assistance.client.main.domain.use_cases.Logout
+import esi.roadside.assistance.client.main.domain.use_cases.Rating
 import esi.roadside.assistance.client.main.domain.use_cases.SubmitRequest
-import esi.roadside.assistance.client.main.presentation.models.ClientUi
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeUiState
 import esi.roadside.assistance.client.main.presentation.routes.home.SearchEvent
 import esi.roadside.assistance.client.main.presentation.routes.home.SearchState
 import esi.roadside.assistance.client.main.presentation.routes.home.request.RequestAssistanceState
-import esi.roadside.assistance.client.main.presentation.routes.home.request.ServiceSheetState
 import esi.roadside.assistance.client.main.presentation.routes.profile.ProfileUiState
-import esi.roadside.assistance.client.main.util.NotificationListener
+import esi.roadside.assistance.client.main.util.QueuesManager
 import esi.roadside.assistance.client.main.util.saveClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -44,20 +50,24 @@ class MainViewModel(
     val updateUseCase: Update,
     val submitRequestUseCase: SubmitRequest,
     val finishRequestUseCase: FinishRequest,
+    val ratingUseCase: Rating,
     val logoutUseCase: Logout,
     val geocodingUseCase: Geocoding,
+    val directionsUseCaseUseCase: DirectionsUseCase,
+    val queuesManager: QueuesManager,
 ): ViewModel() {
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState = _homeUiState.asStateFlow()
 
-    private val _serviceState = MutableStateFlow(ServiceSheetState())
-    val serviceState = _serviceState.asStateFlow()
-
     private val _searchState = MutableStateFlow(SearchState())
     val searchState = _searchState.asStateFlow()
 
-    private val _client = MutableStateFlow(ClientUi())
+    private val _client = MutableStateFlow(ClientInfo())
     val client = _client.asStateFlow()
+
+    private val _serviceAcceptance = MutableStateFlow<PolymorphicNotification.ServiceAcceptance?>(null)
+
+    private var  _currentService: ServiceModel? = null
 
     private val _requestAssistanceState = MutableStateFlow(RequestAssistanceState())
     val requestAssistanceState = _requestAssistanceState.asStateFlow()
@@ -82,14 +92,70 @@ class MainViewModel(
 
     init {
         //NotificationListener.listenForNotifications(_client.value.id)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             context.dataStore.data.collectLatest { userPreferences ->
+                _client.value = userPreferences.client.toClientInfo()
                 _profileUiState.update {
                     it.copy(
                         client = userPreferences.client.toClientModel().toClientUi(),
                         editClient = userPreferences.client.toClientModel().toClientUi(),
                         photo = userPreferences.client.photo ?: ""
                     )
+                }
+                queuesManager.close()
+                queuesManager.consumeUserNotifications(userPreferences.client.id, "client")
+                launch(Dispatchers.IO) {
+                    queuesManager.serviceAcceptance.consumeEach {
+                        if (_homeUiState.value.clientState == ClientState.ASSISTANCE_REQUESTED) {
+                            _serviceAcceptance.value = it
+                            _homeUiState.update {
+                                it.copy(clientState = ClientState.PROVIDER_IN_WAY)
+                            }
+                            timer.cancel()
+                            _serviceAcceptance.value?.let { service ->
+                                queuesManager.publishCategoryQueues(
+                                    setOf(service.category),
+                                    PolymorphicNotification.ServiceRemove(
+                                        serviceId = service.id,
+                                        exception = service.provider.id
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+                launch(Dispatchers.IO) {
+                    queuesManager.locationUpdate.consumeEach { providerLocation ->
+                        if (_homeUiState.value.clientState == ClientState.PROVIDER_IN_WAY) {
+                            _homeUiState.update {
+                                it.copy(providerLocation = Point.fromLngLat(providerLocation.longitude, providerLocation.latitude))
+                            }
+                            _homeUiState.value.location?.toLocationModel()?.let { location ->
+                                directionsUseCaseUseCase(
+                                    LocationModel(providerLocation.latitude, providerLocation.longitude)
+                                    to
+                                    location
+                                ).onSuccess { result ->
+                                    result.routes.minByOrNull { it.duration }?.let { route ->
+                                        _homeUiState.update {
+                                            it.copy(directions = route)
+                                        }
+                                    }
+                                }.onError {
+                                    sendEvent(ShowMainActivityMessage(it.text))
+                                }
+                            }
+                        }
+                    }
+                }
+                launch(Dispatchers.IO) {
+                    queuesManager.providerArrival.consumeEach {
+                        if (_homeUiState.value.clientState == ClientState.PROVIDER_IN_WAY) {
+                            _homeUiState.update {
+                                it.copy(clientState = ClientState.ASSISTANCE_IN_PROGRESS)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -163,6 +229,21 @@ class MainViewModel(
                             sendEvent(ShowMainActivityMessage(R.string.request_submitted))
                             _homeUiState.update {
                                 it.copy(clientState = ClientState.ASSISTANCE_REQUESTED)
+                            }
+                            _currentService = it
+                            launch(Dispatchers.IO) {
+                                queuesManager.publishCategoryQueues(
+                                    setOf(_requestAssistanceState.value.category),
+                                    PolymorphicNotification.Service(
+                                        id = it.id,
+                                        client = _client.value,
+                                        description = _requestAssistanceState.value.description,
+                                        serviceCategory = _requestAssistanceState.value.category,
+                                        serviceLocation = LocationModel.fromPoint(location).toString(),
+                                        provider = null,
+                                        price = 0
+                                    )
+                                )
                             }
                             timer.cancel()
                             timer.start()
@@ -273,6 +354,17 @@ class MainViewModel(
                 _homeUiState.update {
                     it.copy(clientState = ClientState.IDLE)
                 }
+                viewModelScope.launch(Dispatchers.IO) {
+                    _currentService?.id?.let { id ->
+                        queuesManager.publishCategoryQueues(
+                            setOf(_requestAssistanceState.value.category),
+                            PolymorphicNotification.ServiceRemove(
+                                serviceId = id,
+                                exception = null
+                            )
+                        )
+                    }
+                }
             }
 
             Action.Timeout -> {
@@ -282,14 +374,44 @@ class MainViewModel(
                 }
             }
 
+            Action.WorkingFinished -> {
+                viewModelScope.launch {
+                    _serviceAcceptance.value?.let { service ->
+                        finishRequestUseCase(service.id)
+                            .onSuccess { result ->
+                                _homeUiState.update {
+                                    it.copy(
+                                        clientState = ClientState.ASSISTANCE_COMPLETED,
+                                        directions = null,
+                                        servicePrice = result.price
+                                    )
+                                }
+                            }
+                    }
+                }
+            }
+
             is Action.CompleteRequest -> {
                 viewModelScope.launch {
-                    finishRequestUseCase(_serviceState.value.service.id, action.rating).onSuccess {
-                        _homeUiState.update {
-                            it.copy(clientState = ClientState.ASSISTANCE_COMPLETED)
-                        }
-                    }.onError {
-                        sendEvent(ShowMainActivityMessage(it.text))
+                    _serviceAcceptance.value?.let { service ->
+                        ratingUseCase(service.id, action.rating)
+                            .onSuccess { result ->
+                                _homeUiState.update {
+                                    it.copy(clientState = ClientState.IDLE)
+                                }
+                                launch(Dispatchers.IO) {
+                                    queuesManager.publishUserNotification(
+                                        service.id,
+                                        "provider",
+                                        PolymorphicNotification.ServiceDone(
+                                            price = _homeUiState.value.servicePrice,
+                                            rating = action.rating
+                                        )
+                                    )
+                                }
+                            }.onError {
+                                sendEvent(ShowMainActivityMessage(it.text))
+                            }
                     }
                 }
             }

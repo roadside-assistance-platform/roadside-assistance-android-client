@@ -2,6 +2,9 @@ package esi.roadside.assistance.client.main.presentation.components
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.StarHalf
 import androidx.compose.material.icons.outlined.Star
@@ -24,11 +27,9 @@ fun RatingBar(
     stars: Int = 5,
     starsColor: Color = Color.Yellow,
 ) {
-
     val filledStars = floor(rating).toInt()
     val unfilledStars = (stars - ceil(rating)).toInt()
     val halfStar = rating.rem(1) != 0.0
-
     Row(modifier = modifier.pointerInput(onRatingChange) {
             if (onRatingChange != null) {
                 detectTapGestures(
@@ -45,14 +46,16 @@ fun RatingBar(
             Icon(
                 imageVector = Icons.Outlined.Star,
                 contentDescription = null,
-                tint = starsColor
+                tint = starsColor,
+                modifier = Modifier.weight(1f).aspectRatio(1f)
             )
         }
         if (halfStar) {
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.StarHalf,
                 contentDescription = null,
-                tint = starsColor
+                tint = starsColor,
+                modifier = Modifier.weight(1f).aspectRatio(1f)
             )
         }
 
@@ -60,7 +63,8 @@ fun RatingBar(
             Icon(
                 imageVector = Icons.Outlined.StarOutline,
                 contentDescription = null,
-                tint = starsColor
+                tint = starsColor,
+                modifier = Modifier.weight(1f).aspectRatio(1f)
             )
         }
     }

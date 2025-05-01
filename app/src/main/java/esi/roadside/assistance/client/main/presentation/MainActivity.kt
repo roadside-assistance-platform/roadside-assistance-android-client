@@ -5,9 +5,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.rememberNavController
@@ -45,7 +47,6 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val mainViewModel : MainViewModel = koinViewModel()
             val requestSheetState = rememberModalBottomSheetState(true)
-            val serviceSheetState = rememberModalBottomSheetState(true)
             val scope = rememberCoroutineScope()
             val snackbarHostState = remember { SnackbarHostState() }
             CollectEvents {
@@ -91,7 +92,6 @@ class MainActivity : ComponentActivity() {
                     snackbarHostState = snackbarHostState,
                     mainViewModel = mainViewModel,
                     requestSheetState = requestSheetState,
-                    serviceSheetState = serviceSheetState
                 )
             }
         }

@@ -20,4 +20,5 @@ sealed interface Action {
         data class EditClient(val client: ClientUi): Action
         data object ConfirmProfileEditing: Action
         data object Logout: Action
+        data object WorkingFinished: Action
 }

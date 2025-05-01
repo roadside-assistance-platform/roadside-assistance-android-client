@@ -4,8 +4,8 @@ import com.mapbox.geojson.Point
 import esi.roadside.assistance.client.core.data.mappers.toLocation
 
 data class LocationModel(
+    val longitude: Double,
     val latitude: Double,
-    val longitude: Double
 ) {
     companion object {
         fun fromString(location: String) = location.toLocation()
@@ -17,3 +17,8 @@ data class LocationModel(
 
     override fun toString() = "${longitude},${latitude}"
 }
+
+fun Point.toLocationModel() = LocationModel(
+    longitude = longitude(),
+    latitude = latitude(),
+)

@@ -38,6 +38,9 @@ sealed class NavRoutes {
     data object CustomizeApp : NavRoutes()
 
     @Serializable
+    data object MapsSettings : NavRoutes()
+
+    @Serializable
     data object Language : NavRoutes()
 
     @Serializable

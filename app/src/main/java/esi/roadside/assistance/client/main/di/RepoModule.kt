@@ -1,10 +1,15 @@
 package esi.roadside.assistance.client.main.di
 
+import esi.roadside.assistance.client.main.data.networking.GeocodingRepoImpl
 import esi.roadside.assistance.client.main.data.networking.MainRepoImpl
+import esi.roadside.assistance.client.main.domain.repository.GeocodingRepo
 import esi.roadside.assistance.client.main.domain.repository.MainRepo
+import esi.roadside.assistance.client.main.util.QueuesManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val repoModule = module {
-    single<MainRepo> { MainRepoImpl(androidContext(), get(), get()) }
+    single<MainRepo> { MainRepoImpl(get(), get()) }
+    single<GeocodingRepo> { GeocodingRepoImpl(androidContext(), get()) }
+    single<QueuesManager> { QueuesManager() }
 }
