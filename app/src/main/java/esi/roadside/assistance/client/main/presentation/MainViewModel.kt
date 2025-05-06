@@ -6,6 +6,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mapbox.geojson.Point
+import esi.roadside.assistance.client.NotificationService
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
 import esi.roadside.assistance.client.auth.domain.use_case.Update
@@ -54,6 +55,7 @@ class MainViewModel(
     val logoutUseCase: Logout,
     val geocodingUseCase: Geocoding,
     val directionsUseCaseUseCase: DirectionsUseCase,
+    val notificationService: NotificationService,
     val queuesManager: QueuesManager,
 ): ViewModel() {
     private val _homeUiState = MutableStateFlow(HomeUiState())
@@ -67,7 +69,8 @@ class MainViewModel(
 
     private val _serviceAcceptance = MutableStateFlow<PolymorphicNotification.ServiceAcceptance?>(null)
 
-    private var  _currentService: ServiceModel? = null
+    private var  _currentService = MutableStateFlow<ServiceModel?>(null)
+    val currentService = _currentService.asStateFlow()
 
     private val _requestAssistanceState = MutableStateFlow(RequestAssistanceState())
     val requestAssistanceState = _requestAssistanceState.asStateFlow()
@@ -91,7 +94,6 @@ class MainViewModel(
     }
 
     init {
-        //NotificationListener.listenForNotifications(_client.value.id)
         viewModelScope.launch(Dispatchers.IO) {
             context.dataStore.data.collectLatest { userPreferences ->
                 _client.value = userPreferences.client.toClientInfo()
@@ -103,7 +105,9 @@ class MainViewModel(
                     )
                 }
                 queuesManager.close()
-                queuesManager.consumeUserNotifications(userPreferences.client.id, "client")
+                launch(Dispatchers.IO) {
+                    queuesManager.consumeUserNotifications(userPreferences.client.id, "client")
+                }
                 launch(Dispatchers.IO) {
                     queuesManager.serviceAcceptance.consumeEach {
                         if (_homeUiState.value.clientState == ClientState.ASSISTANCE_REQUESTED) {
@@ -112,6 +116,14 @@ class MainViewModel(
                                 it.copy(clientState = ClientState.PROVIDER_IN_WAY)
                             }
                             timer.cancel()
+                            notificationService.showNotification(
+                                0,
+                                context.getString(R.string.assistance_request_accepted),
+                                context.getString(
+                                    R.string.service_accepted_by,
+                                    it.provider.fullName
+                                ),
+                            )
                             _serviceAcceptance.value?.let { service ->
                                 queuesManager.publishCategoryQueues(
                                     setOf(service.category),
@@ -130,9 +142,9 @@ class MainViewModel(
                             _homeUiState.update {
                                 it.copy(providerLocation = Point.fromLngLat(providerLocation.longitude, providerLocation.latitude))
                             }
-                            _homeUiState.value.location?.toLocationModel()?.let { location ->
+                            _currentService.value?.serviceLocation?.let { location ->
                                 directionsUseCaseUseCase(
-                                    LocationModel(providerLocation.latitude, providerLocation.longitude)
+                                    LocationModel(providerLocation.longitude, providerLocation.latitude)
                                     to
                                     location
                                 ).onSuccess { result ->
@@ -230,7 +242,7 @@ class MainViewModel(
                             _homeUiState.update {
                                 it.copy(clientState = ClientState.ASSISTANCE_REQUESTED)
                             }
-                            _currentService = it
+                            _currentService.value = it
                             launch(Dispatchers.IO) {
                                 queuesManager.publishCategoryQueues(
                                     setOf(_requestAssistanceState.value.category),
@@ -249,6 +261,9 @@ class MainViewModel(
                             timer.start()
                         }.onError {
                             sendEvent(ShowMainActivityMessage(it.text))
+                            _homeUiState.update {
+                                it.copy(clientState = ClientState.ASSISTANCE_FAILED)
+                            }
                         }
                         _requestAssistanceState.update {
                             it.copy(sheetVisible = false, loading = false)
@@ -355,7 +370,7 @@ class MainViewModel(
                     it.copy(clientState = ClientState.IDLE)
                 }
                 viewModelScope.launch(Dispatchers.IO) {
-                    _currentService?.id?.let { id ->
+                    _currentService.value?.id?.let { id ->
                         queuesManager.publishCategoryQueues(
                             setOf(_requestAssistanceState.value.category),
                             PolymorphicNotification.ServiceRemove(
@@ -375,6 +390,9 @@ class MainViewModel(
             }
 
             Action.WorkingFinished -> {
+                _homeUiState.update {
+                    it.copy(loading = true)
+                }
                 viewModelScope.launch {
                     _serviceAcceptance.value?.let { service ->
                         finishRequestUseCase(service.id)
@@ -383,8 +401,14 @@ class MainViewModel(
                                     it.copy(
                                         clientState = ClientState.ASSISTANCE_COMPLETED,
                                         directions = null,
-                                        servicePrice = result.price
+                                        servicePrice = result.price,
+                                        loading = false
                                     )
+                                }
+                            }
+                            .onError {
+                                _homeUiState.update {
+                                    it.copy(loading = false)
                                 }
                             }
                     }
@@ -392,26 +416,38 @@ class MainViewModel(
             }
 
             is Action.CompleteRequest -> {
-                viewModelScope.launch {
+                _homeUiState.update {
+                    it.copy(loading = true)
+                }
+                viewModelScope.launch(Dispatchers.IO) {
                     _serviceAcceptance.value?.let { service ->
                         ratingUseCase(service.id, action.rating)
                             .onSuccess { result ->
                                 _homeUiState.update {
-                                    it.copy(clientState = ClientState.IDLE)
-                                }
-                                launch(Dispatchers.IO) {
-                                    queuesManager.publishUserNotification(
-                                        service.id,
-                                        "provider",
-                                        PolymorphicNotification.ServiceDone(
-                                            price = _homeUiState.value.servicePrice,
-                                            rating = action.rating
-                                        )
+                                    it.copy(
+                                        clientState = ClientState.IDLE,
+                                        loading = false,
+                                        providerLocation = null,
+                                        directions = null,
+                                        servicePrice = 0
                                     )
                                 }
+                                _currentService.value = null
+                                _serviceAcceptance.value = null
                             }.onError {
                                 sendEvent(ShowMainActivityMessage(it.text))
+                                _homeUiState.update {
+                                    it.copy(loading = false)
+                                }
                             }
+                        queuesManager.publishUserNotification(
+                            service.provider.id,
+                            "provider",
+                            PolymorphicNotification.ServiceDone(
+                                price = _homeUiState.value.servicePrice,
+                                rating = action.rating
+                            )
+                        )
                     }
                 }
             }

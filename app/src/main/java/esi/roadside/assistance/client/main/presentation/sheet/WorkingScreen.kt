@@ -1,5 +1,6 @@
 package esi.roadside.assistance.client.main.presentation.sheet
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +26,7 @@ import esi.roadside.assistance.client.auth.presentation.util.Button
 
 @Composable
 fun WorkingScreen(
+    loading: Boolean,
     modifier: Modifier = Modifier,
     onDone: () -> Unit
 ) {
@@ -58,11 +61,16 @@ fun WorkingScreen(
             )
         }
         item {
-            Button(
-                stringResource(R.string.done),
-                icon = Icons.Default.Check,
-                onClick = onDone
-            )
+            AnimatedContent(loading) {
+                if (it)
+                    LinearProgressIndicator(Modifier.fillMaxWidth().padding(vertical = 30.dp))
+                else
+                    Button(
+                        stringResource(R.string.done),
+                        icon = Icons.Default.Check,
+                        onClick = onDone
+                    )
+            }
         }
     }
 }

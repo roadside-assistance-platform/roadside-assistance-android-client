@@ -50,7 +50,7 @@ fun AppScreen(
     IconDialog(
         visible = uiState.clientState == ClientState.ASSISTANCE_FAILED,
         onDismissRequest = {
-            mainViewModel.onAction(Action.CompleteRequest(null))
+            mainViewModel.onAction(Action.CancelRequest)
         },
         title = stringResource(R.string.assistance_failed),
         text = stringResource(R.string.assistance_failed_description),
@@ -68,9 +68,8 @@ fun AppScreen(
     var rating by remember { mutableDoubleStateOf(0.0) }
     Dialog(
         visible = uiState.clientState == ClientState.ASSISTANCE_COMPLETED,
-        onDismissRequest = {
-            mainViewModel.onAction(Action.CompleteRequest(null))
-        },
+        onDismissRequest = {},
+        loading = uiState.loading,
         title = stringResource(R.string.assistance_completed),
         okListener = {
             mainViewModel.onAction(Action.CompleteRequest(rating))

@@ -108,13 +108,13 @@ sealed interface PolymorphicNotification {
             return when (
                 val itemType = jsonElement.jsonObject["polymorphicType"]?.jsonPrimitive?.content?.substringAfterLast(".")
             ) {
-                Service::class.simpleName -> json.decodeFromJsonElement(Service.serializer(), jsonElement)
-                UserNotification::class.simpleName -> json.decodeFromJsonElement(UserNotification.serializer(), jsonElement)
-                LocationUpdate::class.simpleName -> json.decodeFromJsonElement(LocationUpdate.serializer(), jsonElement)
-                ServiceAcceptance::class.simpleName -> json.decodeFromJsonElement(ServiceAcceptance.serializer(), jsonElement)
-                ServiceDone::class.simpleName -> json.decodeFromJsonElement(ServiceDone.serializer(), jsonElement)
-                ProviderArrived::class.simpleName -> json.decodeFromJsonElement(ProviderArrived.serializer(), jsonElement)
-                ServiceRemove::class.simpleName -> json.decodeFromJsonElement(ServiceRemove.serializer(), jsonElement)
+                "Service" -> json.decodeFromJsonElement(Service.serializer(), jsonElement)
+                "UserNotification" -> json.decodeFromJsonElement(UserNotification.serializer(), jsonElement)
+                "LocationUpdate" -> json.decodeFromJsonElement(LocationUpdate.serializer(), jsonElement)
+                "ServiceAcceptance" -> json.decodeFromJsonElement(ServiceAcceptance.serializer(), jsonElement)
+                "ServiceDone" -> json.decodeFromJsonElement(ServiceDone.serializer(), jsonElement)
+                "ProviderArrived" -> json.decodeFromJsonElement(ProviderArrived.serializer(), jsonElement)
+                "ServiceRemove" -> json.decodeFromJsonElement(ServiceRemove.serializer(), jsonElement)
                 else -> throw SerializationException("Unknown itemType: $itemType")
             }
         }

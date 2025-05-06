@@ -63,6 +63,7 @@ fun NavigationScreen(
                 }
         } != false
     val homeUiState by mainViewModel.homeUiState.collectAsState()
+    val currentService by mainViewModel.currentService.collectAsState()
     val searchState by mainViewModel.searchState.collectAsState()
     val profileUiState by mainViewModel.profileUiState.collectAsState()
     val notifications by mainViewModel.notifications.collectAsState()
@@ -110,6 +111,7 @@ fun NavigationScreen(
                 composable<NavRoutes.Map> {
                     HomeScreen(
                         homeUiState,
+                        currentService,
                         searchState,
                         mainViewModel::onAction,
                         mainViewModel::onSearchEvent

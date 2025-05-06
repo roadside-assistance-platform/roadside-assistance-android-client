@@ -77,6 +77,7 @@ import com.mapbox.maps.plugin.viewport.data.FollowPuckViewportStateOptions
 import com.mapbox.maps.plugin.viewport.data.OverviewViewportStateOptions
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.core.presentation.util.isDark
+import esi.roadside.assistance.client.main.domain.models.ServiceModel
 import esi.roadside.assistance.client.main.presentation.Action
 import esi.roadside.assistance.client.main.presentation.ClientState
 import esi.roadside.assistance.client.main.presentation.sheet.NavigatingScreen
@@ -91,6 +92,7 @@ import kotlin.math.roundToInt
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
+    currentService: ServiceModel?,
     searchState: SearchState,
     onAction: (Action) -> Unit,
     onSearchEvent: (SearchEvent) -> Unit,
@@ -151,7 +153,7 @@ fun HomeScreen(
     }
     val marker = rememberIconImage(R.drawable.baseline_location_pin_24)
     val bottomSheetState = rememberStandardBottomSheetState(SheetValue.Hidden, skipHiddenState = false, confirmValueChange = {
-        (uiState.clientState == ClientState.IDLE) or (it != SheetValue.Hidden)
+        it != SheetValue.Hidden
     })
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState)
     LaunchedEffect(uiState.directions) {
@@ -186,7 +188,7 @@ fun HomeScreen(
                 ClientState.PROVIDER_IN_WAY ->
                     NavigatingScreen(uiState.directions?.duration?.roundToInt())
                 ClientState.ASSISTANCE_IN_PROGRESS ->
-                    WorkingScreen {
+                    WorkingScreen(uiState.loading) {
                         onAction(Action.WorkingFinished)
                     }
                 else -> {
@@ -271,7 +273,7 @@ fun HomeScreen(
                         state.easeTo(
                             CameraOptions
                                 .Builder()
-                                .zoom(state.cameraState?.zoom ?: 2.0)
+                                .zoom(200.0)
                                 .center(newPoint)
                                 .pitch(0.0)
                                 .bearing(0.0)
@@ -311,21 +313,29 @@ fun HomeScreen(
                         iconImageCrossFade = 1.0
                     }
                 }
+                currentService?.let {
+                    PointAnnotation(point = it.serviceLocation.toPoint()) {
+                        iconColor = Color(35, 171, 242)
+                        iconImage = marker
+                        iconAnchor = IconAnchor.BOTTOM
+                        iconImageCrossFade = 1.0
+                    }
+                }
                 uiState.providerLocation?.let {
                     PointAnnotation(point = it) {
-                        interactionsState.onClicked {
-                            onAction(Action.SetLocation(it.point))
-                            state.easeTo(
-                                CameraOptions
-                                    .Builder()
-                                    .zoom(state.cameraState?.zoom ?: 2.0)
-                                    .center(it.point)
-                                    .pitch(0.0)
-                                    .bearing(0.0)
-                                    .build()
-                            )
-                            true
-                        }
+//                        interactionsState.onClicked {
+//                            onAction(Action.SetLocation(it.point))
+//                            state.easeTo(
+//                                CameraOptions
+//                                    .Builder()
+//                                    .zoom(state.cameraState?.zoom ?: 2.0)
+//                                    .center(it.point)
+//                                    .pitch(0.0)
+//                                    .bearing(0.0)
+//                                    .build()
+//                            )
+//                            true
+//                        }
                         iconImage = marker
                         iconAnchor = IconAnchor.BOTTOM
                         iconImageCrossFade = 1.0

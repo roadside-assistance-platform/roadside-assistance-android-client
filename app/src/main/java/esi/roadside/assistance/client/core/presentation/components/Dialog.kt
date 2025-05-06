@@ -1,5 +1,6 @@
 package esi.roadside.assistance.client.core.presentation.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,6 +40,7 @@ fun Dialog(
     onDismissRequest: () -> Unit,
     header: @Composable (ColumnScope.() -> Unit)? = null,
     title: String = "",
+    loading: Boolean = false,
     trailingContent: @Composable (RowScope.() -> Unit)? = null,
     centerTitle: Boolean = false,
     cancelListener: (() -> Unit)? = null,
@@ -94,7 +97,12 @@ fun Dialog(
                         header(this)
                     }
                     content(this)
-                    DialogButtons(cancelListener, cancelText, okListener, okText, neutral)
+                    AnimatedContent(loading, Modifier.fillMaxWidth()) {
+                        if (it)
+                            LinearProgressIndicator(Modifier.fillMaxWidth().padding(30.dp))
+                        else
+                            DialogButtons(cancelListener, cancelText, okListener, okText, neutral)
+                    }
                 }
             }
         }

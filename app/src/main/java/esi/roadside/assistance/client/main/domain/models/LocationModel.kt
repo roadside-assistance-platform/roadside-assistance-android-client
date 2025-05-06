@@ -16,6 +16,8 @@ data class LocationModel(
     }
 
     override fun toString() = "${longitude},${latitude}"
+
+    fun toPoint(): Point = Point.fromLngLat(longitude, latitude)
 }
 
 fun Point.toLocationModel() = LocationModel(

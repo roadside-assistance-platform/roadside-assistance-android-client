@@ -340,4 +340,8 @@
     <string name="provider_coming">Provider is coming</string>
     <string name="dzd">%1$s DZD</string>
     <string name="maps_settings">Maps settings</string>
+    <string name="assistance_request_accepted">Your request just got accepted!</string>
+    <string name="service_accepted_by">Service accepted by %1$s</string>
+    <string name="notification_permission_title">Required Notifications Permission</string>
+    <string name="notification_permission_text">To receive notifications, we need to allow this permission</string>
 </resources>

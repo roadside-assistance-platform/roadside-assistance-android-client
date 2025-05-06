@@ -221,11 +221,7 @@ class AuthViewModel(
                                 _authUiState.update {
                                     it.copy(
                                         error = error,
-                                        errorDialogVisible =
-                                            error in setOf(
-                                                DomainError.NO_INTERNET,
-                                                DomainError.TIMEOUT
-                                            ),
+                                        errorDialogVisible = error == DomainError.NO_INTERNET,
                                         loading = false,
                                         action = R.string.retry to {
                                             onAction(Initiate)
