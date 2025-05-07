@@ -8,6 +8,7 @@ import esi.roadside.assistance.client.auth.domain.models.SignupModel
 import esi.roadside.assistance.client.auth.domain.models.UpdateModel
 import esi.roadside.assistance.client.auth.domain.models.VerifyEmailModel
 import esi.roadside.assistance.client.auth.domain.repository.AuthRepo
+import esi.roadside.assistance.client.core.data.AccountStorage
 import esi.roadside.assistance.client.core.data.Endpoints
 import esi.roadside.assistance.client.core.data.dto.Client
 import esi.roadside.assistance.client.core.data.networking.CallType
@@ -28,6 +29,7 @@ import kotlinx.coroutines.runBlocking
 class AuthRepoImpl(
     private val persistentCookieStorage: PersistentCookieStorage,
     private val client: HttpClient,
+    private val accountStorage: AccountStorage
 ) : AuthRepo {
     override suspend fun login(request: LoginRequestModel): Result<AuthResponseModel, DomainError> {
         val remote = request.toLoginRequest()
@@ -36,6 +38,9 @@ class AuthRepoImpl(
                 setBody(remote)
             }.body()
         }.map { response ->
+            accountStorage.saveClientModelProperties(
+                response.data.user.toClientModel()
+            )
             response.toLoginResponseModel()
         }
     }
@@ -47,6 +52,9 @@ class AuthRepoImpl(
                 setBody(remote)
             }.body()
         }.map { response ->
+            accountStorage.saveClientModelProperties(
+                response.data.user.toClientModel()
+            )
             response.toLoginResponseModel()
         }
     }
@@ -63,6 +71,9 @@ class AuthRepoImpl(
                 setBody(remote)
             }.body()
         }.map { response ->
+            accountStorage.saveClientModelProperties(
+                response.toClientModel()
+            )
             response.toClientModel()
         }
     }

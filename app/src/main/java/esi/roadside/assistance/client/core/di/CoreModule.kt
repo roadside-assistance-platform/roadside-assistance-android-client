@@ -3,6 +3,7 @@ package esi.roadside.assistance.client.core.di
 import android.util.Log
 import esi.roadside.assistance.client.BuildConfig
 import esi.roadside.assistance.client.auth.data.PersistentCookieStorage
+import esi.roadside.assistance.client.core.data.AccountStorage
 import esi.roadside.assistance.client.core.data.SettingsDataStore
 import esi.roadside.assistance.client.core.data.networking.constructUrl
 import io.ktor.client.HttpClient
@@ -52,4 +53,5 @@ val coreModule = module {
         }
     }
     single { SettingsDataStore(androidContext()) }
+    single { AccountStorage(androidContext()) }
 }

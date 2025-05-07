@@ -28,6 +28,6 @@ val RepoModule = module {
             .setAutoSelectEnabled(true)
             .build()
     }
-    single<AuthRepo> { AuthRepoImpl(get(), get()) }
+    single<AuthRepo> { AuthRepoImpl(get(), get(),get()) }
     single<CloudinaryRepo> { CloudinaryRepoImpl(get()) }
 }
