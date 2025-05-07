@@ -3,6 +3,7 @@ package esi.roadside.assistance.client.auth.data
 import esi.roadside.assistance.client.auth.data.dto.AuthResponse
 import esi.roadside.assistance.client.auth.domain.models.AuthResponseModel
 import esi.roadside.assistance.client.auth.domain.models.LoginRequestModel
+import esi.roadside.assistance.client.auth.domain.models.ResetPasswordModel
 import esi.roadside.assistance.client.auth.domain.models.SendEmailModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
 import esi.roadside.assistance.client.auth.domain.models.UpdateModel
@@ -51,8 +52,15 @@ class AuthRepoImpl(
         }
     }
 
-    override suspend fun resetPassword(email: String): Result<ClientModel, DomainError> {
-        TODO("Not yet implemented")
+    override suspend fun resetPassword(resetPassword: ResetPasswordModel): Result<Boolean, DomainError> {
+        return safeCall<Client>(CallType.RESET_PASSWORD) {
+            client.post(constructUrl(Endpoints.RESET_PASSWORD)) {
+                val remote = resetPassword.toDto()
+                setBody(remote)
+            }.body()
+        }.map {
+            true
+        }
     }
 
     override suspend fun update(request: UpdateModel): Result<ClientModel, DomainError> {
