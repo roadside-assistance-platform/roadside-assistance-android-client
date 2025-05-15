@@ -27,7 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import esi.roadside.assistance.client.R
-import esi.roadside.assistance.client.auth.presentation.screens.login.InputError
+import esi.roadside.assistance.client.auth.presentation.InputError
 import soup.compose.material.motion.animation.materialFadeIn
 import soup.compose.material.motion.animation.materialFadeOut
 

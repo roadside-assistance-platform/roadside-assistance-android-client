@@ -1,7 +1,7 @@
 package esi.roadside.assistance.client.core.presentation.util
 
 import esi.roadside.assistance.client.R
-import esi.roadside.assistance.client.auth.presentation.screens.login.InputError
+import esi.roadside.assistance.client.auth.presentation.InputError
 
 object ValidateInput {
     fun validateEmail(email: String): InputError? =
@@ -106,4 +106,8 @@ object ValidateInput {
         validateFullName(fullName) ?: validatePhoneNumber(phoneNumber) ?:
         validateEmail(email) ?: validatePassword(password) ?:
         validateConfirmPassword(password, confirmPassword)
+
+
+    fun validateResetPassword(password: String, confirmPassword: String): InputError? =
+        validatePassword(password) ?: validateConfirmPassword(password, confirmPassword)
 }

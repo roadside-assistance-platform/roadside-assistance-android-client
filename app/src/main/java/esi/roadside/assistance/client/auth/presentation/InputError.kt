@@ -1,4 +1,4 @@
-package esi.roadside.assistance.client.auth.presentation.screens.login
+package esi.roadside.assistance.client.auth.presentation
 
 import esi.roadside.assistance.client.core.presentation.util.Field
 

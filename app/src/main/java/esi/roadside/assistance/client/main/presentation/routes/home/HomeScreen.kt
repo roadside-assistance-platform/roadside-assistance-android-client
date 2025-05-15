@@ -186,7 +186,10 @@ fun HomeScreen(
         sheetContent = {
             when(uiState.clientState) {
                 ClientState.PROVIDER_IN_WAY ->
-                    NavigatingScreen(uiState.directions?.duration?.roundToInt())
+                    NavigatingScreen(
+                        uiState.providerInfo,
+                        uiState.directions?.duration?.roundToInt()
+                    )
                 ClientState.ASSISTANCE_IN_PROGRESS ->
                     WorkingScreen(uiState.loading) {
                         onAction(Action.WorkingFinished)
