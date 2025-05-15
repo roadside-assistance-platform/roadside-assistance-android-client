@@ -68,15 +68,10 @@ class AuthActivity : ComponentActivity() {
                 val viewModel: AuthViewModel = koinViewModel()
                 val step by viewModel.step.collectAsStateWithLifecycle()
                 val authUiState by viewModel.authUiState.collectAsStateWithLifecycle()
-                val loginUiState by viewModel.loginUiState.collectAsStateWithLifecycle()
-                val signupUiState by viewModel.signupUiState.collectAsStateWithLifecycle()
-                val otpUiState by viewModel.otpUiState.collectAsStateWithLifecycle()
-                val resetPasswordUiState by viewModel.resetPasswordUiState.collectAsStateWithLifecycle()
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
                 LaunchedEffect(Unit) {
                     viewModel.onAction(Action.Initiate)
-                    viewModel.createAccountManager(this@AuthActivity)
                 }
                 CollectEvents { event ->
                     when (event) {
@@ -134,23 +129,22 @@ class AuthActivity : ComponentActivity() {
                                 WelcomeScreen(step, authUiState.loading, viewModel::onAction)
                             }
                             composable<NavRoutes.Login> {
-                                LoginScreen(loginUiState, viewModel::onAction)
+                                LoginScreen {
+                                    navController.navigate(it)
+                                }
                             }
                             composable<NavRoutes.Signup> {
-                                SignupScreen(signupUiState, viewModel::onAction)
+                                SignupScreen {
+                                    navController.navigate(it)
+                                }
                             }
                             composable<NavRoutes.VerifyEmail> {
-                                VerifyEmailScreen(
-                                    otpUiState,
-                                    signupUiState.loading,
-                                    viewModel::onOtpAction,
-                                    onResend = { viewModel.onAction(Action.SendCodeToEmail) },
-                                    onConfirm = { viewModel.onAction(Action.Verify) },
-                                    modifier = Modifier.fillMaxSize()
-                                )
+                                VerifyEmailScreen()
                             }
                             composable<NavRoutes.ForgotPassword> {
-                                ResetPasswordScreen(resetPasswordUiState, viewModel::onAction)
+                                ResetPasswordScreen {
+                                    navController.navigate(it)
+                                }
                             }
                         }
                         if (authUiState.errorDialogVisible)

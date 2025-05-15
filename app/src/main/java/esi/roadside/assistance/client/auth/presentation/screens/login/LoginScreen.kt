@@ -14,28 +14,36 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import esi.roadside.assistance.client.R
-import esi.roadside.assistance.client.auth.presentation.Action
+import esi.roadside.assistance.client.auth.presentation.NavRoutes
 import esi.roadside.assistance.client.auth.presentation.util.Button
 import esi.roadside.assistance.client.auth.presentation.util.MyScreen
 import esi.roadside.assistance.client.core.presentation.components.MyTextField
 import esi.roadside.assistance.client.core.presentation.components.PasswordTextField
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
+import esi.roadside.assistance.client.settings.util.findActivity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen(
-    uiState: LoginUiState,
-    onAction: (Action) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigate: (NavRoutes) -> Unit,
 ) {
+    val viewModel: LoginViewModel = koinViewModel()
+    val uiState by viewModel.loginUiState.collectAsState()
+    val context = LocalContext.current
     MyScreen(
         stringResource(R.string.welcome_back),
         stringResource(R.string.log_in_to_continue),
@@ -48,7 +56,7 @@ fun LoginScreen(
             MyTextField(
                 uiState.email,
                 {
-                    onAction(Action.SetLoginEmail(it))
+                    viewModel.onAction(LoginAction.SetEmail(it))
                 },
                 label = stringResource(R.string.email),
                 placeholder = stringResource(R.string.email_placeholder),
@@ -61,11 +69,11 @@ fun LoginScreen(
             PasswordTextField(
                 uiState.password,
                 {
-                    onAction(Action.SetLoginPassword(it))
+                    viewModel.onAction(LoginAction.SetPassword(it))
                 },
                 uiState.passwordHidden,
                 {
-                    onAction(Action.ToggleLoginPasswordHidden)
+                    viewModel.onAction(LoginAction.TogglePasswordHidden)
                 },
                 label = stringResource(R.string.password),
                 placeholder = stringResource(R.string.password_placeholder),
@@ -79,7 +87,7 @@ fun LoginScreen(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton({ onAction(Action.GoToForgotPassword) }, enabled = !uiState.loading) {
+                TextButton({ onNavigate(NavRoutes.ForgotPassword) }, enabled = !uiState.loading) {
                     Text(stringResource(R.string.forgot_password))
                 }
             }
@@ -88,13 +96,13 @@ fun LoginScreen(
                     LinearProgressIndicator(Modifier.padding(vertical = 30.dp).fillMaxWidth())
                 else
                     Button(stringResource(R.string.log_in), Modifier.fillMaxWidth(), enabled = !uiState.loading) {
-                        onAction(Action.Login)
+                        viewModel.onAction(LoginAction.Login)
                     }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(R.string.don_t_have_an_account))
                 TextButton(
-                    { onAction(Action.GoToSignup) },
+                    { onNavigate(NavRoutes.Signup) },
                     contentPadding = PaddingValues(horizontal = 8.dp),
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.tertiary
@@ -113,6 +121,6 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     PreviewAppTheme {
-        LoginScreen(LoginUiState("", ""), {})
+        //LoginScreen(LoginState("", ""), {}, {})
     }
 }

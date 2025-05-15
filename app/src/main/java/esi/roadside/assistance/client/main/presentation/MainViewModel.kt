@@ -109,11 +109,14 @@ class MainViewModel(
                     queuesManager.consumeUserNotifications(userPreferences.client.id, "client")
                 }
                 launch(Dispatchers.IO) {
-                    queuesManager.serviceAcceptance.consumeEach {
+                    queuesManager.serviceAcceptance.consumeEach { service ->
                         if (_homeUiState.value.clientState == ClientState.ASSISTANCE_REQUESTED) {
-                            _serviceAcceptance.value = it
+                            _serviceAcceptance.value = service
                             _homeUiState.update {
-                                it.copy(clientState = ClientState.PROVIDER_IN_WAY)
+                                it.copy(
+                                    providerInfo = service.provider,
+                                    clientState = ClientState.PROVIDER_IN_WAY
+                                )
                             }
                             timer.cancel()
                             notificationService.showNotification(
@@ -121,18 +124,16 @@ class MainViewModel(
                                 context.getString(R.string.assistance_request_accepted),
                                 context.getString(
                                     R.string.service_accepted_by,
-                                    it.provider.fullName
+                                    service.provider.fullName
                                 ),
                             )
-                            _serviceAcceptance.value?.let { service ->
-                                queuesManager.publishCategoryQueues(
-                                    setOf(service.category),
-                                    PolymorphicNotification.ServiceRemove(
-                                        serviceId = service.id,
-                                        exception = service.provider.id
-                                    )
+                            queuesManager.publishCategoryQueues(
+                                setOf(service.category),
+                                PolymorphicNotification.ServiceRemove(
+                                    serviceId = service.id,
+                                    exception = service.provider.id
                                 )
-                            }
+                            )
                         }
                     }
                 }

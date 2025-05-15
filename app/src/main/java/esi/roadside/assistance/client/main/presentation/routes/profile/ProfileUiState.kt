@@ -1,6 +1,6 @@
 package esi.roadside.assistance.client.main.presentation.routes.profile
 
-import esi.roadside.assistance.client.auth.presentation.screens.login.InputError
+import esi.roadside.assistance.client.auth.presentation.InputError
 import esi.roadside.assistance.client.main.presentation.models.ClientUi
 
 data class ProfileUiState(

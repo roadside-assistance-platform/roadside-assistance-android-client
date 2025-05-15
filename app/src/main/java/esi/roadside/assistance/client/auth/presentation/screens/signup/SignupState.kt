@@ -1,9 +1,9 @@
 package esi.roadside.assistance.client.auth.presentation.screens.signup
 
 import android.net.Uri
-import esi.roadside.assistance.client.auth.presentation.screens.login.InputError
+import esi.roadside.assistance.client.auth.presentation.InputError
 
-data class SignupUiState(
+data class SignupState(
     val fullName: String = "",
     val fullNameError: InputError? = null,
     val phoneNumber: String = "",

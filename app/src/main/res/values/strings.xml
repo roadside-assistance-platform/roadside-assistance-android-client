@@ -173,6 +173,7 @@
     <string name="show_timer_button">Show timer button</string>
     <string name="show_lyrics_button">Show lyrics button</string>
     <string name="join_us">Join us</string>
+    <string name="join_us_signup_text">Create an account</string>
     <string name="join_us_text">and get back on the road quickly!</string>
     <string name="sign_up">Sign up</string>
     <string name="log_in">Log in</string>
@@ -344,4 +345,6 @@
     <string name="service_accepted_by">Service accepted by %1$s</string>
     <string name="notification_permission_title">Required Notifications Permission</string>
     <string name="notification_permission_text">To receive notifications, we need to allow this permission</string>
+    <string name="password_reset_success">Password reset successfully</string>
+    <string name="reset">Reset</string>
 </resources>

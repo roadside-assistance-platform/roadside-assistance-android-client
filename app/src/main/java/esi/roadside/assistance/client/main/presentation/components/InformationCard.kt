@@ -35,7 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import esi.roadside.assistance.client.R
-import esi.roadside.assistance.client.auth.presentation.screens.login.InputError
+import esi.roadside.assistance.client.auth.presentation.InputError
 import esi.roadside.assistance.client.core.presentation.components.MyTextField
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 

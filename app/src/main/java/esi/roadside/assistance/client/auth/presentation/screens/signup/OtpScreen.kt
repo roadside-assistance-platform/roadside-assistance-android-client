@@ -7,11 +7,15 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import esi.roadside.assistance.client.auth.presentation.OtpAction
+import kotlin.collections.none
 
 @Composable
 fun OtpScreen(
@@ -21,6 +25,25 @@ fun OtpScreen(
     enabled: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val focusManager = LocalFocusManager.current
+    val keyboardManager = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(state.focusedIndex) {
+        state.focusedIndex?.let { index ->
+            focusRequesters.getOrNull(index)?.requestFocus()
+        }
+    }
+
+    LaunchedEffect(state.code, keyboardManager) {
+        val allNumbersEntered = state.code.none { it == null }
+        if(allNumbersEntered) {
+            focusRequesters.forEach {
+                it.freeFocus()
+            }
+            focusManager.clearFocus()
+            keyboardManager?.hide()
+        }
+    }
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
