@@ -20,7 +20,7 @@ val viewModelModule = module {
         LoginViewModel(get(), get())
     }
     viewModel {
-        SignupViewModel(get(), get(), get(), get(), get(), get())
+        SignupViewModel(get(), get(), get(), get(), get())
     }
     viewModel {
         ResetPasswordViewModel(get(), get(), get())

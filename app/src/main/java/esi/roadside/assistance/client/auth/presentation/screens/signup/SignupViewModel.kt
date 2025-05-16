@@ -43,7 +43,6 @@ class SignupViewModel(
     private val sendEmailUseCase: SendEmail,
     private val signUpUseCase: SignUp,
     private val verifyEmailUseCase: VerifyEmail,
-    private val googleIdOption: GetGoogleIdOption,
 ): ViewModel() {
     private val _signupState = MutableStateFlow(SignupState())
     val signupState = _signupState.asStateFlow()
