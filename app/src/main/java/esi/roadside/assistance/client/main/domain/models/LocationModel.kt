@@ -19,8 +19,3 @@ data class LocationModel(
 
     fun toPoint(): Point = Point.fromLngLat(longitude, latitude)
 }
-
-fun Point.toLocationModel() = LocationModel(
-    longitude = longitude(),
-    latitude = latitude(),
-)

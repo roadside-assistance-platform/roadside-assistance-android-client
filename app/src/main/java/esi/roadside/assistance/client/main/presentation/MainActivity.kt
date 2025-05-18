@@ -35,7 +35,6 @@ import esi.roadside.assistance.client.core.util.composables.CollectEvents
 import esi.roadside.assistance.client.core.util.composables.SetSystemBarColors
 import esi.roadside.assistance.client.main.util.isPermissionGranted
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     lateinit var permissionsManager: PermissionsManager
@@ -58,7 +57,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             SetSystemBarColors()
             val navController = rememberNavController()
-            val mainViewModel : MainViewModel = koinViewModel()
             val requestSheetState = rememberModalBottomSheetState(true)
             val scope = rememberCoroutineScope()
             val snackbarHostState = remember { SnackbarHostState() }
@@ -113,7 +111,6 @@ class MainActivity : ComponentActivity() {
                 AppScreen(
                     navController = navController,
                     snackbarHostState = snackbarHostState,
-                    mainViewModel = mainViewModel,
                     requestSheetState = requestSheetState,
                 )
                 IconDialog(

@@ -1,5 +1,6 @@
 package esi.roadside.assistance.client.main.util
 
+import java.time.LocalDateTime
 import java.util.Locale
 
 fun Long.formatTime(): String {
@@ -13,3 +14,6 @@ fun Long.formatTime(): String {
     formattedTime.append(String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds))
     return formattedTime.toString()
 }
+
+fun LocalDateTime.formatTime(): String =
+    atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli().formatTime()

@@ -8,7 +8,6 @@ import esi.roadside.assistance.client.auth.data.CloudinaryRepoImpl
 import esi.roadside.assistance.client.auth.data.PersistentCookieStorage
 import esi.roadside.assistance.client.auth.domain.repository.AuthRepo
 import esi.roadside.assistance.client.auth.domain.repository.CloudinaryRepo
-import esi.roadside.assistance.client.auth.util.account.AccountManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

@@ -49,6 +49,7 @@ sealed interface PolymorphicNotification {
     data class LocationUpdate(
         val longitude: Double,
         val latitude: Double,
+        val eta: Double?
     ) : PolymorphicNotification
 
     @Serializable
@@ -60,6 +61,9 @@ sealed interface PolymorphicNotification {
 
     @Serializable
     data object ProviderArrived : PolymorphicNotification
+
+    @Serializable
+    data class Message(val content: String) : PolymorphicNotification
 
     @Serializable
     data class ServiceDone(
@@ -88,6 +92,8 @@ sealed interface PolymorphicNotification {
                 polymorphic(PolymorphicNotification::class, UserNotification::class, UserNotification.serializer())
                 polymorphic(PolymorphicNotification::class, LocationUpdate::class, LocationUpdate.serializer())
                 polymorphic(PolymorphicNotification::class, ServiceAcceptance::class, ServiceAcceptance.serializer())
+                polymorphic(PolymorphicNotification::class, Message::class, Message.serializer())
+                polymorphic(PolymorphicNotification::class, Message::class, Message.serializer())
                 polymorphic(PolymorphicNotification::class, ServiceDone::class, ServiceDone.serializer())
                 polymorphic(PolymorphicNotification::class, ProviderArrived::class, ProviderArrived.serializer())
                 polymorphic(PolymorphicNotification::class, ServiceRemove::class, ServiceRemove.serializer())
@@ -112,6 +118,7 @@ sealed interface PolymorphicNotification {
                 "UserNotification" -> json.decodeFromJsonElement(UserNotification.serializer(), jsonElement)
                 "LocationUpdate" -> json.decodeFromJsonElement(LocationUpdate.serializer(), jsonElement)
                 "ServiceAcceptance" -> json.decodeFromJsonElement(ServiceAcceptance.serializer(), jsonElement)
+                "Message" -> json.decodeFromJsonElement(Message.serializer(), jsonElement)
                 "ServiceDone" -> json.decodeFromJsonElement(ServiceDone.serializer(), jsonElement)
                 "ProviderArrived" -> json.decodeFromJsonElement(ProviderArrived.serializer(), jsonElement)
                 "ServiceRemove" -> json.decodeFromJsonElement(ServiceRemove.serializer(), jsonElement)

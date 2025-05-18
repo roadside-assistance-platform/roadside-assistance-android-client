@@ -16,7 +16,9 @@ fun ComponentActivity.SetSystemBarColors() {
     val isDark by isDark()
     val scrim = MaterialTheme.colorScheme.scrim
     DisposableEffect(isDark) {
-        val statusBarStyle = SystemBarStyle.dark(scrim.copy(alpha = .25f).toArgb())
+        val statusBarStyle =
+            if (isDark) SystemBarStyle.dark(Color.TRANSPARENT)
+            else SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
         val navigationBarStyle =
             if (isDark) SystemBarStyle.dark(Color.TRANSPARENT)
             else SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)

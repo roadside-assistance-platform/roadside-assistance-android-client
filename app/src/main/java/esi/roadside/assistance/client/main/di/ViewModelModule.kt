@@ -1,24 +1,24 @@
 package esi.roadside.assistance.client.main.di
 
 import esi.roadside.assistance.client.main.presentation.MainViewModel
+import esi.roadside.assistance.client.main.presentation.routes.home.SearchViewModel
+import esi.roadside.assistance.client.main.presentation.routes.home.request.AssistanceViewModel
+import esi.roadside.assistance.client.main.presentation.routes.profile.ProfileViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel {
-        MainViewModel(
-            androidContext(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get()
-        )
+        MainViewModel(get(), get(), get(), get(), get())
+    }
+    viewModel {
+        AssistanceViewModel(get())
+    }
+    viewModel {
+        SearchViewModel(get())
+    }
+    viewModel {
+        ProfileViewModel(get(), get(), get())
     }
 }

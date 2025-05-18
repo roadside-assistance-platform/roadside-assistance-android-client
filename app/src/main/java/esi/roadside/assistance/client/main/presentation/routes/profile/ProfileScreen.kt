@@ -33,6 +33,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,19 +47,16 @@ import androidx.compose.ui.unit.dp
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.core.presentation.components.ProfilePicturePicker
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
-import esi.roadside.assistance.client.main.presentation.Action
 import esi.roadside.assistance.client.main.presentation.components.DefaultBackNavButton
 import esi.roadside.assistance.client.main.presentation.components.InformationCard
 import esi.roadside.assistance.client.main.presentation.components.TopAppBar
-import esi.roadside.assistance.client.main.presentation.models.ClientUi
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(
-    state: ProfileUiState,
-    onAction: (Action) -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun ProfileScreen(modifier: Modifier = Modifier) {
+    val viewModel: ProfileViewModel = koinViewModel()
+    val state by viewModel.state.collectAsState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val focusRequester = remember { FocusRequester() }
     var image by remember { mutableStateOf<Any?>(null) }
@@ -98,7 +96,7 @@ fun ProfileScreen(
                     ) {
                         if (state.enableEditing)
                             FloatingActionButton(
-                                { onAction(Action.CancelProfileEditing) },
+                                { viewModel.onAction(ProfileAction.CancelProfileEditing) },
                                 containerColor = MaterialTheme.colorScheme.errorContainer,
                                 contentColor = MaterialTheme.colorScheme.error,
                             ) {
@@ -106,9 +104,9 @@ fun ProfileScreen(
                             }
                         ExtendedFloatingActionButton(
                             onClick = {
-                                onAction(
-                                    if (state.enableEditing) Action.ConfirmProfileEditing
-                                    else Action.EnableProfileEditing
+                                viewModel.onAction(
+                                    if (state.enableEditing) ProfileAction.ConfirmProfileEditing
+                                    else ProfileAction.EnableProfileEditing
                                 )
                             },
                             icon = {
@@ -148,7 +146,7 @@ fun ProfileScreen(
                 enabled = state.enableEditing,
                 modifier = Modifier.padding(bottom = 24.dp)
             ) {
-                onAction(Action.EditClient(
+                viewModel.onAction(ProfileAction.EditClient(
                     state.editClient.copy(
                         photo = it
                     )
@@ -159,7 +157,7 @@ fun ProfileScreen(
                 title = R.string.full_name,
                 text = state.client.fullName,
                 value = state.editClient.fullName,
-                onValueChange = { onAction(Action.EditClient(
+                onValueChange = { viewModel.onAction(ProfileAction.EditClient(
                     state.editClient.copy(
                        fullName = it
                     )
@@ -173,7 +171,7 @@ fun ProfileScreen(
                 title = R.string.email_adress,
                 text = state.client.email,
                 value = state.editClient.email,
-                onValueChange = { onAction(Action.EditClient(
+                onValueChange = { viewModel.onAction(ProfileAction.EditClient(
                     state.editClient.copy(
                         email = it
                     )
@@ -186,7 +184,7 @@ fun ProfileScreen(
                 title = R.string.phone_number,
                 text = state.client.phone,
                 value = state.editClient.phone,
-                onValueChange = { onAction(Action.EditClient(
+                onValueChange = { viewModel.onAction(ProfileAction.EditClient(
                     state.editClient.copy(
                         phone = it
                     )
@@ -197,7 +195,7 @@ fun ProfileScreen(
         }
     }
     BackHandler(enabled = state.enableEditing) {
-        onAction(Action.CancelProfileEditing)
+        viewModel.onAction(ProfileAction.CancelProfileEditing)
     }
 }
 
@@ -205,16 +203,16 @@ fun ProfileScreen(
 @Composable
 private fun Preview() {
     PreviewAppTheme {
-        ProfileScreen(
-            state = ProfileUiState(
-                client = ClientUi(
-                    fullName = "John Doe",
-                    email = "email@example.com",
-                    phone = "0123456789"
-                ),
-                enableEditing = false
-            ),
-            {}
-        )
+//        ProfileScreen(
+//            state = ProfileUiState(
+//                client = ClientUi(
+//                    fullName = "John Doe",
+//                    email = "email@example.com",
+//                    phone = "0123456789"
+//                ),
+//                enableEditing = false
+//            ),
+//            {}
+//        )
     }
 }

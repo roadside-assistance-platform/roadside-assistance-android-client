@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.NavRoutes
 import esi.roadside.assistance.client.auth.presentation.OtpAction
-import esi.roadside.assistance.client.auth.presentation.screens.signup.OtpScreen
+import esi.roadside.assistance.client.auth.presentation.OtpScreen
 import esi.roadside.assistance.client.auth.presentation.util.Button
 import esi.roadside.assistance.client.auth.presentation.util.MyScreen
 import esi.roadside.assistance.client.core.presentation.components.MyTextField

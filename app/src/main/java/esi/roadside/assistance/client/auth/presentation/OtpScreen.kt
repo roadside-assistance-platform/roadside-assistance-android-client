@@ -1,11 +1,10 @@
-package esi.roadside.assistance.client.auth.presentation.screens.signup
+package esi.roadside.assistance.client.auth.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -14,7 +13,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
-import esi.roadside.assistance.client.auth.presentation.OtpAction
+import esi.roadside.assistance.client.auth.presentation.screens.signup.OtpInputField
 import kotlin.collections.none
 
 @Composable
@@ -59,7 +58,7 @@ fun OtpScreen(
                     enabled = enabled,
                     focusRequester = focusRequesters[index],
                     onFocusChanged = { isFocused ->
-                        if(isFocused) {
+                        if (isFocused) {
                             onAction(OtpAction.OnChangeFieldFocused(index))
                         }
                     },

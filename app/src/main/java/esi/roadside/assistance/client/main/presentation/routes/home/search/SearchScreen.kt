@@ -1,4 +1,4 @@
-package esi.roadside.assistance.client.main.presentation.routes.home
+package esi.roadside.assistance.client.main.presentation.routes.home.search
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -48,7 +48,7 @@ fun SearchScreen(
     state: SearchState,
     clientState: ClientState,
     time: Long,
-    onSearchEvent: (SearchEvent) -> Unit,
+    onSearchEvent: (SearchAction) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
     onItemClick: (Feature) -> Unit,
@@ -57,8 +57,8 @@ fun SearchScreen(
         inputField = {
             SearchBarDefaults.InputField(
                 query = state.query,
-                onQueryChange = { onSearchEvent(SearchEvent.UpdateQuery(it)) },
-                onSearch = { onSearchEvent(SearchEvent.UpdateQuery(it)) },
+                onQueryChange = { onSearchEvent(SearchAction.UpdateQuery(it)) },
+                onSearch = { onSearchEvent(SearchAction.UpdateQuery(it)) },
                 expanded = state.expanded,
                 placeholder = {
                     AnimatedContent(clientState) {
@@ -96,11 +96,11 @@ fun SearchScreen(
                             )
                         else {
                             if (state.expanded) {
-                                IconButton(onClick = { onSearchEvent(SearchEvent.Collapse) }) {
+                                IconButton(onClick = { onSearchEvent(SearchAction.Collapse) }) {
                                     Icon(Icons.AutoMirrored.Default.ArrowBack, null)
                                 }
                             } else {
-                                IconButton(onClick = { onSearchEvent(SearchEvent.Expand) }) {
+                                IconButton(onClick = { onSearchEvent(SearchAction.Expand) }) {
                                     Icon(Icons.Default.Search, null)
                                 }
                             }
@@ -136,7 +136,7 @@ fun SearchScreen(
                                 enter = materialFadeThroughIn(),
                                 exit = materialFadeThroughOut()
                             ) {
-                                IconButton({ onSearchEvent(SearchEvent.UpdateQuery("")) }) {
+                                IconButton({ onSearchEvent(SearchAction.UpdateQuery("")) }) {
                                     Icon(Icons.Default.Clear, null)
                                 }
                             }
@@ -144,14 +144,14 @@ fun SearchScreen(
                 },
                 onExpandedChange = {
                     if (clientState != ClientState.ASSISTANCE_REQUESTED)
-                        onSearchEvent(SearchEvent.UpdateExpanded(it))
+                        onSearchEvent(SearchAction.UpdateExpanded(it))
                                    },
             )
         },
         expanded = state.expanded,
         onExpandedChange = {
             if (clientState != ClientState.ASSISTANCE_REQUESTED)
-                onSearchEvent(SearchEvent.UpdateExpanded(it))
+                onSearchEvent(SearchAction.UpdateExpanded(it))
                            },
         modifier = modifier,
         windowInsets = SearchBarDefaults.windowInsets.add(WindowInsets(left = 8.dp, right = 8.dp)),
@@ -176,8 +176,8 @@ fun SearchScreen(
                     ),
                     modifier = Modifier.clickable {
                         onItemClick(it)
-                        onSearchEvent(SearchEvent.Collapse)
-                        onSearchEvent(SearchEvent.UpdateQuery(""))
+                        onSearchEvent(SearchAction.Collapse)
+                        onSearchEvent(SearchAction.UpdateQuery(""))
                     }
                 )
             }

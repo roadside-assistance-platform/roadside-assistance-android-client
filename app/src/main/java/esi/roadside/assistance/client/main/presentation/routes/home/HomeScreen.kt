@@ -25,6 +25,7 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -77,27 +78,29 @@ import com.mapbox.maps.plugin.viewport.data.FollowPuckViewportStateOptions
 import com.mapbox.maps.plugin.viewport.data.OverviewViewportStateOptions
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.core.presentation.util.isDark
-import esi.roadside.assistance.client.main.domain.models.ServiceModel
+import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.presentation.Action
 import esi.roadside.assistance.client.main.presentation.ClientState
 import esi.roadside.assistance.client.main.presentation.sheet.NavigatingScreen
-import esi.roadside.assistance.client.main.presentation.sheet.WorkingScreen
+import esi.roadside.assistance.client.main.domain.repository.ServiceState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.koin.androidx.compose.koinViewModel
 import soup.compose.material.motion.animation.materialSharedAxisZIn
 import soup.compose.material.motion.animation.materialSharedAxisZOut
-import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class, MapboxExperimental::class)
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
-    currentService: ServiceModel?,
-    searchState: SearchState,
+    serviceState: ServiceState,
     onAction: (Action) -> Unit,
-    onSearchEvent: (SearchEvent) -> Unit,
-    modifier: Modifier = Modifier
+    onLocationChange: (LocationModel?) -> Unit,
+    modifier: Modifier = Modifier,
+    onRequest: () -> Unit
 ) {
+    val searchViewModel: SearchViewModel = koinViewModel()
+    val searchState by searchViewModel.state.collectAsState()
     var point by remember { mutableStateOf<Point?>(null) }
     val state = rememberMapViewportState {
         setCameraOptions {
@@ -152,6 +155,7 @@ fun HomeScreen(
         mutableStateOf(true)
     }
     val marker = rememberIconImage(R.drawable.baseline_location_pin_24)
+    val blueMarker = rememberIconImage(R.drawable.baseline_location_pin_blue_24)
     val bottomSheetState = rememberStandardBottomSheetState(SheetValue.Hidden, skipHiddenState = false, confirmValueChange = {
         it != SheetValue.Hidden
     })
@@ -172,35 +176,37 @@ fun HomeScreen(
             }
         }
     }
-    LaunchedEffect(uiState.clientState) {
-        Log.i("MainActivity", "newState: ${uiState.clientState}")
-        if (uiState.clientState in setOf(ClientState.PROVIDER_IN_WAY, ClientState.ASSISTANCE_IN_PROGRESS))
+    LaunchedEffect(serviceState.clientState) {
+        Log.i("MainActivity", "newState: ${serviceState.clientState}")
+        if (serviceState.clientState in setOf(ClientState.PROVIDER_IN_WAY, ClientState.ASSISTANCE_IN_PROGRESS))
             bottomSheetState.expand()
         else
             bottomSheetState.hide()
+    }
+    LaunchedEffect(uiState.providerLocation) {
+        Log.d("MainActivity", "point: ${uiState.providerLocation?.longitude()}, ${uiState.providerLocation?.latitude()}")
     }
     BottomSheetScaffold(
         modifier = modifier,
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
         sheetContent = {
-            when(uiState.clientState) {
-                ClientState.PROVIDER_IN_WAY ->
-                    NavigatingScreen(
-                        uiState.providerInfo,
-                        uiState.directions?.duration?.roundToInt()
-                    )
+            when(serviceState.clientState) {
+                ClientState.PROVIDER_IN_WAY,
                 ClientState.ASSISTANCE_IN_PROGRESS ->
-                    WorkingScreen(uiState.loading) {
-                        onAction(Action.WorkingFinished)
-                    }
+                    NavigatingScreen(
+                        serviceState.providerInfo,
+                        uiState.message,
+                        onAction
+                    )
                 else -> {
-
                 }
             }
         }
     ) {
-        Box(Modifier.fillMaxSize().padding(it)) {
+        Box(Modifier
+            .fillMaxSize()
+            .padding(it)) {
             MapboxMap(
                 modifier = Modifier.fillMaxSize(),
                 mapViewportState = state,
@@ -272,7 +278,7 @@ fun HomeScreen(
                 onMapLongClickListener = object : OnMapLongClickListener {
                     override fun onMapLongClick(newPoint: Point): Boolean {
                         point = newPoint
-                        onAction(Action.SetLocation(newPoint))
+                        onLocationChange(LocationModel.fromPoint(newPoint))
                         state.easeTo(
                             CameraOptions
                                 .Builder()
@@ -299,7 +305,7 @@ fun HomeScreen(
                 point?.let {
                     PointAnnotation(point = it) {
                         interactionsState.onClicked {
-                            onAction(Action.SetLocation(it.point))
+                            onLocationChange(LocationModel.fromPoint(it.point))
                             state.easeTo(
                                 CameraOptions
                                     .Builder()
@@ -316,10 +322,9 @@ fun HomeScreen(
                         iconImageCrossFade = 1.0
                     }
                 }
-                currentService?.let {
+                serviceState.serviceModel?.let {
                     PointAnnotation(point = it.serviceLocation.toPoint()) {
-                        iconColor = Color(35, 171, 242)
-                        iconImage = marker
+                        iconImage = blueMarker
                         iconAnchor = IconAnchor.BOTTOM
                         iconImageCrossFade = 1.0
                     }
@@ -327,7 +332,7 @@ fun HomeScreen(
                 uiState.providerLocation?.let {
                     PointAnnotation(point = it) {
 //                        interactionsState.onClicked {
-//                            onAction(Action.SetLocation(it.point))
+//                            onLocationChange(it.point)
 //                            state.easeTo(
 //                                CameraOptions
 //                                    .Builder()
@@ -346,7 +351,7 @@ fun HomeScreen(
                 }
                 MapEffect(Unit) { mapView ->
                     followLocation(state, mapView) {
-                        if (it != null) onAction(Action.SetLocation(it))
+                        if (it != null) onLocationChange(LocationModel.fromPoint(it))
                     }
                 }
                 MapEffect(point) { view ->
@@ -355,21 +360,23 @@ fun HomeScreen(
                             enabled = false
                         }
                     } ?: followLocation(state, view) {
-                        if (it != null) onAction(Action.SetLocation(it))
+                        if (it != null) onLocationChange(LocationModel.fromPoint(it))
                     }
                 }
             }
-            SearchScreen(
+            TopBar(
                 searchState,
-                uiState.clientState,
-                uiState.time,
-                onSearchEvent,
+                serviceState.clientState,
+                serviceState.time,
+                serviceState.eta,
+                searchViewModel::onAction,
+                { onAction(Action.WorkingFinished) },
                 { onAction(Action.CancelRequest) },
                 modifier = Modifier.align(Alignment.TopCenter)
             ) {
                 val newPoint = Point.fromLngLat(it.properties.coordinates.longitude, it.properties.coordinates.latitude)
                 point = newPoint
-                onAction(Action.SetLocation(newPoint))
+                onLocationChange(LocationModel.fromPoint(newPoint))
                 state.easeTo(
                     CameraOptions
                         .Builder()
@@ -384,7 +391,9 @@ fun HomeScreen(
                 !searchState.expanded,
                 enter = materialSharedAxisZIn(true),
                 exit = materialSharedAxisZOut(true),
-                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
             ) {
                 Column(
                     horizontalAlignment = Alignment.End,
@@ -394,7 +403,7 @@ fun HomeScreen(
                         {
                             followLocation(state) {
                                 it?.let {
-                                    onAction(Action.SetLocation(it))
+                                    onLocationChange(LocationModel.fromPoint(it))
                                     point = null
                                 }
                             }
@@ -405,14 +414,12 @@ fun HomeScreen(
                         Icon(Icons.Default.LocationOn, null)
                     }
                     AnimatedVisibility(
-                        (uiState.location != null) and (uiState.clientState == ClientState.IDLE),
+                        (uiState.location != null) and (serviceState.clientState == ClientState.IDLE),
                         enter = materialSharedAxisZIn(true),
                         exit = materialSharedAxisZOut(true)
                     ) {
                         ExtendedFloatingActionButton(
-                            onClick = {
-                                onAction(Action.ShowRequestAssistance)
-                            },
+                            onClick = onRequest,
                             icon = { Icon(Icons.Outlined.Edit, null) },
                             text = { Text(stringResource(R.string.request_service)) },
                             containerColor = MaterialTheme.colorScheme.primary

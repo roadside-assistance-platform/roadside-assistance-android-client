@@ -28,27 +28,39 @@ import androidx.navigation.NavHostController
 import esi.roadside.assistance.client.core.presentation.components.Dialog
 import esi.roadside.assistance.client.core.presentation.components.IconDialog
 import esi.roadside.assistance.client.main.presentation.components.RatingBar
+import esi.roadside.assistance.client.main.presentation.routes.home.request.AssistanceAction
+import esi.roadside.assistance.client.main.presentation.routes.home.request.AssistanceViewModel
 import esi.roadside.assistance.client.main.presentation.routes.home.request.RequestAssistance
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppScreen(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
-    mainViewModel: MainViewModel,
     requestSheetState: SheetState,
     modifier: Modifier = Modifier
 ) {
+    val mainViewModel: MainViewModel = koinViewModel()
+    val assistanceViewModel: AssistanceViewModel = koinViewModel()
+    val assistanceState by assistanceViewModel.state.collectAsState()
+    val uiState by mainViewModel.homeUiState.collectAsState()
+    val service by mainViewModel.currentService.collectAsState()
     NavigationScreen(
         modifier = modifier.fillMaxSize(),
         navController = navController,
         snackbarHostState = snackbarHostState,
         mainViewModel = mainViewModel,
+        onLocationChange = { location ->
+            mainViewModel.onAction(Action.SetLocation(location))
+            assistanceViewModel.onAction(AssistanceAction.SetLocation(location))
+        },
+        onRequest = {
+            assistanceViewModel.onAction(AssistanceAction.ShowSheet)
+        }
     )
-    val requestAssistanceState by mainViewModel.requestAssistanceState.collectAsState()
-    val uiState by mainViewModel.homeUiState.collectAsState()
     IconDialog(
-        visible = uiState.clientState == ClientState.ASSISTANCE_FAILED,
+        visible = service.clientState == ClientState.ASSISTANCE_FAILED,
         onDismissRequest = {
             mainViewModel.onAction(Action.CancelRequest)
         },
@@ -56,7 +68,7 @@ fun AppScreen(
         text = stringResource(R.string.assistance_failed_description),
         icon = Icons.Default.Error,
         okListener = {
-            mainViewModel.onAction(Action.SubmitRequest)
+            //mainViewModel.onAction(Action.SubmitRequest)
         },
         cancelListener = {
             mainViewModel.onAction(Action.CancelRequest)
@@ -67,7 +79,7 @@ fun AppScreen(
 
     var rating by remember { mutableDoubleStateOf(0.0) }
     Dialog(
-        visible = uiState.clientState == ClientState.ASSISTANCE_COMPLETED,
+        visible = service.clientState == ClientState.ASSISTANCE_COMPLETED,
         onDismissRequest = {},
         loading = uiState.loading,
         title = stringResource(R.string.assistance_completed),
@@ -105,5 +117,5 @@ fun AppScreen(
             )
         }
     }
-    RequestAssistance(requestSheetState, requestAssistanceState, mainViewModel::onAction)
+    RequestAssistance(requestSheetState, assistanceState, assistanceViewModel::onAction)
 }

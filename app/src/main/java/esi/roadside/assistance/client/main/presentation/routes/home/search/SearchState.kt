@@ -1,4 +1,4 @@
-package esi.roadside.assistance.client.main.presentation.routes.home
+package esi.roadside.assistance.client.main.presentation.routes.home.search
 
 import esi.roadside.assistance.client.main.domain.models.geocoding.GeocodingResponseModel
 

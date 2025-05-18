@@ -347,4 +347,10 @@
     <string name="notification_permission_text">To receive notifications, we need to allow this permission</string>
     <string name="password_reset_success">Password reset successfully</string>
     <string name="reset">Reset</string>
+    <string name="idle">Idle</string>
+    <string name="idle_description">Idle text</string>
+    <string name="looking_for_providers_description">Wait until we find some nearby providers</string>
+    <string name="unknown">Unknown</string>
+    <string name="chat_placeholder">Send message to provider</string>
+    <string name="in_progress_text">Assistance in progress</string>
 </resources>

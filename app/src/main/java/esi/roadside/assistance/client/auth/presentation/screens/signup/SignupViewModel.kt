@@ -3,7 +3,6 @@ package esi.roadside.assistance.client.auth.presentation.screens.signup
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.domain.models.SendEmailModel
 import esi.roadside.assistance.client.auth.domain.models.SignupModel
@@ -14,7 +13,7 @@ import esi.roadside.assistance.client.auth.domain.use_case.SignUp
 import esi.roadside.assistance.client.auth.domain.use_case.VerifyEmail
 import esi.roadside.assistance.client.auth.presentation.NavRoutes
 import esi.roadside.assistance.client.auth.presentation.OtpAction
-import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordAction
+import esi.roadside.assistance.client.auth.presentation.OtpState
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupAction.*
 import esi.roadside.assistance.client.auth.presentation.util.loggedIn
 import esi.roadside.assistance.client.auth.util.account.AccountManager
@@ -32,9 +31,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.collections.filterNotNull
-import kotlin.collections.getOrNull
-import kotlin.collections.mapIndexed
-import kotlin.collections.none
 
 
 class SignupViewModel(

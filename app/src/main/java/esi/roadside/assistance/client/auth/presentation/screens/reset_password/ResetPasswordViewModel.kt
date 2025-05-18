@@ -10,7 +10,7 @@ import esi.roadside.assistance.client.auth.domain.use_case.SendEmail
 import esi.roadside.assistance.client.auth.domain.use_case.VerifyEmail
 import esi.roadside.assistance.client.auth.presentation.NavRoutes
 import esi.roadside.assistance.client.auth.presentation.OtpAction
-import esi.roadside.assistance.client.auth.presentation.screens.signup.OtpState
+import esi.roadside.assistance.client.auth.presentation.OtpState
 import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess
 import esi.roadside.assistance.client.core.presentation.util.Event.AuthNavigate

@@ -4,8 +4,10 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Badge
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navigation
 import esi.roadside.assistance.client.core.util.intUpDownTransSpec
+import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeScreen
 import esi.roadside.assistance.client.main.presentation.routes.notifications.NotificationDetails
 import esi.roadside.assistance.client.main.presentation.routes.notifications.NotificationsScreen
@@ -42,7 +45,9 @@ fun NavigationScreen(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     mainViewModel: MainViewModel,
+    onLocationChange: (LocationModel?) -> Unit,
     modifier: Modifier = Modifier,
+    onRequest: () -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -64,103 +69,101 @@ fun NavigationScreen(
         } != false
     val homeUiState by mainViewModel.homeUiState.collectAsState()
     val currentService by mainViewModel.currentService.collectAsState()
-    val searchState by mainViewModel.searchState.collectAsState()
-    val profileUiState by mainViewModel.profileUiState.collectAsState()
     val notifications by mainViewModel.notifications.collectAsState()
-    val navigationBarVisible = isParent and
-            ((currentNavRoute != Routes.PROFILE) or !profileUiState.enableEditing)
+    val navigationBarVisible = isParent and (currentService.clientState == ClientState.IDLE)
 
-    Scaffold(
-        modifier = modifier,
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        bottomBar = {
-            AnimatedVisibility(
-                navigationBarVisible,
-                enter = slideInVertically { it },
-                exit = slideOutVertically { it }
+    Column(modifier.fillMaxSize()) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize().weight(1f),
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            },
+            contentWindowInsets = WindowInsets(0, 0, 0, 0)
+        ) {
+            NavHost(
+                navController = navController,
+                startDestination = NavRoutes.Home,
+                modifier = Modifier.fillMaxSize().padding(it),
             ) {
-                NavigationBar(navController, currentNavRoute) {
-                    AnimatedVisibility(
-                        (it == Routes.NOTIFICATIONS) and notifications.isNotEmpty(),
-                        enter = materialFadeThroughIn(),
-                        exit = materialFadeThroughOut()
-                    ) {
-                        Badge {
-                            AnimatedContent(
-                                notifications.size,
-                                label = "",
-                                transitionSpec = intUpDownTransSpec
-                            ) {
-                                Text("$it")
-                            }
+                navigation<NavRoutes.Home>(NavRoutes.Map) {
+                    composable<NavRoutes.Map> {
+                        HomeScreen(
+                            homeUiState,
+                            currentService,
+                            mainViewModel::onAction,
+                            onLocationChange,
+                            onRequest = onRequest
+                        )
+                    }
+                }
+                navigation<NavRoutes.Notifications>(NavRoutes.NotificationsList) {
+                    composable<NavRoutes.NotificationsList> {
+                        NotificationsScreen(notifications) {
+                            navController.navigate(NavRoutes.Notification(it.id))
                         }
+                    }
+                    composable<NavRoutes.Notification> { args ->
+                        val notification = notifications.firstOrNull { it.id == args.id }
+                        notification?.let { notification ->
+                            NotificationDetails(notification)
+                        }
+                    }
+                }
+                composable<NavRoutes.Profile> {
+                    ProfileScreen()
+                }
+                navigation<NavRoutes.Settings>(NavRoutes.SettingsList) {
+                    composable<NavRoutes.SettingsList> {
+                        SettingsScreen(navController, mainViewModel::onAction)
+                    }
+                    composable<NavRoutes.ChangePassword> {
+                        // ChangePasswordScreen()
+                    }
+                    composable<NavRoutes.DeleteAccount> {
+                        // DeletePasswordScreen()
+                    }
+                    composable<NavRoutes.CustomizeApp> {
+                        CustomizeAppScreen()
+                    }
+                    composable<NavRoutes.Language> {
+                        LanguageScreen()
+                    }
+                    composable<NavRoutes.About> {
+                        AboutScreen()
+                    }
+                    composable<NavRoutes.TermsOfService> {
+                        TermsOfServiceScreen()
+                    }
+                    composable<NavRoutes.PrivacyPolicy> {
+                        PrivacyPolicyScreen()
+                    }
+                    composable<NavRoutes.Help> {
+                        // HelpScreen()
                     }
                 }
             }
         }
-    ) {
-        NavHost(
-            navController = navController,
-            startDestination = NavRoutes.Home,
-            modifier = Modifier.fillMaxSize().padding(it),
+        AnimatedVisibility(
+            navigationBarVisible,
+            enter = slideInVertically { it },
+            exit = slideOutVertically { it },
+            modifier = Modifier.fillMaxWidth()
         ) {
-            navigation<NavRoutes.Home>(NavRoutes.Map) {
-                composable<NavRoutes.Map> {
-                    HomeScreen(
-                        homeUiState,
-                        currentService,
-                        searchState,
-                        mainViewModel::onAction,
-                        mainViewModel::onSearchEvent
-                    )
-                }
-            }
-            navigation<NavRoutes.Notifications>(NavRoutes.NotificationsList) {
-                composable<NavRoutes.NotificationsList> {
-                    NotificationsScreen(notifications) {
-                        navController.navigate(NavRoutes.Notification(it.id))
+            NavigationBar(navController, currentNavRoute) {
+                androidx.compose.animation.AnimatedVisibility(
+                    (it == Routes.NOTIFICATIONS) and notifications.isNotEmpty(),
+                    enter = materialFadeThroughIn(),
+                    exit = materialFadeThroughOut()
+                ) {
+                    Badge {
+                        AnimatedContent(
+                            notifications.size,
+                            label = "",
+                            transitionSpec = intUpDownTransSpec
+                        ) {
+                            Text("$it")
+                        }
                     }
-                }
-                composable<NavRoutes.Notification> { args ->
-                    val notification = notifications.firstOrNull { it.id == args.id }
-                    notification?.let { notification ->
-                        NotificationDetails(notification)
-                    }
-                }
-            }
-            composable<NavRoutes.Profile> {
-                ProfileScreen(profileUiState, mainViewModel::onAction)
-            }
-            navigation<NavRoutes.Settings>(NavRoutes.SettingsList) {
-                composable<NavRoutes.SettingsList> {
-                    SettingsScreen(navController, mainViewModel::onAction)
-                }
-                composable<NavRoutes.ChangePassword> {
-                    // ChangePasswordScreen()
-                }
-                composable<NavRoutes.DeleteAccount> {
-                    // DeletePasswordScreen()
-                }
-                composable<NavRoutes.CustomizeApp> {
-                    CustomizeAppScreen()
-                }
-                composable<NavRoutes.Language> {
-                    LanguageScreen()
-                }
-                composable<NavRoutes.About> {
-                    AboutScreen()
-                }
-                composable<NavRoutes.TermsOfService> {
-                    TermsOfServiceScreen()
-                }
-                composable<NavRoutes.PrivacyPolicy> {
-                    PrivacyPolicyScreen()
-                }
-                composable<NavRoutes.Help> {
-                    // HelpScreen()
                 }
             }
         }

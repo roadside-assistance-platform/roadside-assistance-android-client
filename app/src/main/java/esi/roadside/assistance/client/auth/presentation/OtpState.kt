@@ -1,6 +1,4 @@
-package esi.roadside.assistance.client.auth.presentation.screens.signup
-
-import esi.roadside.assistance.client.auth.presentation.OtpAction
+package esi.roadside.assistance.client.auth.presentation
 
 data class OtpState(
     val code: List<Int?> = (1..6).map { null },

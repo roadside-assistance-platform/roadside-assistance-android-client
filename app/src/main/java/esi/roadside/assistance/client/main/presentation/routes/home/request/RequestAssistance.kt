@@ -49,14 +49,13 @@ import esi.roadside.assistance.client.auth.presentation.util.ToggleOutlineButton
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 import esi.roadside.assistance.client.core.presentation.util.isDark
 import esi.roadside.assistance.client.main.domain.Categories
-import esi.roadside.assistance.client.main.presentation.Action
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RequestAssistance(
     sheetState: SheetState,
     state: RequestAssistanceState,
-    onAction: (Action) -> Unit,
+    onAction: (AssistanceAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val isDark by isDark()
@@ -67,7 +66,7 @@ fun RequestAssistance(
     if (state.sheetVisible) {
         ModalBottomSheet(
             onDismissRequest = {
-                onAction(Action.HideRequestAssistance)
+                onAction(AssistanceAction.HideSheet)
             },
             modifier = Modifier,
             sheetState = sheetState,
@@ -141,7 +140,7 @@ fun RequestAssistance(
                                 it.forEach { category ->
                                     ToggleOutlineButton(
                                         state.category == category,
-                                        { onAction(Action.SelectCategory(category)) },
+                                        { onAction(AssistanceAction.SelectCategory(category)) },
                                         Modifier.weight(1f)
                                     ) {
                                         Icon(
@@ -172,7 +171,7 @@ fun RequestAssistance(
                 item {
                     BasicTextField(
                         value = state.description,
-                        onValueChange = { onAction(Action.SetDescription(it)) },
+                        onValueChange = { onAction(AssistanceAction.SetDescription(it)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(100.dp)
@@ -210,7 +209,7 @@ fun RequestAssistance(
                                 LinearProgressIndicator(Modifier.padding(vertical = 30.dp).fillMaxWidth(.5f))
                             else
                                 Button(stringResource(R.string.submit_req), Modifier.padding(10.dp)) {
-                                    onAction(Action.SubmitRequest)
+                                    onAction(AssistanceAction.Submit)
                                 }
                         }
                     }

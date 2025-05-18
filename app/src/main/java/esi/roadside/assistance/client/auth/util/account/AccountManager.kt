@@ -13,8 +13,12 @@ import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
 import esi.roadside.assistance.client.auth.UserPreferences
 import esi.roadside.assistance.client.auth.util.dataStore
+import esi.roadside.assistance.client.core.data.dto.Client
 import esi.roadside.assistance.client.core.domain.model.ClientModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 
 class AccountManager(private val context: Context) {
     private val credentialManager = CredentialManager.create(context)
@@ -69,5 +73,9 @@ class AccountManager(private val context: Context) {
         context.dataStore.updateData {
             UserPreferences(client.toClient())
         }
+    }
+
+    fun getUserFlow(): Flow<Client> {
+        return context.dataStore.data.map { it.client }
     }
 }

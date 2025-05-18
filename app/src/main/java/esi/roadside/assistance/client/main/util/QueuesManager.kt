@@ -59,6 +59,7 @@ class QueuesManager() {
                         is PolymorphicNotification.UserNotification -> _userNotifications.trySend(deserialized)
                         is PolymorphicNotification.ServiceAcceptance -> _serviceAcceptance.trySend(deserialized)
                         is PolymorphicNotification.ProviderArrived -> _providerArrival.trySend(deserialized)
+                        is PolymorphicNotification.LocationUpdate -> _locationUpdate.trySend(deserialized)
                         else -> return@let
                     }
                 } catch (e: Exception) {
