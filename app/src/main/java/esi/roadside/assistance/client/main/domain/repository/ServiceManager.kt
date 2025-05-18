@@ -113,7 +113,7 @@ class ServiceManager(
             ServiceAction.Cancel -> {
                 timer?.cancel()
                 _service.update {
-                    it.copy(clientState = ClientState.IDLE)
+                    it.copy(clientState = ClientState.IDLE, serviceModel = null)
                 }
                 _service.value.serviceModel?.let { serviceModel ->
                     queuesManager.publishCategoryQueues(
@@ -140,6 +140,7 @@ class ServiceManager(
                             it.copy(
                                 clientState = ClientState.ASSISTANCE_COMPLETED,
                                 price = result.price,
+                                serviceModel = null
                             )
                         }
                     }
@@ -152,7 +153,7 @@ class ServiceManager(
                             it.copy(
                                 clientState = ClientState.IDLE,
                                 providerLocation = null,
-                                serviceModel = null
+                                serviceModel = null,
                             )
                         }
                     }.onError {

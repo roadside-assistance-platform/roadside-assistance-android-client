@@ -2,8 +2,6 @@ package esi.roadside.assistance.client.main.presentation
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -143,12 +141,7 @@ fun NavigationScreen(
                 }
             }
         }
-        AnimatedVisibility(
-            navigationBarVisible,
-            enter = slideInVertically { it },
-            exit = slideOutVertically { it },
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        AnimatedVisibility(navigationBarVisible, modifier = Modifier.fillMaxWidth()) {
             NavigationBar(navController, currentNavRoute) {
                 androidx.compose.animation.AnimatedVisibility(
                     (it == Routes.NOTIFICATIONS) and notifications.isNotEmpty(),
