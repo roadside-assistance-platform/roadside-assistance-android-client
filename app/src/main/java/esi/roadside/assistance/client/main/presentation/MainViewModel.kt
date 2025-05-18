@@ -1,5 +1,6 @@
 package esi.roadside.assistance.client.main.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import esi.roadside.assistance.client.auth.util.account.AccountManager
@@ -12,12 +13,12 @@ import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import esi.roadside.assistance.client.main.domain.models.ClientInfo
 import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.domain.models.NotificationModel
+import esi.roadside.assistance.client.main.domain.repository.ServiceAction
+import esi.roadside.assistance.client.main.domain.repository.ServiceManager
 import esi.roadside.assistance.client.main.domain.use_cases.DirectionsUseCase
 import esi.roadside.assistance.client.main.domain.use_cases.Logout
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeUiState
 import esi.roadside.assistance.client.main.util.QueuesManager
-import esi.roadside.assistance.client.main.domain.repository.ServiceAction
-import esi.roadside.assistance.client.main.domain.repository.ServiceManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,11 +60,17 @@ class MainViewModel(
                 launch(Dispatchers.IO) {
                     queuesManager.locationUpdate.consumeEach { providerLocation ->
                         if (currentService.value.clientState == ClientState.PROVIDER_IN_WAY) {
-                            serviceManager.onAction(ServiceAction.LocationUpdate(
-                                LocationModel(providerLocation.longitude, providerLocation.latitude),
-                                providerLocation.eta
-                            ))
+                            serviceManager.onAction(
+                                ServiceAction.LocationUpdate(
+                                    LocationModel(
+                                        providerLocation.longitude,
+                                        providerLocation.latitude
+                                    ),
+                                    providerLocation.eta
+                                )
+                            )
                             currentService.value.serviceModel?.serviceLocation?.let { location ->
+                                Log.i("MainViewModel", "Location: $location, Provider: $providerLocation")
                                 directionsUseCaseUseCase(
                                     LocationModel(providerLocation.longitude, providerLocation.latitude)
                                     to
@@ -126,7 +133,7 @@ class MainViewModel(
                     }
                     serviceManager.onAction(ServiceAction.Complete(action.rating))
                     _homeUiState.update {
-                        it.copy(loading = false)
+                        it.copy(loading = false, directions = null)
                     }
                 }
             }

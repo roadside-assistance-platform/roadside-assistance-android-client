@@ -127,6 +127,7 @@ class ServiceManager(
             }
 
             is ServiceAction.LocationUpdate -> {
+                Log.i("ServiceManager", "Provider location: ${action.location}")
                 _service.update {
                     it.copy(providerLocation = action.location, eta = action.eta)
                 }

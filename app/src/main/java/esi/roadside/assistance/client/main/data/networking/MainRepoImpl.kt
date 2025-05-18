@@ -9,6 +9,7 @@ import esi.roadside.assistance.client.core.domain.util.Result
 import esi.roadside.assistance.client.core.domain.util.map
 import esi.roadside.assistance.client.main.data.dto.UpdateResponse
 import esi.roadside.assistance.client.main.domain.models.AssistanceRequestModel
+import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.domain.models.ServiceModel
 import esi.roadside.assistance.client.main.domain.repository.MainRepo
 import io.ktor.client.HttpClient
@@ -27,7 +28,11 @@ class MainRepoImpl(
                 setBody(request.toAssistanceRequest())
             }.body()
         }.map {
-            it.data.service.toServiceModel()
+            it.data.service.toServiceModel().let { model ->
+                model.copy(
+                    serviceLocation = LocationModel(model.serviceLocation.latitude, model.serviceLocation.longitude)
+                )
+            }
         }
 
     override suspend fun rate(

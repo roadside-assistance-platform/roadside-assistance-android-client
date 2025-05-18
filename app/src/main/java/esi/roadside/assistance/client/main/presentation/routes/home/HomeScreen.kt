@@ -369,6 +369,7 @@ fun HomeScreen(
                 serviceState.clientState,
                 serviceState.time,
                 serviceState.eta,
+                uiState.loading,
                 searchViewModel::onAction,
                 { onAction(Action.WorkingFinished) },
                 { onAction(Action.CancelRequest) },

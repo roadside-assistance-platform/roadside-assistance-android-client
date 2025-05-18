@@ -48,6 +48,7 @@ fun TopBar(
     clientState: ClientState,
     time: Long,
     eta: Double?,
+    loading: Boolean,
     onAction: (SearchAction) -> Unit,
     onWorkingFinished: () -> Unit,
     onCancel: () -> Unit,
@@ -142,15 +143,30 @@ fun TopBar(
                                 targetValue = progress,
                                 animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
                             )
-                            LinearProgressIndicator(
-                                progress = { animatedProgress },
-                                modifier = Modifier.weight(1f),
-                                drawStopIndicator = {}
-                            )
+                            if (clientState.ordinal - 1 == index)
+                                AnimatedContent(
+                                    loading,
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    if (it)
+                                        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                                    else
+                                        LinearProgressIndicator(
+                                            progress = { animatedProgress },
+                                            modifier = Modifier.fillMaxWidth(),
+                                            drawStopIndicator = {}
+                                        )
+                                }
+                            else
+                                LinearProgressIndicator(
+                                    progress = { animatedProgress },
+                                    modifier = Modifier.weight(1f),
+                                    drawStopIndicator = {}
+                                )
                         }
                     }
                     AnimatedVisibility(
-                        clientState == ClientState.ASSISTANCE_IN_PROGRESS,
+                        (clientState == ClientState.ASSISTANCE_IN_PROGRESS) and (!loading),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Button(onWorkingFinished) {
