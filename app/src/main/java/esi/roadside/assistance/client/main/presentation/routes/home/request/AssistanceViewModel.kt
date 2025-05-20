@@ -2,7 +2,6 @@ package esi.roadside.assistance.client.main.presentation.routes.home.request
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import esi.roadside.assistance.client.auth.util.account.AccountManager
 import esi.roadside.assistance.client.core.presentation.util.Event.ShowRequestAssistance
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import esi.roadside.assistance.client.main.domain.models.AssistanceRequestModel
@@ -11,8 +10,6 @@ import esi.roadside.assistance.client.main.domain.repository.ServiceManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 

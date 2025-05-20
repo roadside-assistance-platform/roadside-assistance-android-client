@@ -70,6 +70,7 @@ import com.mapbox.maps.extension.style.expressions.generated.Expression.Companio
 import com.mapbox.maps.extension.style.layers.properties.generated.IconAnchor
 import com.mapbox.maps.extension.style.utils.transition
 import com.mapbox.maps.plugin.PuckBearing
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotation
 import com.mapbox.maps.plugin.gestures.OnMapLongClickListener
 import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
 import com.mapbox.maps.plugin.locationcomponent.location
@@ -183,7 +184,7 @@ fun HomeScreen(
         else
             bottomSheetState.hide()
     }
-    LaunchedEffect(uiState.providerLocation) {
+    LaunchedEffect(serviceState.providerLocation) {
         Log.d("MainActivity", "point: ${uiState.providerLocation?.longitude()}, ${uiState.providerLocation?.latitude()}")
     }
     BottomSheetScaffold(
@@ -329,8 +330,8 @@ fun HomeScreen(
                         iconImageCrossFade = 1.0
                     }
                 }
-                uiState.providerLocation?.let {
-                    PointAnnotation(point = it) {
+                serviceState.providerLocation?.let {
+                    PointAnnotation(point = it.toPoint()) {
 //                        interactionsState.onClicked {
 //                            onLocationChange(it.point)
 //                            state.easeTo(

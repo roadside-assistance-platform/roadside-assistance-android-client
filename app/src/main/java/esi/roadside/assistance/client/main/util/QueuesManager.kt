@@ -8,7 +8,6 @@ import esi.roadside.assistance.client.BuildConfig
 import esi.roadside.assistance.client.main.domain.Categories
 import esi.roadside.assistance.client.main.domain.PolymorphicNotification
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
 class QueuesManager() {

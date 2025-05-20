@@ -11,6 +11,7 @@ sealed interface ServiceAction {
     data object Arrived: ServiceAction
     data class SendMessage(val message: String): ServiceAction
     data class LocationUpdate(val location: LocationModel, val eta: Double?): ServiceAction
+    data class SetDistance(val distance: Double): ServiceAction
     data object WorkFinished: ServiceAction
     data class Complete(val rating: Double?): ServiceAction
 }

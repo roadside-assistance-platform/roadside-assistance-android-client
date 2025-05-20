@@ -4,7 +4,7 @@ import esi.roadside.assistance.client.auth.presentation.AuthViewModel
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginViewModel
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordViewModel
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupViewModel
-import esi.roadside.assistance.client.auth.util.account.AccountManager
+import esi.roadside.assistance.client.core.util.account.AccountManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module

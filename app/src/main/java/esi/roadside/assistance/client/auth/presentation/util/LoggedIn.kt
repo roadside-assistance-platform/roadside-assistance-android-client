@@ -3,7 +3,7 @@ package esi.roadside.assistance.client.auth.presentation.util
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import esi.roadside.assistance.client.auth.util.account.AccountManager
+import esi.roadside.assistance.client.core.util.account.AccountManager
 import esi.roadside.assistance.client.core.domain.model.ClientModel
 import esi.roadside.assistance.client.core.presentation.util.Event.LaunchMainActivity
 import esi.roadside.assistance.client.core.presentation.util.sendEvent

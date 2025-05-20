@@ -9,9 +9,11 @@ import esi.roadside.assistance.client.core.domain.util.Result
 import esi.roadside.assistance.client.core.domain.util.map
 import esi.roadside.assistance.client.main.data.dto.UpdateResponse
 import esi.roadside.assistance.client.main.domain.models.AssistanceRequestModel
+import esi.roadside.assistance.client.main.domain.models.CompletionResponse
 import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.domain.models.ServiceModel
 import esi.roadside.assistance.client.main.domain.repository.MainRepo
+import esi.roadside.assistance.client.main.domain.models.CompletionRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
@@ -53,20 +55,12 @@ class MainRepoImpl(
             it.data.service.toServiceModel()
         }
     }
-    override suspend fun finishRequest(
-        serviceId: String,
-    ): Result<ServiceModel, DomainError> {
-        return safeCall<UpdateResponse> {
-            client.put(constructUrl("${Endpoints.SERVICE_UPDATE}$serviceId")) {
-                val json = """
-                    {
-                        "done": true
-                    }
-                """.trimIndent()
-                setBody(json)
+
+    override suspend fun completionRequest(request: CompletionRequest): Result<CompletionResponse, DomainError> {
+        return safeCall<CompletionResponse> {
+            client.post(constructUrl(Endpoints.COMPLETION_REQUEST)) {
+                setBody(request)
             }.body()
-        }.map {
-            it.data.service.toServiceModel()
         }
     }
 

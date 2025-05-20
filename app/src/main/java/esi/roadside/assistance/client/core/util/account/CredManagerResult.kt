@@ -1,4 +1,4 @@
-package esi.roadside.assistance.client.auth.util.account
+package esi.roadside.assistance.client.core.util.account
 
 import androidx.credentials.PasswordCredential
 

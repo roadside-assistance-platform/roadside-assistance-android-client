@@ -1,8 +1,8 @@
 package esi.roadside.assistance.client.main.di
 
 import esi.roadside.assistance.client.NotificationService
+import esi.roadside.assistance.client.main.domain.use_cases.Completion
 import esi.roadside.assistance.client.main.domain.use_cases.DirectionsUseCase
-import esi.roadside.assistance.client.main.domain.use_cases.FinishRequest
 import esi.roadside.assistance.client.main.domain.use_cases.Geocoding
 import esi.roadside.assistance.client.main.domain.use_cases.Logout
 import esi.roadside.assistance.client.main.domain.use_cases.Rating
@@ -14,7 +14,7 @@ val useCaseModule = module {
     factory { SubmitRequest(get()) }
     factory { Logout(get()) }
     factory { Geocoding(get()) }
-    factory { FinishRequest(get()) }
+    factory { Completion(get()) }
     factory { DirectionsUseCase(get()) }
     factory { Rating(get()) }
     factory { NotificationService(androidContext()) }

@@ -16,7 +16,7 @@ import esi.roadside.assistance.client.auth.presentation.OtpAction
 import esi.roadside.assistance.client.auth.presentation.OtpState
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupAction.*
 import esi.roadside.assistance.client.auth.presentation.util.loggedIn
-import esi.roadside.assistance.client.auth.util.account.AccountManager
+import esi.roadside.assistance.client.core.util.account.AccountManager
 import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess
 import esi.roadside.assistance.client.core.presentation.util.Event.*

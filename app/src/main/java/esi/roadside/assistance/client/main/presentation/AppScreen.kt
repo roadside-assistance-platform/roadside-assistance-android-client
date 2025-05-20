@@ -97,7 +97,7 @@ fun AppScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                stringResource(R.string.dzd, uiState.servicePrice),
+                stringResource(R.string.dzd, service.price),
                 Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleLarge,

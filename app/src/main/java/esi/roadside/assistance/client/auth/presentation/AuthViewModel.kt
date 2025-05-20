@@ -16,7 +16,7 @@ import esi.roadside.assistance.client.auth.presentation.Action.Skip
 import esi.roadside.assistance.client.auth.presentation.Action.SkipVerification
 import esi.roadside.assistance.client.auth.presentation.screens.AuthUiState
 import esi.roadside.assistance.client.auth.presentation.util.loggedIn
-import esi.roadside.assistance.client.auth.util.account.AccountManager
+import esi.roadside.assistance.client.core.util.account.AccountManager
 import esi.roadside.assistance.client.core.data.networking.DomainError
 import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess

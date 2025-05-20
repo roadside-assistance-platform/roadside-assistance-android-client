@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.domain.use_case.Cloudinary
 import esi.roadside.assistance.client.auth.domain.use_case.Update
-import esi.roadside.assistance.client.auth.util.account.AccountManager
+import esi.roadside.assistance.client.core.util.account.AccountManager
 import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess
 import esi.roadside.assistance.client.core.presentation.util.Event.ShowMainActivityMessage

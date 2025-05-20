@@ -1,4 +1,4 @@
-package esi.roadside.assistance.client.auth.util.account
+package esi.roadside.assistance.client.core.util.account
 
 import android.content.Context
 import androidx.credentials.CreatePasswordRequest
@@ -16,7 +16,6 @@ import esi.roadside.assistance.client.auth.util.dataStore
 import esi.roadside.assistance.client.core.data.dto.Client
 import esi.roadside.assistance.client.core.domain.model.ClientModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 

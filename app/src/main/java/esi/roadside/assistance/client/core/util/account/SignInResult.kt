@@ -1,4 +1,4 @@
-package esi.roadside.assistance.client.auth.util.account
+package esi.roadside.assistance.client.core.util.account
 
 sealed interface SignInResult {
     data class Success(val username: String, val password: String): SignInResult

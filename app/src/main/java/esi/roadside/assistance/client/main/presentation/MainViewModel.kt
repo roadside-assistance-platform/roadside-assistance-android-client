@@ -3,7 +3,7 @@ package esi.roadside.assistance.client.main.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import esi.roadside.assistance.client.auth.util.account.AccountManager
+import esi.roadside.assistance.client.core.util.account.AccountManager
 import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess
 import esi.roadside.assistance.client.core.presentation.util.Event.ExitToAuthActivity
@@ -80,6 +80,7 @@ class MainViewModel(
                                         _homeUiState.update {
                                             it.copy(directions = route)
                                         }
+                                        serviceManager.onAction(ServiceAction.SetDistance(route.distance))
                                     }
                                 }.onError {
                                     sendEvent(ShowMainActivityMessage(it.text))
@@ -121,7 +122,7 @@ class MainViewModel(
                     }
                     serviceManager.onAction(ServiceAction.WorkFinished)
                     _homeUiState.update {
-                        it.copy(loading = false)
+                        it.copy(loading = false, directions = null)
                     }
                 }
             }

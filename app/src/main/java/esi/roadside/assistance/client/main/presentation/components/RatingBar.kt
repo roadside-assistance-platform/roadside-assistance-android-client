@@ -1,21 +1,20 @@
 package esi.roadside.assistance.client.main.presentation.components
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.StarHalf
-import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import kotlin.math.ceil
+import esi.roadside.assistance.client.R
 import kotlin.math.floor
 
 
@@ -28,8 +27,6 @@ fun RatingBar(
     starsColor: Color = Color.Yellow,
 ) {
     val filledStars = floor(rating).toInt()
-    val unfilledStars = (stars - ceil(rating)).toInt()
-    val halfStar = rating.rem(1) != 0.0
     Row(modifier = modifier.pointerInput(onRatingChange) {
             if (onRatingChange != null) {
                 detectTapGestures(
@@ -42,30 +39,25 @@ fun RatingBar(
             }
         }
     ) {
-        repeat(filledStars) {
-            Icon(
-                imageVector = Icons.Outlined.Star,
-                contentDescription = null,
-                tint = starsColor,
-                modifier = Modifier.weight(1f).aspectRatio(1f)
-            )
-        }
-        if (halfStar) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Outlined.StarHalf,
-                contentDescription = null,
-                tint = starsColor,
-                modifier = Modifier.weight(1f).aspectRatio(1f)
-            )
-        }
-
-        repeat(unfilledStars) {
-            Icon(
-                imageVector = Icons.Outlined.StarOutline,
-                contentDescription = null,
-                tint = starsColor,
-                modifier = Modifier.weight(1f).aspectRatio(1f)
-            )
+        repeat(stars) {
+            Box(Modifier.weight(1f).aspectRatio(1f)) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.star_1_svgrepo_com),
+                    contentDescription = null,
+                    tint = starsColor,
+                )
+                androidx.compose.animation.AnimatedVisibility(
+                    it < filledStars,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.star_svgrepo_com_filled),
+                        contentDescription = null,
+                        tint = starsColor
+                    )
+                }
+            }
         }
     }
 }

@@ -5,16 +5,17 @@ import android.os.CountDownTimer
 import android.util.Log
 import esi.roadside.assistance.client.NotificationService
 import esi.roadside.assistance.client.R
-import esi.roadside.assistance.client.auth.util.account.AccountManager
 import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess
 import esi.roadside.assistance.client.core.presentation.util.Event.ShowMainActivityMessage
 import esi.roadside.assistance.client.core.presentation.util.EventBus.sendEvent
+import esi.roadside.assistance.client.core.util.account.AccountManager
 import esi.roadside.assistance.client.main.domain.PolymorphicNotification
 import esi.roadside.assistance.client.main.domain.PolymorphicNotification.Service
 import esi.roadside.assistance.client.main.domain.PolymorphicNotification.ServiceDone
 import esi.roadside.assistance.client.main.domain.PolymorphicNotification.ServiceRemove
-import esi.roadside.assistance.client.main.domain.use_cases.FinishRequest
+import esi.roadside.assistance.client.main.domain.models.CompletionRequest
+import esi.roadside.assistance.client.main.domain.use_cases.Completion
 import esi.roadside.assistance.client.main.domain.use_cases.Rating
 import esi.roadside.assistance.client.main.domain.use_cases.SubmitRequest
 import esi.roadside.assistance.client.main.presentation.ClientState
@@ -26,6 +27,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.util.concurrent.TimeoutException
 
 class ServiceManager(
     private val context: Context,
@@ -34,7 +37,7 @@ class ServiceManager(
     private val ratingUseCase: Rating,
     private val queuesManager: QueuesManager,
     private val notificationService: NotificationService,
-    private val finishRequestUseCase: FinishRequest,
+    private val completionUseCase: Completion,
 ) {
     private val _service = MutableStateFlow<ServiceState>(ServiceState())
     val service = _service.asStateFlow()
@@ -73,12 +76,6 @@ class ServiceManager(
             is ServiceAction.Submit -> {
                 submitRequestUseCase(action.request).onSuccess { serviceModel ->
                     sendEvent(ShowMainActivityMessage(R.string.request_submitted))
-                    _service.update {
-                        it.copy(
-                            clientState = ClientState.ASSISTANCE_REQUESTED,
-                            serviceModel = serviceModel
-                        )
-                    }
                     withContext(Dispatchers.Main) {
                         timer?.cancel()
                         timer = object: CountDownTimer(5 * 60 * 1000, 1000) {
@@ -94,18 +91,28 @@ class ServiceManager(
                         }.start()
                     }
                     Log.i("ServiceManager", "category: ${action.request.serviceCategory}")
-                    queuesManager.publishCategoryQueues(
-                        setOf(action.request.serviceCategory),
-                        Service(
-                            id = serviceModel.id,
-                            client = clientInfo.first(),
-                            description = action.request.description,
-                            serviceCategory = action.request.serviceCategory,
-                            serviceLocation = action.request.serviceLocation.toString(),
-                            provider = null,
-                            price = 0
+                    try {
+                        queuesManager.publishCategoryQueues(
+                            setOf(action.request.serviceCategory),
+                            Service(
+                                id = serviceModel.id,
+                                client = clientInfo.first(),
+                                description = action.request.description,
+                                serviceCategory = action.request.serviceCategory,
+                                serviceLocation = action.request.serviceLocation.toString(),
+                                provider = null,
+                                price = 0
+                            )
                         )
-                    )
+                        _service.update {
+                            it.copy(
+                                clientState = ClientState.ASSISTANCE_REQUESTED,
+                                serviceModel = serviceModel
+                            )
+                        }
+                    } catch (_: TimeoutException) {
+                        sendEvent(ShowMainActivityMessage(R.string.timeout))
+                    }
                 }.onError {
                     sendEvent(ShowMainActivityMessage(it.text))
                 }
@@ -127,23 +134,33 @@ class ServiceManager(
             }
 
             is ServiceAction.LocationUpdate -> {
-                Log.i("ServiceManager", "Provider location: ${action.location}")
                 _service.update {
                     it.copy(providerLocation = action.location, eta = action.eta)
                 }
             }
 
-            ServiceAction.WorkFinished -> {
-                finishRequestUseCase(service.value.serviceModel?.id!!)
-                    .onSuccess { result ->
-                        _service.update {
-                            it.copy(
-                                clientState = ClientState.ASSISTANCE_COMPLETED,
-                                price = result.price,
-                                serviceModel = null
-                            )
-                        }
+            is ServiceAction.SetDistance -> {
+                if (_service.value.distance == null)
+                    _service.update {
+                        it.copy(distance = action.distance)
                     }
+            }
+
+            ServiceAction.WorkFinished -> {
+                completionUseCase(
+                    CompletionRequest(
+                        service.value.serviceModel?.id!!,
+                        service.value.distance?.div(1000.0) ?: 0.0,
+                        LocalDateTime.now().toString()
+                    )
+                ).onSuccess { result ->
+                    _service.update {
+                        it.copy(
+                            clientState = ClientState.ASSISTANCE_COMPLETED,
+                            price = result.price,
+                        )
+                    }
+                }
             }
 
             is ServiceAction.Complete -> {
@@ -160,7 +177,7 @@ class ServiceManager(
                         sendEvent(ShowMainActivityMessage(it.text))
                     }
                 queuesManager.publishUserNotification(
-                    _service.value.providerInfo?.id ?: "",
+                    _service.value.providerInfo?.id!!,
                     "provider",
                     ServiceDone(
                         price = _service.value.price,
@@ -172,11 +189,6 @@ class ServiceManager(
                 _service.update {
                     it.copy(clientState = ClientState.ASSISTANCE_IN_PROGRESS)
                 }
-//                notificationService.showNotification(
-//                    0,
-//                    context.getString(R.string.provider_arrived),
-//                    context.getString(R.string.provider_arrived_notification),
-//                )
             }
 
             is ServiceAction.SendMessage -> {
