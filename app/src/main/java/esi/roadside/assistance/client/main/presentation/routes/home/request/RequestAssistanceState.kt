@@ -8,5 +8,7 @@ data class RequestAssistanceState(
     val category: Categories = Categories.TOWING,
     val loading: Boolean = false,
     val location: LocationModel? = null,
-    val description: String = ""
+    val description: String = "",
+    val isAIDetectionActive: Boolean = false,
+    val isProcessingAI: Boolean = false
 )

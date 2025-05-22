@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -58,7 +59,7 @@ fun Button(
             Spacer(Modifier.width(ButtonDefaults.IconSpacing))
         }
         ProvideTextStyle(MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium)) {
-            Text(text)
+            Text(text, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }

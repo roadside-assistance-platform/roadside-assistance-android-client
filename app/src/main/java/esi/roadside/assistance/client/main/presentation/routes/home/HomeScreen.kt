@@ -1,6 +1,7 @@
 package esi.roadside.assistance.client.main.presentation.routes.home
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

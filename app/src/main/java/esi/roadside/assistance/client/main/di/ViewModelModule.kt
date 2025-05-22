@@ -13,7 +13,7 @@ val viewModelModule = module {
         MainViewModel(get(), get(), get(), get(), get())
     }
     viewModel {
-        AssistanceViewModel(get())
+        AssistanceViewModel(get(), get())
     }
     viewModel {
         SearchViewModel(get())

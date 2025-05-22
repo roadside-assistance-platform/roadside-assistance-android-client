@@ -29,6 +29,7 @@ android {
             buildConfigField("String", "MAPBOX_DRIVING", "\"https://api.mapbox.com/directions/v5/mapbox/\"")
             buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://xcikzbue:mEXrzOw8yh9B4vwXggUbhIhQj2XjPIES@rat.rmq2.cloudamqp.com/xcikzbue\"")
             buildConfigField("String", "WEB_CLIENT_ID", "\"469116526388-l4fltok5uk1qo6gf4jup9eu57m558h6v.apps.googleusercontent.com\"")
+            buildConfigField("String", "GEMINI", "\"AIzaSyBE2qwhZ9WhYEA5JLCzKHUOv6sGnDPRq7A\"")
         }
         release {
             isMinifyEnabled = true
@@ -42,6 +43,7 @@ android {
             buildConfigField("String", "MAPBOX_DRIVING", "\"https://api.mapbox.com/directions/v5/mapbox/\"")
             buildConfigField("String", "CLOUDAMPQ_URL", "\"amqps://xcikzbue:mEXrzOw8yh9B4vwXggUbhIhQj2XjPIES@rat.rmq2.cloudamqp.com/xcikzbue\"")
             buildConfigField("String", "WEB_CLIENT_ID", "\"469116526388-l4fltok5uk1qo6gf4jup9eu57m558h6v.apps.googleusercontent.com\"")
+            buildConfigField("String", "GEMINI", "\"AIzaSyBE2qwhZ9WhYEA5JLCzKHUOv6sGnDPRq7A\"")
         }
     }
     compileOptions {
@@ -112,4 +114,22 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.compose.markdown)
     implementation(libs.androidx.core.splashscreen)
+
+    // ML Kit dependencies for image analysis and vehicle issue detection
+    implementation(libs.image.labeling)
+    implementation(libs.obj.detection)
+    implementation(libs.text.recognition)
+
+    // CameraX dependencies for camera access and processing
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+
+    // Gemini AI for description generation
+    implementation(libs.generativeai)
+
+    // Audio recording and processing
+    implementation(libs.androidx.media3.common)
+    implementation(libs.androidx.media3.exoplayer)
 }

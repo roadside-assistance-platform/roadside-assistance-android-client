@@ -1,11 +1,15 @@
 [versions]
-agp = "8.9.2"
+agp = "8.9.3"
 amqpClient = "5.15.0"
+cameraCore = "1.4.2"
 cloudinaryAndroid = "3.0.2"
 composeMarkdown = "0.5.7"
 coreSplashscreen = "1.0.1"
+generativeai = "0.9.0"
+geminilite = "0.3.2"
 googleid = "1.1.1"
 credentials = "1.5.0"
+imageLabeling = "17.0.9"
 mapboxAndroid = "11.9.1"
 kotlin = "2.1.0"
 coreKtx = "1.16.0"
@@ -14,11 +18,12 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.9.0"
 activityCompose = "1.10.1"
-composeBom = "2025.05.00"
+composeBom = "2025.05.01"
 mapboxMapsCompose = "11.9.1"
 material-icons-extended = "1.7.8"
 material3 = "1.3.2"
 materialKolor = "2.0.0"
+media3Common = "1.7.1"
 playServicesAuth = "21.3.0"
 playServicesLocation = "21.3.0"
 navigation-compose = "2.9.0"
@@ -35,19 +40,30 @@ ksp = "2.1.0-1.0.29"
 koin-bom = "4.0.2"
 material3AdaptiveNavigationSuite = "1.3.2"
 desugar-jdk-libs = "2.1.5"
-ktor = "3.0.3"
+ktor = "2.3.7"
+textRecognition = "16.0.1"
 truth = "1.4.4"
 slf4jSimple = "2.0.9"
+objectDetection = "17.0.2"
 
 [libraries]
 amqp-client = { module = "com.rabbitmq:amqp-client", version.ref = "amqpClient" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCore" }
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraCore" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCore" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCore" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
+androidx-media3-common = { module = "androidx.media3:media3-common", version.ref = "media3Common" }
+androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Common" }
 cloudinary-android = { module = "com.cloudinary:cloudinary-android", version.ref = "cloudinaryAndroid" }
 cloudinary-android-download = { module = "com.cloudinary:cloudinary-android-download", version.ref = "cloudinaryAndroid" }
 compose-markdown = { module = "com.github.jeziellago:compose-markdown", version.ref = "composeMarkdown" }
+generativeai = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "generativeai" }
+gemini-lite = { module = "androidx.ai.genai:genai-gemini-lite", version.ref = "geminilite" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
+image-labeling = { module = "com.google.mlkit:image-labeling", version.ref = "imageLabeling" }
 koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4" }
 mapbox-android = { module = "com.mapbox.maps:android", version.ref = "mapboxAndroid" }
 mapbox-maps-compose = { module = "com.mapbox.extension:maps-compose", version.ref = "mapboxMapsCompose" }
@@ -89,10 +105,15 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-plugins = { module = "io.ktor:ktor-client-plugins", version.ref = "ktor" }
+text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "textRecognition" }
+obj-detection = { module = "com.google.mlkit:object-detection", version.ref = "objectDetection" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4jSimple" }
 
@@ -106,8 +127,12 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 [bundles]
 ktor = [
     "ktor-client-cio",
+    "ktor-client-okhttp",
+    "ktor-client-auth",
     "ktor-client-content-negotiation",
     "ktor-client-core",
     "ktor-client-logging",
     "ktor-serialization-kotlinx-json",
+    "ktor-client-plugins"
 ]
+

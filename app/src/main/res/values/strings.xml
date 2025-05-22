@@ -372,4 +372,6 @@
     <string name="location_permission">Fine location</string>
     <string name="notification_permission">Notifications</string>
     <string name="refresh">Refresh</string>
+    <string name="use_ai">Use AI</string>
+    <string name="submit">Submit</string>
 </resources>

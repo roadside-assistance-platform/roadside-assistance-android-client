@@ -4,16 +4,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import esi.roadside.assistance.client.core.presentation.util.Event.ShowRequestAssistance
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
+import esi.roadside.assistance.client.main.domain.Categories
 import esi.roadside.assistance.client.main.domain.models.AssistanceRequestModel
 import esi.roadside.assistance.client.main.domain.repository.ServiceAction.Submit
 import esi.roadside.assistance.client.main.domain.repository.ServiceManager
+import esi.roadside.assistance.client.main.domain.services.VehicleIssueAIService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AssistanceViewModel(private val serviceManager: ServiceManager): ViewModel() {
+class AssistanceViewModel(
+    private val serviceManager: ServiceManager,
+    private val aiService: VehicleIssueAIService
+): ViewModel() {
     private val _state = MutableStateFlow(RequestAssistanceState())
     val state = _state.asStateFlow()
 
@@ -68,6 +73,33 @@ class AssistanceViewModel(private val serviceManager: ServiceManager): ViewModel
                     it.copy(location = action.location)
                 }
             }
+            AssistanceAction.StartAIDetection -> {
+                _state.update {
+                    it.copy(isAIDetectionActive = true)
+                }
+            }
+            AssistanceAction.CloseAIDetection -> {
+                _state.update {
+                    it.copy(isAIDetectionActive = false)
+                }
+            }
+            is AssistanceAction.SubmitAIData -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val category = aiService.detectCategoryFromImageUri(action.uri)
+                    val description = aiService.generateDescriptionFromImageAndAudio(
+                        action.uri, action.audio
+                    )
+                    _state.update {
+                        it.copy(
+                            category = category ?: Categories.OTHER,
+                            description = description,
+                            isProcessingAI = false,
+                            isAIDetectionActive = false
+                        )
+                    }
+                }
+            }
         }
     }
 }
+
