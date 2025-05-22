@@ -20,7 +20,7 @@ suspend inline fun <reified T> responseToResult(
         CallType.HOME -> DomainError.UNKNOWN
         CallType.SEND_EMAIL -> DomainError.EMAIL_ERROR
         CallType.VERIFY_EMAIL -> DomainError.INCORRECT_VERIFICATION_CODE
-        null -> DomainError.UNKNOWN
+        else -> DomainError.UNKNOWN
     }
     val error401 = when (callType) {
         CallType.SIGNUP -> DomainError.USER_ALREADY_EXISTS

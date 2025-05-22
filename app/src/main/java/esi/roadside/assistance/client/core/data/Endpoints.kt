@@ -11,6 +11,7 @@ object Endpoints {
     const val UPDATE_PROFILE = "/client/update/"
     const val HOME = "/home"
     const val SEND_EMAIL = "/email/send-code"
+    const val SEND_FORGOT_EMAIL = "/email/forgot-code"
     const val VERIFY_EMAIL = "/email/verify-code"
     const val SERVICE_CREATE = "/service/create"
     const val SERVICE_UPDATE = "/service/update/"

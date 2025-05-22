@@ -66,7 +66,7 @@ fun SearchScreen(
                             if (it == ClientState.ASSISTANCE_REQUESTED)
                                 stringResource(R.string.looking_for_providers)
                             else
-                                stringResource(R.string.search)
+                                stringResource(R.string.search_for_location)
                         )
                     }
                 },

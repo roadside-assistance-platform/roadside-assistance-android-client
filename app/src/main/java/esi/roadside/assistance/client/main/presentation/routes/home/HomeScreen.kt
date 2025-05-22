@@ -6,11 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -70,7 +69,6 @@ import com.mapbox.maps.extension.style.expressions.generated.Expression.Companio
 import com.mapbox.maps.extension.style.layers.properties.generated.IconAnchor
 import com.mapbox.maps.extension.style.utils.transition
 import com.mapbox.maps.plugin.PuckBearing
-import com.mapbox.maps.plugin.annotation.generated.PointAnnotation
 import com.mapbox.maps.plugin.gestures.OnMapLongClickListener
 import com.mapbox.maps.plugin.locationcomponent.createDefault2DPuck
 import com.mapbox.maps.plugin.locationcomponent.location
@@ -80,10 +78,10 @@ import com.mapbox.maps.plugin.viewport.data.OverviewViewportStateOptions
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.core.presentation.util.isDark
 import esi.roadside.assistance.client.main.domain.models.LocationModel
+import esi.roadside.assistance.client.main.domain.repository.ServiceState
 import esi.roadside.assistance.client.main.presentation.Action
 import esi.roadside.assistance.client.main.presentation.ClientState
 import esi.roadside.assistance.client.main.presentation.sheet.NavigatingScreen
-import esi.roadside.assistance.client.main.domain.repository.ServiceState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
@@ -184,24 +182,17 @@ fun HomeScreen(
         else
             bottomSheetState.hide()
     }
-    LaunchedEffect(serviceState.providerLocation) {
-        Log.d("MainActivity", "point: ${uiState.providerLocation?.longitude()}, ${uiState.providerLocation?.latitude()}")
-    }
     BottomSheetScaffold(
         modifier = modifier,
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
         sheetContent = {
-            when(serviceState.clientState) {
-                ClientState.PROVIDER_IN_WAY,
-                ClientState.ASSISTANCE_IN_PROGRESS ->
-                    NavigatingScreen(
-                        serviceState.providerInfo,
-                        uiState.message,
-                        onAction
-                    )
-                else -> {
-                }
+            if (serviceState.clientState in setOf(ClientState.PROVIDER_IN_WAY, ClientState.ASSISTANCE_IN_PROGRESS)) {
+                NavigatingScreen(
+                    serviceState.providerInfo,
+                    uiState.message,
+                    onAction
+                )
             }
         }
     ) {
@@ -213,15 +204,15 @@ fun HomeScreen(
                 mapViewportState = state,
                 compass = {
                     Compass(
-                        modifier = Modifier.statusBarsPadding(),
+                        modifier = Modifier.statusBarsPadding().padding(top = 100.dp, end = 16.dp),
                         alignment = Alignment.TopEnd
                     )
                 },
                 scaleBar = {
-                    ScaleBar(
-                        modifier = Modifier.navigationBarsPadding(),
-                        alignment = Alignment.BottomStart
-                    )
+//                    ScaleBar(
+//                        modifier = Modifier.navigationBarsPadding(),
+//                        alignment = Alignment.BottomStart
+//                    )
                 },
                 style = {
                     if (routeLine != null)
@@ -300,7 +291,7 @@ fun HomeScreen(
                     }
                 },
                 logo = {
-                    Logo(alignment = Alignment.TopStart)
+                    Logo(alignment = Alignment.BottomStart, modifier = Modifier.padding(16.dp))
                 }
             ) {
                 point?.let {
@@ -413,7 +404,7 @@ fun HomeScreen(
                         containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                         contentColor = contentColorFor(MaterialTheme.colorScheme.tertiaryContainer)
                     ) {
-                        Icon(Icons.Default.LocationOn, null)
+                        Icon(Icons.Default.MyLocation, null)
                     }
                     AnimatedVisibility(
                         (uiState.location != null) and (serviceState.clientState == ClientState.IDLE),

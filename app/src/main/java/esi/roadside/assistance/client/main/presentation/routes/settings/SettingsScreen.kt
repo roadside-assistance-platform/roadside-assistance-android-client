@@ -36,8 +36,7 @@ fun SettingsScreen(
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val scrollBehavior =
-        TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val listState = rememberLazyListState()
     val settings = Settings.groups
     Scaffold(

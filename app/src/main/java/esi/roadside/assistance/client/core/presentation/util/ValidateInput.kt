@@ -110,4 +110,11 @@ object ValidateInput {
 
     fun validateResetPassword(password: String, confirmPassword: String): InputError? =
         validatePassword(password) ?: validateConfirmPassword(password, confirmPassword)
+
+    fun validateChangePassword(
+//        currentPassword: String,
+        newPassword: String,
+        confirmNewPassword: String,
+    ): InputError? =
+        validatePassword(newPassword) ?: validateConfirmPassword(newPassword, confirmNewPassword)
 }

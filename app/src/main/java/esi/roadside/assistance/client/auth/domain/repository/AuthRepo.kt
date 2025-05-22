@@ -16,7 +16,7 @@ interface AuthRepo {
     suspend fun signup(request: SignupModel): Result<AuthResponseModel, DomainError>
     suspend fun resetPassword(email: String): Result<ClientModel, DomainError>
     suspend fun update(request: UpdateModel): Result<ClientModel, DomainError>
-    suspend fun sendEmail(request: SendEmailModel): Result<Boolean, DomainError>
+    suspend fun sendEmail(request: SendEmailModel, forgot: Boolean): Result<Boolean, DomainError>
     suspend fun verifyEmail(request: VerifyEmailModel): Result<Boolean, DomainError>
     suspend fun authHome(): Result<Boolean, DomainError>
 }

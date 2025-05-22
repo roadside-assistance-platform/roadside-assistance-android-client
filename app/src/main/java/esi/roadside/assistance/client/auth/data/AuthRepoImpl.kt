@@ -67,9 +67,11 @@ class AuthRepoImpl(
         }
     }
 
-    override suspend fun sendEmail(request: SendEmailModel): Result<Boolean, DomainError> {
-        return safeCall<Any>(CallType.SEND_EMAIL) {
-            client.post(constructUrl(Endpoints.SEND_EMAIL)) {
+    override suspend fun sendEmail(request: SendEmailModel, forgot: Boolean): Result<Boolean, DomainError> {
+        return safeCall<Any>(if (forgot) CallType.SEND_FORGOT_EMAIL else CallType.SEND_EMAIL) {
+            client.post(constructUrl(
+                if (forgot) Endpoints.SEND_FORGOT_EMAIL else Endpoints.SEND_EMAIL
+            )) {
                 setBody(request)
             }.body()
         }.map { true }

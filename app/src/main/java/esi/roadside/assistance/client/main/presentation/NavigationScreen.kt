@@ -29,6 +29,7 @@ import esi.roadside.assistance.client.main.presentation.routes.notifications.Not
 import esi.roadside.assistance.client.main.presentation.routes.notifications.NotificationsScreen
 import esi.roadside.assistance.client.main.presentation.routes.profile.ProfileScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.AboutScreen
+import esi.roadside.assistance.client.main.presentation.routes.settings.ChangePasswordScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.CustomizeAppScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.LanguageScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.PrivacyPolicyScreen
@@ -115,7 +116,7 @@ fun NavigationScreen(
                         SettingsScreen(navController, mainViewModel::onAction)
                     }
                     composable<NavRoutes.ChangePassword> {
-                        // ChangePasswordScreen()
+                        ChangePasswordScreen()
                     }
                     composable<NavRoutes.DeleteAccount> {
                         // DeletePasswordScreen()

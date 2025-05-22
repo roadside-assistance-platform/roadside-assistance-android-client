@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.core.data.SettingsDataStore
 import esi.roadside.assistance.client.core.presentation.util.isDark
+import esi.roadside.assistance.client.main.presentation.components.TopAppBar
 import esi.roadside.assistance.client.main.presentation.constants.Settings.themeOptions
 import esi.roadside.assistance.client.settings.presentation.checkSettingsItem
 import esi.roadside.assistance.client.settings.presentation.dropdownSettingsItem
@@ -49,24 +50,13 @@ fun CustomizeAppScreen(modifier: Modifier = Modifier) {
     val extraDarkChecked by dataStore.extraDark.collectAsState(initial = true)
     val theme by dataStore.theme.collectAsState(initial = "light")
     val scope = rememberCoroutineScope()
-    val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Scaffold(
         modifier = modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        stringResource(id = R.string.theme),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { dispatcher?.onBackPressed() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
-                    }
-                },
-                scrollBehavior = scrollBehavior,
+            TopAppBar(
+                title = stringResource(R.string.customize_app),
+                background = R.drawable.union,
+                scrollBehavior = scrollBehavior
             )
         },
     ) { paddingValues ->

@@ -353,4 +353,14 @@
     <string name="unknown">Unknown</string>
     <string name="chat_placeholder">Send message to provider</string>
     <string name="in_progress_text">Assistance in progress</string>
+    <string name="finish_service">Finished</string>
+    <string name="provider">Provider</string>
+    <string name="service">Service</string>
+    <string name="request_time">Request time</string>
+    <string name="location">Location</string>
+    <string name="price">Price</string>
+    <string name="category">Category</string>
+    <string name="search_for_location">Search for location</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
 </resources>

@@ -8,5 +8,6 @@ enum class CallType {
     HOME,
     GOOGLE,
     SEND_EMAIL,
+    SEND_FORGOT_EMAIL,
     VERIFY_EMAIL,
 }

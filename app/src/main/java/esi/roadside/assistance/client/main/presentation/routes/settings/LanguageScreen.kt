@@ -35,6 +35,7 @@ import androidx.core.app.LocaleManagerCompat
 import androidx.core.os.LocaleListCompat
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.core.data.SettingsDataStore
+import esi.roadside.assistance.client.main.presentation.components.TopAppBar
 import esi.roadside.assistance.client.main.presentation.constants.Settings.languages
 import esi.roadside.assistance.client.settings.presentation.settingsRadioItems
 import esi.roadside.assistance.client.settings.util.findActivity
@@ -51,27 +52,16 @@ fun LanguageScreen(modifier: Modifier = Modifier) {
     val language by dataStore.language.collectAsState(initial = "system")
     var selectedLanguage by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
-    val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Scaffold(
         modifier =
             modifier
                 .fillMaxSize()
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        stringResource(id = R.string.language),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { dispatcher?.onBackPressed() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
-                    }
-                },
-                scrollBehavior = scrollBehavior,
+            TopAppBar(
+                title = stringResource(R.string.language),
+                background = R.drawable.union,
+                scrollBehavior = scrollBehavior
             )
         },
     ) { paddingValues ->

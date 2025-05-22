@@ -17,3 +17,5 @@ fun Long.formatTime(): String {
 
 fun LocalDateTime.formatTime(): String =
     atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli().formatTime()
+
+fun LocalDateTime.formatShortTime(): String = formatTime().dropLast(3)
