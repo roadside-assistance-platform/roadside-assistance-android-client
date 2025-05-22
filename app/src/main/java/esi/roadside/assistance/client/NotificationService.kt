@@ -6,8 +6,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.app.TaskStackBuilder
-import esi.roadside.assistance.client.core.util.NotificationsReceiver
+import androidx.core.app.NotificationManagerCompat
 import kotlin.apply
 import kotlin.collections.forEach
 import kotlin.let
@@ -15,30 +14,48 @@ import kotlin.let
 class NotificationService(private val context: Context) {
     private val notificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    fun getPendingIntent(intent: Intent) =
-        PendingIntent.getBroadcast(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
+
+    init {
+        val channel = NotificationChannelCompat.Builder(CHANNEL_ID, CHANNEL_IMPORTANCE)
+            .setName(CHANNEL_NAME)
+            .setDescription(CHANNEL_DESCRIPTION)
+            .build()
+        NotificationManagerCompat.from(context).createNotificationChannel(channel)
+    }
 
     fun showNotification(
         id: Int,
         title: String,
         content: String,
-        vararg actions: NotificationCompat.Action
+        extras: Map<String, Any>? = null,
+        vararg actions: NotificationCompat.Action,
     ) {
-        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
-        val pendingIntent = intent?.let {
-            TaskStackBuilder.create(context)
-                .addNextIntentWithParentStack(it)
-                .getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
+        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)?.apply {
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            extras?.forEach { (key, value) ->
+                when (value) {
+                    is Boolean -> putExtra(key, value)
+                    is Int -> putExtra(key, value)
+                    is String -> putExtra(key, value)
+                    is Long -> putExtra(key, value)
+                    is Float -> putExtra(key, value)
+                    is Double -> putExtra(key, value)
+                    is Char -> putExtra(key, value)
+                    is Short -> putExtra(key, value)
+                    is Byte -> putExtra(key, value)
+                    else -> putExtra(key, value.toString())
+                }
+            }
         }
-        val notification = NotificationCompat.Builder(
-            context,
-            CHANNEL_ID,
-        )
+        val pendingIntent = intent?.let {
+            PendingIntent.getActivity(
+                context,
+                0,
+                it,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        }
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle(CHANNEL_NAME)
             .setContentTitle(title)
             .setSmallIcon(R.drawable.app_icon)
@@ -58,6 +75,7 @@ class NotificationService(private val context: Context) {
             .build()
         notificationManager.notify(id, notification)
     }
+
     companion object {
         const val CHANNEL_ID = "esi.roadside.assistance.client"
         const val CHANNEL_NAME = "Roadside Assistance Client"

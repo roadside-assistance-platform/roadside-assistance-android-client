@@ -363,4 +363,13 @@
     <string name="search_for_location">Search for location</string>
     <string name="new_password">New password</string>
     <string name="confirm_new_password">Confirm new password</string>
+    <string name="provider_arrived">Provider arrived</string>
+    <string name="permissions_required">Permissions required</string>
+    <string name="permissions_required_text">To continue, please grant the required permissions. These are necessary for the app to function properly.</string>
+    <string name="request_permission">Request</string>
+    <string name="denied">Denied</string>
+    <string name="granted">Granted</string>
+    <string name="location_permission">Fine location</string>
+    <string name="notification_permission">Notifications</string>
+    <string name="refresh">Refresh</string>
 </resources>

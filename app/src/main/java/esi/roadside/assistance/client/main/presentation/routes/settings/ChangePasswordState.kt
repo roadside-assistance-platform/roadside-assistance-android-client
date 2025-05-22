@@ -1,6 +1,6 @@
-package esi.roadside.assistance.provider.main.presentation.routes.settings
+package esi.roadside.assistance.client.main.presentation.routes.settings
 
-import esi.roadside.assistance.provider.auth.presentation.screens.login.InputError
+import esi.roadside.assistance.client.auth.presentation.InputError
 
 data class ChangePasswordState(
 //    val currentPassword: String = "",

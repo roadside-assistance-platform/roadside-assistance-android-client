@@ -63,6 +63,10 @@ class ServiceManager(
                             R.string.service_accepted_by,
                             action.providerInfo.fullName
                         ),
+                        extras = mapOf(
+                            "from_notification" to true,
+                            "service_id" to (_service.value.serviceModel?.id ?: ""),
+                        )
                     )
                     queuesManager.publishCategoryQueues(
                         service.value.serviceModel?.category?.let { setOf(it) } ?: emptySet(),
@@ -189,6 +193,12 @@ class ServiceManager(
                 _service.update {
                     it.copy(clientState = ClientState.ASSISTANCE_IN_PROGRESS)
                 }
+                notificationService.showNotification(
+                    0,
+                    context.getString(R.string.provider_arrived),
+                    "",
+                    extras = mapOf("from_notification" to true)
+                )
             }
 
             is ServiceAction.SendMessage -> {
@@ -201,3 +211,4 @@ class ServiceManager(
         }
     }
 }
+
