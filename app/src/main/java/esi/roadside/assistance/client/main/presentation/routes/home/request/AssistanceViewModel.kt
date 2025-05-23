@@ -58,7 +58,8 @@ class AssistanceViewModel(
             }
             AssistanceAction.ShowSheet -> {
                 _state.update {
-                    it.copy(sheetVisible = true)
+                    it.copy(sheetVisible = true, isAIDetectionActive = false, isProcessingAI = false,
+                        description = "", category = Categories.TOWING)
                 }
                 sendEvent(ShowRequestAssistance)
             }
