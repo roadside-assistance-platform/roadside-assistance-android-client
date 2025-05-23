@@ -7,6 +7,7 @@ import android.content.Intent
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import esi.roadside.assistance.client.main.presentation.MainActivity
 import kotlin.apply
 import kotlin.collections.forEach
 import kotlin.let
@@ -30,7 +31,7 @@ class NotificationService(private val context: Context) {
         extras: Map<String, Any>? = null,
         vararg actions: NotificationCompat.Action,
     ) {
-        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)?.apply {
+        val intent = Intent(context, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             extras?.forEach { (key, value) ->
                 when (value) {
@@ -47,7 +48,7 @@ class NotificationService(private val context: Context) {
                 }
             }
         }
-        val pendingIntent = intent?.let {
+        val pendingIntent = intent.let {
             PendingIntent.getActivity(
                 context,
                 0,

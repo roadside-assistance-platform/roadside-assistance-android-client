@@ -244,7 +244,7 @@ class VehicleIssueAIService(
     ): String? {
         return try {
             val generativeModel = GenerativeModel(
-                modelName = "gemini-1.5-flash",
+                modelName = "gemini-2.5-flash",
                 apiKey = BuildConfig.GEMINI,
                 safetySettings = listOf(
                     SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.MEDIUM_AND_ABOVE),

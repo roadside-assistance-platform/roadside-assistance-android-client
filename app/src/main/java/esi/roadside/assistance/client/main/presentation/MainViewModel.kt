@@ -20,10 +20,10 @@ import esi.roadside.assistance.client.main.domain.use_cases.Logout
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeUiState
 import esi.roadside.assistance.client.main.util.QueuesManager
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -53,12 +53,12 @@ class MainViewModel(
                     queuesManager.consumeUserNotifications(client.id, "client")
                 }
                 launch(Dispatchers.IO) {
-                    queuesManager.serviceAcceptance.consumeEach { service ->
+                    queuesManager.serviceAcceptance.receiveAsFlow().collectLatest { service ->
                         serviceManager.onAction(ServiceAction.Accepted(service.provider))
                     }
                 }
                 launch(Dispatchers.IO) {
-                    queuesManager.locationUpdate.consumeEach { providerLocation ->
+                    queuesManager.locationUpdate.receiveAsFlow().collectLatest { providerLocation ->
                         if (currentService.value.clientState == ClientState.PROVIDER_IN_WAY) {
                             serviceManager.onAction(
                                 ServiceAction.LocationUpdate(
@@ -90,7 +90,7 @@ class MainViewModel(
                     }
                 }
                 launch(Dispatchers.IO) {
-                    queuesManager.providerArrival.consumeEach {
+                    queuesManager.providerArrival.receiveAsFlow().collectLatest {
                         if (currentService.value.clientState == ClientState.PROVIDER_IN_WAY) {
                             serviceManager.onAction(ServiceAction.Arrived)
                         }

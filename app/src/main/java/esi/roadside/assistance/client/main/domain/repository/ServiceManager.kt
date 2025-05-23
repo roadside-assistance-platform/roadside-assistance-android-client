@@ -123,9 +123,6 @@ class ServiceManager(
             }
             ServiceAction.Cancel -> {
                 timer?.cancel()
-                _service.update {
-                    it.copy(clientState = ClientState.IDLE, serviceModel = null)
-                }
                 _service.value.serviceModel?.let { serviceModel ->
                     queuesManager.publishCategoryQueues(
                         setOf(serviceModel.category),
@@ -134,6 +131,9 @@ class ServiceManager(
                             exception = null
                         )
                     )
+                }
+                _service.update {
+                    it.copy(clientState = ClientState.IDLE, serviceModel = null)
                 }
             }
 

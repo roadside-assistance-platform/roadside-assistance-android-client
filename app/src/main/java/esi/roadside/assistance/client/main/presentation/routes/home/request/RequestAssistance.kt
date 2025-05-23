@@ -1,5 +1,6 @@
 package esi.roadside.assistance.client.main.presentation.routes.home.request
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,8 +23,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AutoFixHigh
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,8 +56,7 @@ import esi.roadside.assistance.client.auth.presentation.util.ToggleOutlineButton
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 import esi.roadside.assistance.client.core.presentation.util.isDark
 import esi.roadside.assistance.client.main.domain.Categories
-import esi.roadside.assistance.client.main.domain.services.VehicleIssueAIService
-import org.koin.compose.getKoin
+import soup.compose.material.motion.animation.materialSharedAxisZ
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,7 +71,6 @@ fun RequestAssistance(
     val textColor =
         if (isDark) contentColorFor(MaterialTheme.colorScheme.surfaceContainer)
         else MaterialTheme.colorScheme.surfaceContainer
-    //val vehicleIssueAIService = getKoin().get<VehicleIssueAIService>()
     if (state.sheetVisible) {
         ModalBottomSheet(
             onDismissRequest = {
@@ -85,7 +81,10 @@ fun RequestAssistance(
             dragHandle = null,
             contentWindowInsets = { WindowInsets(0, 0, 0, 0) }
         ) {
-            AnimatedContent(state.isAIDetectionActive) {
+            AnimatedContent(
+                state.isAIDetectionActive,
+                transitionSpec = { materialSharedAxisZ(!targetState) }
+            ) {
                 if (it)
                     AIDetectionScreen(
                         { uri, audio ->
@@ -258,7 +257,9 @@ fun RequestAssistance(
                     }
                 }
         }
-
+        BackHandler(enabled = state.isAIDetectionActive) {
+            onAction(AssistanceAction.CloseAIDetection)
+        }
     }
 }
 
