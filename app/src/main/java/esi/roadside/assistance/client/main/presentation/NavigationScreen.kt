@@ -31,6 +31,7 @@ import esi.roadside.assistance.client.main.presentation.routes.profile.ProfileSc
 import esi.roadside.assistance.client.main.presentation.routes.settings.AboutScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.ChangePasswordScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.CustomizeAppScreen
+import esi.roadside.assistance.client.main.presentation.routes.settings.HelpScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.LanguageScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.PrivacyPolicyScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.SettingsScreen
@@ -137,7 +138,7 @@ fun NavigationScreen(
                         PrivacyPolicyScreen()
                     }
                     composable<NavRoutes.Help> {
-                        // HelpScreen()
+                        HelpScreen()
                     }
                 }
             }
