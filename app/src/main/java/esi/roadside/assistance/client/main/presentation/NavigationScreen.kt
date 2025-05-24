@@ -25,8 +25,6 @@ import androidx.navigation.navigation
 import esi.roadside.assistance.client.core.util.intUpDownTransSpec
 import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeScreen
-import esi.roadside.assistance.client.main.presentation.routes.notifications.NotificationDetails
-import esi.roadside.assistance.client.main.presentation.routes.notifications.NotificationsScreen
 import esi.roadside.assistance.client.main.presentation.routes.profile.ProfileScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.AboutScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.ChangePasswordScreen
@@ -94,19 +92,6 @@ fun NavigationScreen(
                             onLocationChange,
                             onRequest = onRequest
                         )
-                    }
-                }
-                navigation<NavRoutes.Notifications>(NavRoutes.NotificationsList) {
-                    composable<NavRoutes.NotificationsList> {
-                        NotificationsScreen(notifications) {
-                            navController.navigate(NavRoutes.Notification(it.id))
-                        }
-                    }
-                    composable<NavRoutes.Notification> { args ->
-                        val notification = notifications.firstOrNull { it.id == args.id }
-                        notification?.let { notification ->
-                            NotificationDetails(notification)
-                        }
                     }
                 }
                 composable<NavRoutes.Profile> {
