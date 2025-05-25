@@ -4,7 +4,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,8 +20,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
@@ -35,20 +34,18 @@ import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.NavRoutes
 import esi.roadside.assistance.client.auth.presentation.util.BackgroundBox
 import esi.roadside.assistance.client.auth.presentation.util.Button
-import esi.roadside.assistance.client.auth.presentation.util.TermsAndPolicy
 import esi.roadside.assistance.client.core.presentation.components.MyTextField
 import esi.roadside.assistance.client.core.presentation.components.PasswordTextField
 import esi.roadside.assistance.client.core.presentation.components.ProfilePicturePicker
 import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 import esi.roadside.assistance.client.core.presentation.theme.lightScheme
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SignupScreen(
+    viewModel: SignupViewModel,
     modifier: Modifier = Modifier,
     onNavigate: (NavRoutes) -> Unit
 ) {
-    val viewModel: SignupViewModel = koinViewModel()
     val uiState by viewModel.signupState.collectAsState()
     BackgroundBox(R.drawable.signup_background, modifier) {
         Column(
@@ -182,11 +179,6 @@ fun SignupScreen(
                     }
                 }
             }
-            TermsAndPolicy(
-                Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Max)
-            )
         }
     }
     BackHandler(uiState.loading) {}

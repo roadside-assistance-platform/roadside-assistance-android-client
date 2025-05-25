@@ -17,6 +17,7 @@ import esi.roadside.assistance.client.core.data.networking.safeCall
 import esi.roadside.assistance.client.core.domain.model.ClientModel
 import esi.roadside.assistance.client.core.domain.util.Result
 import esi.roadside.assistance.client.core.domain.util.map
+import esi.roadside.assistance.client.main.data.dto.UpdateClientResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -51,19 +52,28 @@ class AuthRepoImpl(
         }
     }
 
-    override suspend fun resetPassword(email: String): Result<ClientModel, DomainError> {
-        TODO("Not yet implemented")
+    override suspend fun resetPassword(email: String, password: String): Result<Any, DomainError> {
+        return safeCall<Any>(CallType.RESET_PASSWORD) {
+            client.post(constructUrl(Endpoints.RESET_PASSWORD)) {
+                setBody(
+                    mapOf(
+                        "email" to email,
+                        "newPassword" to password
+                    )
+                )
+            }.body()
+        }
     }
 
     override suspend fun update(request: UpdateModel): Result<ClientModel, DomainError> {
         persistentCookieStorage.logAllCookies()
         val remote = request.toUpdateRequest()
-        return safeCall<Client>(CallType.UPDATE) {
+        return safeCall<UpdateClientResponse>(CallType.UPDATE) {
             client.put(constructUrl("${Endpoints.UPDATE_PROFILE}${request.id}")) {
                 setBody(remote)
             }.body()
         }.map { response ->
-            response.toClientModel()
+            response.data.user.toClientModel()
         }
     }
 

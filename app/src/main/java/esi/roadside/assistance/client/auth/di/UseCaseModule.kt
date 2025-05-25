@@ -15,7 +15,7 @@ val useCaseModule = module {
      factory { ResetPassword(get()) }
      factory { Login(get()) }
      factory { SignUp(get()) }
-     factory { Update(get()) }
+     factory { Update(get(), get()) }
      factory { Home(get()) }
      factory { Cloudinary(get()) }
      factory { AuthHome(get()) }

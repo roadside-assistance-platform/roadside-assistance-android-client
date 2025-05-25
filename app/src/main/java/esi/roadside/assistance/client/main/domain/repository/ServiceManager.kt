@@ -170,6 +170,14 @@ class ServiceManager(
             is ServiceAction.Complete -> {
                 ratingUseCase(service.value.serviceModel?.id!!, action.rating)
                     .onSuccess { result ->
+                        queuesManager.publishUserNotification(
+                            _service.value.providerInfo?.id!!,
+                            "provider",
+                            ServiceDone(
+                                price = _service.value.price,
+                                rating = action.rating
+                            )
+                        )
                         _service.update {
                             it.copy(
                                 clientState = ClientState.IDLE,
@@ -180,14 +188,6 @@ class ServiceManager(
                     }.onError {
                         sendEvent(ShowMainActivityMessage(it.text))
                     }
-                queuesManager.publishUserNotification(
-                    _service.value.providerInfo?.id!!,
-                    "provider",
-                    ServiceDone(
-                        price = _service.value.price,
-                        rating = action.rating
-                    )
-                )
             }
             ServiceAction.Arrived -> {
                 _service.update {

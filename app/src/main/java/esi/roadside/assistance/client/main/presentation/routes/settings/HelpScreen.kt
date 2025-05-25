@@ -30,7 +30,7 @@ fun HelpScreen(modifier: Modifier = Modifier) {
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = stringResource(R.string.terms_of_service),
+                title = stringResource(R.string.help),
                 background = R.drawable.union,
                 scrollBehavior = scrollBehavior
             )

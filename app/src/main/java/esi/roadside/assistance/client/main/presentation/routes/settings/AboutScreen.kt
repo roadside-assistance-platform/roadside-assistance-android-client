@@ -12,8 +12,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Mail
-import androidx.compose.material.icons.filled.Translate
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -74,70 +72,25 @@ fun AboutScreen(modifier: Modifier = Modifier) {
                 )
             }
             item {
-                Button(onClick = {}) {
-                    Text("v${context.getAppVersion()}")
-                }
+                Text(
+                    "v${context.getAppVersion()}",
+                    Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                )
             }
             Settings
                 .Developers
                 .entries
                 .sortedBy { it.type.ordinal }
                 .groupBy { it.type }
-                .forEach { (type, devs) ->
+                .forEach { (_, devs) ->
                 item {
                     HorizontalDivider(Modifier.fillMaxWidth())
                 }
                 items(devs) { dev ->
                     DeveloperCard(dev)
-                }
-            }
-            item {
-                HorizontalDivider(Modifier.fillMaxWidth())
-            }
-            item {
-                AboutCard(
-                    stringResource(R.string.project),
-                    stringResource(R.string.source_code),
-                    Icons.Default.Code,
-                ) {
-                }
-            }
-            item {
-                AboutCard(
-                    stringResource(R.string.send_feedback),
-                    "y.bouhouche@esi-sba.dz",
-                    Icons.Default.Mail,
-                ) {
-                    with(
-                        Intent(Intent.ACTION_SENDTO).apply {
-                            data = "mailto:".toUri()
-                            putExtra(
-                                Intent.EXTRA_EMAIL,
-                                arrayOf("younes.bouhouche12@gmail.com"),
-                            )
-                            putExtra(
-                                Intent.EXTRA_SUBJECT,
-                                "Feedback about Roadside Assistance Client App",
-                            )
-                            putExtra(
-                                Intent.EXTRA_TEXT,
-                                "\nApp Version:${context.getAppVersion()}," +
-                                        "\nAPI Level:${Build.VERSION.SDK_INT}",
-                            )
-                        },
-                    ) {
-                        if (this.resolveActivity(context.packageManager) != null) {
-                            context.startActivity(this)
-                        }
-                    }
-                }
-            }
-            item {
-                AboutCard(
-                    stringResource(R.string.translation),
-                    stringResource(R.string.contribute_in_app_translation),
-                    Icons.Default.Translate,
-                ) {
                 }
             }
         }

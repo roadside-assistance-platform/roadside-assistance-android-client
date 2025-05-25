@@ -44,14 +44,7 @@ fun MyScreen(
     title: String,
     text: String,
     modifier: Modifier = Modifier,
-    bottomContent: @Composable () -> Unit = {
-        TermsAndPolicy(
-            Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Max)
-                .navigationBarsPadding()
-        )
-    },
+    bottomContent: @Composable () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit
 ) {
     val isDark by isDark()

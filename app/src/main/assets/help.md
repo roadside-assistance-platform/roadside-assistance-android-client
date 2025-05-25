@@ -1,78 +1,67 @@
-# Roadside Assistance Android Client - Help Guide
+# Roadside Assistance Provider App - Help Guide
 
-Welcome to the Roadside Assistance app! This guide will help you get started and make the most of the app’s features.
+Welcome to the Roadside Assistance Provider App! This guide will help you get started and answer common questions.
 
 ## Getting Started
 
-1. **Download & Install**  
-   Install the app from the official source or your organization’s distribution channel.
+1. **Login:**  
+   Open the app and log in using your provider credentials.
 
-2. **Sign Up / Log In**  
-   - Open the app and create a new account or log in with your existing credentials.
-   - Make sure to verify your email or phone number if required.
+2. **View Requests:**  
+   After logging in, you will see a list of assistance requests from customers in your area.
 
-## Main Features
+3. **Accept a Request:**  
+   Tap on a request to view details. Press "Accept" to take the job.
 
-- **Request Assistance**  
-  Tap the “Request Assistance” button on the home screen. Fill in your location and the type of issue (e.g., flat tire, battery, fuel, etc.).
+4. **Navigate to Location:**  
+   Use the integrated map to navigate to the customer's location.
 
-- **Track Your Request**  
-  After submitting a request, you can track the status and see the estimated arrival time of the service provider.
+5. **Update Status:**  
+   Update the status of the request (e.g., "On the way", "Arrived", "Completed") as you progress.
 
-- **View History**  
-  Access your previous assistance requests from the “History” section.
+6. **Complete the Request:**  
+   After providing assistance, mark the request as completed and add any necessary notes.
 
-- **Profile Management**  
-  Update your personal information, contact details, and vehicle information in the “Profile” section.
+## Features
 
-## Tips
+- **Real-time Notifications:**  
+  Receive instant notifications for new requests and updates.
 
-- **Enable Location Services**  
-  For accurate assistance, ensure your device’s location services are enabled.
+- **Profile Management:**  
+  Update your profile and availability from the app menu.
 
-- **Emergency Contacts**  
-  Add emergency contacts in your profile for quick access during critical situations.
-
-- **Notifications**  
-  Allow notifications to receive real-time updates about your request status.
-
-## Troubleshooting
-
-- **App Crashes or Freezes**  
-  Try restarting the app. If the problem persists, clear the app cache or reinstall.
-
-- **Can’t Log In**  
-  Check your internet connection and credentials. Use the “Forgot Password” option if needed.
-
-- **Request Not Submitted**  
-  Ensure all required fields are filled and you have a stable internet connection.
-
-## Support
-
-If you need further assistance, contact our support team:
-- **Email:** support@roadside-assist.com
-- **Phone:** +1-800-123-4567
-
-Thank you for using the Roadside Assistance app. Drive safe!
+- **History:**  
+  View your completed and ongoing assistance requests.
 
 ## Frequently Asked Questions (FAQs)
 
-**Q: Is the app free to use?**  
-A: Downloading and using the app is free. However, service charges may apply depending on the assistance requested.
+**Q: What should I do if I can't log in?**  
+A: Ensure your credentials are correct and you have a stable internet connection. If the issue persists, contact support.
 
-**Q: How do I update my vehicle information?**  
-A: Go to the Profile section, tap on your vehicle details, and make the necessary changes.
+**Q: How do I update my availability?**  
+A: Go to the profile section in the app menu and set your availability status.
 
-**Q: Can I cancel a request after submitting it?**  
-A: Yes, you can cancel a request from the request tracking screen before the service provider is dispatched.
+**Q: Why am I not receiving notifications?**  
+A: Make sure notifications are enabled for the app in your device settings and you have a stable internet connection.
 
-**Q: What if I have no internet connection?**  
-A: The app requires an internet connection to submit requests and receive updates. Please ensure you are connected to the internet.
+**Q: Can I cancel a request after accepting it?**  
+A: Yes, but please provide a reason for cancellation in the app to help us improve our service.
 
-**Q: How do I reset my password?**  
-A: Use the “Forgot Password” option on the login screen and follow the instructions sent to your email or phone.
+**Q: How do I contact the customer?**  
+A: Once you accept a request, the customer's contact information will be available in the request details.
 
-**Q: Can I request assistance for someone else?**  
-A: Yes, you can enter the location and details for another person when submitting a request.
+## Troubleshooting
 
-If your question is not listed here, please contact our support team for further assistance.
+- **Cannot Log In:**  
+  Ensure your credentials are correct and you have a stable internet connection.
+
+- **App Crashes or Freezes:**  
+  Restart the app. If the problem persists, clear the app cache or reinstall.
+
+- **Location Issues:**  
+  Make sure location services are enabled and the app has permission to access your location.
+
+## Contact Support
+
+If you need further assistance, contact our support team
+

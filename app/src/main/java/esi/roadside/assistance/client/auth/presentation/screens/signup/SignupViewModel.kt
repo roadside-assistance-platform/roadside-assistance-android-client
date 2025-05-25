@@ -19,6 +19,7 @@ import esi.roadside.assistance.client.auth.presentation.util.loggedIn
 import esi.roadside.assistance.client.core.util.account.AccountManager
 import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.core.domain.util.onSuccess
+import esi.roadside.assistance.client.core.presentation.util.Event
 import esi.roadside.assistance.client.core.presentation.util.Event.*
 import esi.roadside.assistance.client.core.presentation.util.Event.AuthNavigate
 import esi.roadside.assistance.client.core.presentation.util.Event.AuthShowError
@@ -26,6 +27,7 @@ import esi.roadside.assistance.client.core.presentation.util.Event.ImageUploadEr
 import esi.roadside.assistance.client.core.presentation.util.Field
 import esi.roadside.assistance.client.core.presentation.util.ValidateInput
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -124,7 +126,7 @@ class SignupViewModel(
                     _signupState.update {
                         it.copy(loading = true)
                     }
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         var url: String? = null
                         cloudinaryUseCase(
                             image = _signupState.value.image ?: "".toUri(),
@@ -143,7 +145,8 @@ class SignupViewModel(
                                 _signupState.update {
                                     it.copy(photo = url ?: "_", loading = false)
                                 }
-                                //onAction(SendCode(_signupState.value.email))
+                                sendEvent(AuthNavigate(NavRoutes.VerifyEmail))
+                                onAction(SendCode(_signupState.value.email))
                             }
                         )
                     }

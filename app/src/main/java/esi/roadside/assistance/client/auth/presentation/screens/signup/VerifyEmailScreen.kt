@@ -33,8 +33,7 @@ import esi.roadside.assistance.client.core.presentation.theme.PreviewAppTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun VerifyEmailScreen(modifier: Modifier = Modifier) {
-    val viewModel: SignupViewModel = koinViewModel()
+fun VerifyEmailScreen(viewModel: SignupViewModel, modifier: Modifier = Modifier) {
     val uiState by viewModel.signupState.collectAsState()
     val otpState by viewModel.otpUiState.collectAsState()
     val focusRequesters = remember {

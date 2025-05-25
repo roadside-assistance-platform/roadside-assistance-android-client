@@ -11,6 +11,7 @@ import esi.roadside.assistance.client.core.presentation.util.ValidateInput
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import esi.roadside.assistance.client.core.util.account.AccountManager
 import esi.roadside.assistance.client.R
+import esi.roadside.assistance.client.auth.presentation.NavRoutes
 import esi.roadside.assistance.client.core.domain.util.onError
 import esi.roadside.assistance.client.main.presentation.routes.settings.ChangePasswordAction
 import kotlinx.coroutines.Dispatchers
@@ -64,6 +65,7 @@ class ChangePasswordViewModel(
                     resetPassword(email.first(), _state.value.newPassword)
                         .onSuccess {
                             sendEvent(Event.ShowMainActivityMessage(R.string.password_reset_success))
+                            sendEvent(Event.AuthNavigate(NavRoutes.Login))
                         }.onError { error ->
                             sendEvent(Event.ShowMainActivityMessage(error.text))
                         }

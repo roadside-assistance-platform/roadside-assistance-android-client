@@ -32,6 +32,7 @@ import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.main.presentation.constants.Settings
 import esi.roadside.assistance.client.main.util.launch
 import esi.roadside.assistance.client.main.util.openLink
+import androidx.core.net.toUri
 
 @Composable
 fun DeveloperCard(
@@ -75,7 +76,7 @@ fun DeveloperCard(
                     ) {
                         context.launch(
                             Intent(Intent.ACTION_SENDTO).apply {
-                                data = Uri.parse("mailto:")
+                                data = "mailto:".toUri()
                                 putExtra(
                                     Intent.EXTRA_EMAIL,
                                     arrayOf(developers.email),

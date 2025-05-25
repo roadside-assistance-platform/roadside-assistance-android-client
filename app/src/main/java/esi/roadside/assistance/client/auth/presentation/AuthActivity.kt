@@ -43,6 +43,7 @@ import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.screens.login.LoginScreen
 import esi.roadside.assistance.client.auth.presentation.screens.reset_password.ResetPasswordScreen
 import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupScreen
+import esi.roadside.assistance.client.auth.presentation.screens.signup.SignupViewModel
 import esi.roadside.assistance.client.auth.presentation.screens.signup.VerifyEmailScreen
 import esi.roadside.assistance.client.auth.presentation.screens.welcome.WelcomeScreen
 import esi.roadside.assistance.client.core.presentation.theme.AppTheme
@@ -70,6 +71,7 @@ class AuthActivity : ComponentActivity() {
                 val authUiState by viewModel.authUiState.collectAsStateWithLifecycle()
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
+                val signupViewModel : SignupViewModel = koinViewModel()
                 LaunchedEffect(Unit) {
                     viewModel.onAction(Action.Initiate)
                 }
@@ -134,12 +136,12 @@ class AuthActivity : ComponentActivity() {
                                 }
                             }
                             composable<NavRoutes.Signup> {
-                                SignupScreen {
+                                SignupScreen(signupViewModel) {
                                     navController.navigate(it)
                                 }
                             }
                             composable<NavRoutes.VerifyEmail> {
-                                VerifyEmailScreen()
+                                VerifyEmailScreen(signupViewModel)
                             }
                             composable<NavRoutes.ForgotPassword> {
                                 ResetPasswordScreen {

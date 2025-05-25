@@ -64,9 +64,6 @@ class ProfileViewModel(
                                 updateUseCase(_state.value.editClient.toUpdateModel().copy(
                                     photo = _state.value.photo
                                 ))
-                                    .onSuccess {
-                                        accountManager.updateUser(it)
-                                    }
                                     .onError {
                                         sendEvent(ShowMainActivityMessage(it.text))
                                     }

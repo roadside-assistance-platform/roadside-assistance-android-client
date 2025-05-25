@@ -149,7 +149,7 @@ object Settings {
             null
         ),
         AmineLachi(
-            "Amine Lachi",
+            "Mouhamed Amine Lachi",
             DeveloperType.BackendDeveloper,
             "ma.lachi@esi-sba.dz",
             null,

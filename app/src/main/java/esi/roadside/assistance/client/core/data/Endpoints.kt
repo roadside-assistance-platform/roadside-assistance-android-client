@@ -9,6 +9,7 @@ object Endpoints {
     const val LOGIN = "/client/login"
     const val SIGNUP = "/client/signup"
     const val UPDATE_PROFILE = "/client/update/"
+    const val RESET_PASSWORD = "/client/reset-password"
     const val HOME = "/home"
     const val SEND_EMAIL = "/email/send-code"
     const val SEND_FORGOT_EMAIL = "/email/forgot-code"
