@@ -161,7 +161,7 @@ fun ServicesScreen(
                                             startAxis = VerticalAxis.rememberStart(),
                                             bottomAxis = HorizontalAxis.rememberBottom(
                                                 valueFormatter = CartesianValueFormatter { context, x, _ ->
-                                                    (context.model.extraStore[xToDateMapKey][x.toFloat()]
+                                                    (context.model.extraStore.getOrNull(xToDateMapKey)?.get(x.toFloat())
                                                         ?: LocalDate.ofEpochDay(x.toLong())
                                                             )
                                                         .format(dateTimeFormatter)

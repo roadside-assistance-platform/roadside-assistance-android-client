@@ -104,61 +104,61 @@ fun NavigatingScreen(
                     }
                 }
             }
-            item {
-                Row(
-                    Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    AnimatedVisibility(!isFocused) {
-                        FilledIconButton({ context.launchCallIntent(provider.phone) }) {
-                            Icon(Icons.Default.Phone, null)
-                        }
-                    }
-                    OutlinedTextField(
-                        value = message,
-                        onValueChange = { onAction(Action.SetMessage(it)) },
-                        shape = RoundedCornerShape(100),
-                        modifier = Modifier.weight(1f).focusRequester(focusRequester),
-                        interactionSource = interactionSource,
-                        singleLine = true,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedBorderColor = Color.Transparent,
-                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        ),
-                        placeholder = {
-                            Text(
-                                stringResource(R.string.chat_placeholder),
-                                style = MaterialTheme.typography.bodyMedium,
-                            )
-                        },
-                        trailingIcon = {
-                            IconButton(
-                                {
-                                    { onAction(Action.SendMessage) }
-                                    focusManager.clearFocus(true)
-                                },
-                                modifier = Modifier.padding(end = 2.dp),
-                                enabled = message.isNotBlank(),
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    containerColor =
-                                        if (isFocused) MaterialTheme.colorScheme.primary
-                                        else Color.Unspecified,
-                                    contentColor =
-                                        if (isFocused) MaterialTheme.colorScheme.onPrimary
-                                        else Color.Unspecified,
-                                    disabledContainerColor = Color.Transparent,
-                                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                ),
-                            ) {
-                                Icon(Icons.AutoMirrored.Filled.Send, null)
-                            }
-                        },
-                    )
-                }
-            }
+//            item {
+//                Row(
+//                    Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+//                ) {
+//                    AnimatedVisibility(!isFocused) {
+//                        FilledIconButton({ context.launchCallIntent(provider.phone) }) {
+//                            Icon(Icons.Default.Phone, null)
+//                        }
+//                    }
+//                    OutlinedTextField(
+//                        value = message,
+//                        onValueChange = { onAction(Action.SetMessage(it)) },
+//                        shape = RoundedCornerShape(100),
+//                        modifier = Modifier.weight(1f).focusRequester(focusRequester),
+//                        interactionSource = interactionSource,
+//                        singleLine = true,
+//                        colors = OutlinedTextFieldDefaults.colors(
+//                            unfocusedBorderColor = Color.Transparent,
+//                            focusedBorderColor = Color.Transparent,
+//                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+//                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+//                        ),
+//                        placeholder = {
+//                            Text(
+//                                stringResource(R.string.chat_placeholder),
+//                                style = MaterialTheme.typography.bodyMedium,
+//                            )
+//                        },
+//                        trailingIcon = {
+//                            IconButton(
+//                                {
+//                                    { onAction(Action.SendMessage) }
+//                                    focusManager.clearFocus(true)
+//                                },
+//                                modifier = Modifier.padding(end = 2.dp),
+//                                enabled = message.isNotBlank(),
+//                                colors = IconButtonDefaults.iconButtonColors(
+//                                    containerColor =
+//                                        if (isFocused) MaterialTheme.colorScheme.primary
+//                                        else Color.Unspecified,
+//                                    contentColor =
+//                                        if (isFocused) MaterialTheme.colorScheme.onPrimary
+//                                        else Color.Unspecified,
+//                                    disabledContainerColor = Color.Transparent,
+//                                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+//                                ),
+//                            ) {
+//                                Icon(Icons.AutoMirrored.Filled.Send, null)
+//                            }
+//                        },
+//                    )
+//                }
+//            }
         }
     }
 }

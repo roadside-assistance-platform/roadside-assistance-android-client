@@ -1,5 +1,6 @@
 package esi.roadside.assistance.client.main.util
 
+import android.util.Log
 import com.rabbitmq.client.BuiltinExchangeType
 import com.rabbitmq.client.CancelCallback
 import com.rabbitmq.client.ConnectionFactory
@@ -91,6 +92,7 @@ class QueuesManager() {
                 Json.encodeToString(PolymorphicNotification.serializer(), message).toByteArray()
             )
         }
+        Log.i("QueueManager", "sent: $message, exchanges: $exchanges")
     }
 
     private fun publishToQueue(queueName: String, message: PolymorphicNotification) {
@@ -102,6 +104,7 @@ class QueuesManager() {
             null,
             Json.encodeToString(PolymorphicNotification.serializer(), message).toByteArray()
         )
+        Log.i("QueueManager", "sent: $message")
     }
 
     fun consumeUserNotifications(userId: String, type: String) = consume("notifications-$type-$userId")

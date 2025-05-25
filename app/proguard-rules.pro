@@ -32,3 +32,5 @@
 -keepnames class * extends esi.roadside.assistance.client.auth.presentation.NavRoutes
 -keep public class esi.roadside.assistance.client.main.domain.PolymorphicNotification
 -keep public class esi.roadside.assistance.client.main.domain.PolymorphicNotification.*
+-keep public class esi.roadside.assistance.client.main.domain.Categories
+-keepnames class esi.roadside.assistance.client.main.domain.Categories
