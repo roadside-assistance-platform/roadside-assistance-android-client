@@ -12,7 +12,7 @@ import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import esi.roadside.assistance.client.core.util.account.AccountManager
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.core.domain.util.onError
-import esi.roadside.assistance.provider.main.presentation.routes.settings.ChangePasswordAction
+import esi.roadside.assistance.client.main.presentation.routes.settings.ChangePasswordAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

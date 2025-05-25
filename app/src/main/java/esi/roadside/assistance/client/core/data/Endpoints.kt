@@ -16,6 +16,7 @@ object Endpoints {
     const val SERVICE_CREATE = "/service/create"
     const val SERVICE_UPDATE = "/service/update/"
     const val MAPBOX_GEOCODING = "forward"
+    const val SERVICES = "/client/history/"
     const val COMPLETION_REQUEST = "/service/complete/"
     const val GET_LOCATION_STRING = "/reverse/geocoding?access_token={access_token}&longitude={longitude}&latitude={latitude}&types=address"
     const val GET_ROUTES = "/{profile}/{coordinates}?access_token={access_token}&geometries=geojson"

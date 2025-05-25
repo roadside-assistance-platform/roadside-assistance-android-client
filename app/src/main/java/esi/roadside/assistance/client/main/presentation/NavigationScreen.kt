@@ -22,7 +22,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import esi.roadside.assistance.client.core.util.intUpDownTransSpec
+import esi.roadside.assistance.client.main.domain.models.FetchServicesModel
 import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeScreen
 import esi.roadside.assistance.client.main.presentation.routes.profile.ProfileScreen
@@ -34,6 +36,8 @@ import esi.roadside.assistance.client.main.presentation.routes.settings.Language
 import esi.roadside.assistance.client.main.presentation.routes.settings.PrivacyPolicyScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.SettingsScreen
 import esi.roadside.assistance.client.main.presentation.routes.settings.TermsOfServiceScreen
+import esi.roadside.assistance.client.main.presentation.routes.services.ServiceDetails
+import esi.roadside.assistance.client.main.presentation.routes.services.ServicesScreen
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 
@@ -66,6 +70,7 @@ fun NavigationScreen(
                 }
         } != false
     val homeUiState by mainViewModel.homeUiState.collectAsState()
+    val servicesHistory by mainViewModel.servicesHistory.collectAsState()
     val currentService by mainViewModel.currentService.collectAsState()
     val notifications by mainViewModel.notifications.collectAsState()
     val navigationBarVisible = isParent and (currentService.clientState == ClientState.IDLE)
@@ -92,6 +97,28 @@ fun NavigationScreen(
                             onLocationChange,
                             onRequest = onRequest
                         )
+                    }
+                }
+                navigation<NavRoutes.Services>(NavRoutes.ServicesList) {
+                    composable<NavRoutes.ServicesList> {
+                        ServicesScreen(
+                            servicesHistory ?: FetchServicesModel(),
+                            homeUiState.servicesLoading,
+                            {
+                                mainViewModel.onAction(Action.FetchServices)
+                            }
+                        ) {
+                            navController.navigate(NavRoutes.Service(it.id))
+                        }
+                    }
+                    composable<NavRoutes.Service> { args ->
+                        val service = servicesHistory
+                            ?.data
+                            ?.services
+                            ?.firstOrNull { it.id == args.toRoute<NavRoutes.Service>().id }
+                        service?.let { service ->
+                            ServiceDetails(service)
+                        }
                     }
                 }
                 composable<NavRoutes.Profile> {
@@ -131,7 +158,7 @@ fun NavigationScreen(
         AnimatedVisibility(navigationBarVisible, modifier = Modifier.fillMaxWidth()) {
             NavigationBar(navController, currentNavRoute) {
                 androidx.compose.animation.AnimatedVisibility(
-                    (it == Routes.NOTIFICATIONS) and notifications.isNotEmpty(),
+                    (it == Routes.SERVICES) and notifications.isNotEmpty(),
                     enter = materialFadeThroughIn(),
                     exit = materialFadeThroughOut()
                 ) {

@@ -28,7 +28,7 @@ import esi.roadside.assistance.client.main.presentation.components.TopAppBar
 import esi.roadside.assistance.client.R
 import esi.roadside.assistance.client.auth.presentation.util.Button
 import esi.roadside.assistance.client.core.presentation.components.PasswordTextField
-import esi.roadside.assistance.provider.main.presentation.routes.settings.ChangePasswordAction
+import esi.roadside.assistance.client.main.presentation.routes.settings.ChangePasswordAction
 import esi.roadside.assistance.client.main.util.plus
 import org.koin.androidx.compose.koinViewModel
 

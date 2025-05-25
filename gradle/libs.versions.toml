@@ -45,6 +45,7 @@ textRecognition = "16.0.1"
 truth = "1.4.4"
 slf4jSimple = "2.0.9"
 objectDetection = "17.0.2"
+vico = "2.1.2"
 
 [libraries]
 amqp-client = { module = "com.rabbitmq:amqp-client", version.ref = "amqpClient" }
@@ -62,6 +63,8 @@ cloudinary-android-download = { module = "com.cloudinary:cloudinary-android-down
 compose-markdown = { module = "com.github.jeziellago:compose-markdown", version.ref = "composeMarkdown" }
 generativeai = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "generativeai" }
 gemini-lite = { module = "androidx.ai.genai:genai-gemini-lite", version.ref = "geminilite" }
+vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
+vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 image-labeling = { module = "com.google.mlkit:image-labeling", version.ref = "imageLabeling" }
 koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4" }

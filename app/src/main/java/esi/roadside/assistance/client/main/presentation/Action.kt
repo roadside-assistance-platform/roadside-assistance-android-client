@@ -11,4 +11,5 @@ sealed interface Action {
     data class CompleteRequest(val rating: Double?): Action
     data object Logout: Action
     data object WorkingFinished: Action
+    data object FetchServices: Action
 }

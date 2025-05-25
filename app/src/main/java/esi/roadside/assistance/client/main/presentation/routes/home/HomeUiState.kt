@@ -12,5 +12,6 @@ data class HomeUiState(
     val message: String = "",
     val directions: RouteX? = null,
     val servicePrice: Int = 0,
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val servicesLoading: Boolean = false
 )

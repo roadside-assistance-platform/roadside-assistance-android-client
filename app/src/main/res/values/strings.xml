@@ -374,4 +374,11 @@
     <string name="refresh">Refresh</string>
     <string name="use_ai">Use AI</string>
     <string name="submit">Submit</string>
+    <string name="services">Services</string>
+    <string name="service_details">Service details</string>
+    <string name="completed">Completed</string>
+    <string name="in_progress">In progress</string>
+    <string name="service_information">Service information</string>
+    <string name="loading_services">Loading services</string>
+    <string name="no_services">No services</string>
 </resources>

@@ -1,4 +1,4 @@
-package esi.roadside.assistance.provider.main.presentation.routes.settings
+package esi.roadside.assistance.client.main.presentation.routes.settings
 
 sealed interface ChangePasswordAction {
 //    data class SetCurrentPassword(val value: String): ChangePasswordAction

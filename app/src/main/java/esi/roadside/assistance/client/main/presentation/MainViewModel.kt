@@ -11,11 +11,14 @@ import esi.roadside.assistance.client.core.presentation.util.Event.MainNavigate
 import esi.roadside.assistance.client.core.presentation.util.Event.ShowMainActivityMessage
 import esi.roadside.assistance.client.core.presentation.util.sendEvent
 import esi.roadside.assistance.client.main.domain.models.ClientInfo
+import esi.roadside.assistance.client.main.domain.models.FetchServicesModel
 import esi.roadside.assistance.client.main.domain.models.LocationModel
 import esi.roadside.assistance.client.main.domain.models.NotificationModel
+import esi.roadside.assistance.client.main.domain.models.ServiceModel
 import esi.roadside.assistance.client.main.domain.repository.ServiceAction
 import esi.roadside.assistance.client.main.domain.repository.ServiceManager
 import esi.roadside.assistance.client.main.domain.use_cases.DirectionsUseCase
+import esi.roadside.assistance.client.main.domain.use_cases.FetchServices
 import esi.roadside.assistance.client.main.domain.use_cases.Logout
 import esi.roadside.assistance.client.main.presentation.routes.home.HomeUiState
 import esi.roadside.assistance.client.main.util.QueuesManager
@@ -26,6 +29,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.onSuccess
 
 class MainViewModel(
     private val accountManager: AccountManager,
@@ -33,9 +37,13 @@ class MainViewModel(
     val serviceManager: ServiceManager,
     val directionsUseCaseUseCase: DirectionsUseCase,
     val queuesManager: QueuesManager,
+    val fetchServices: FetchServices,
 ): ViewModel() {
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState = _homeUiState.asStateFlow()
+
+    private val _servicesHistory = MutableStateFlow<FetchServicesModel?>(null)
+    val servicesHistory = _servicesHistory.asStateFlow()
 
     private val _client = MutableStateFlow(ClientInfo())
     val client = _client.asStateFlow()
@@ -49,6 +57,7 @@ class MainViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             accountManager.getUserFlow().collectLatest { client ->
                 _client.value = client.toClientInfo()
+                onAction(Action.FetchServices)
                 launch(Dispatchers.IO) {
                     queuesManager.consumeUserNotifications(client.id, "client")
                 }
@@ -154,6 +163,24 @@ class MainViewModel(
             is Action.SetLocation -> {
                 _homeUiState.update {
                     it.copy(location = action.location)
+                }
+            }
+            Action.FetchServices -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    _homeUiState.update {
+                        it.copy(servicesLoading = true)
+                    }
+                    fetchServices().onSuccess { service ->
+                        _servicesHistory.value = service
+                        _homeUiState.update {
+                            it.copy(servicesLoading = false)
+                        }
+                    }.onError {
+                        Log.e("MainViewModel", "Error fetching services: ${it.text}")
+                        _homeUiState.update {
+                            it.copy(servicesLoading = false)
+                        }
+                    }
                 }
             }
         }

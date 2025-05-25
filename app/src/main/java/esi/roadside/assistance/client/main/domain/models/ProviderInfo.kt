@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProviderInfo(
-    val id: String,
-    val fullName: String,
-    val phone: String,
-    val photo: String,
-    val email: String,
-    val categories: Set<Categories>,
+    val id: String = "",
+    val fullName: String = "",
+    val phone: String = "",
+    val photo: String = "",
+    val email: String = "",
+    val categories: Set<Categories> = emptySet(),
 )

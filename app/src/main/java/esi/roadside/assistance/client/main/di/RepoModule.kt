@@ -11,7 +11,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val repoModule = module {
-    single<MainRepo> { MainRepoImpl(get(), get()) }
+    single<MainRepo> { MainRepoImpl(get(), get(), get()) }
     single<GeocodingRepo> { GeocodingRepoImpl(androidContext(), get()) }
     single<QueuesManager> { QueuesManager() }
     single<ServiceManager> {

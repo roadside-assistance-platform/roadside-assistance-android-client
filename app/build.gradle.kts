@@ -132,4 +132,8 @@ dependencies {
     // Audio recording and processing
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.media3.exoplayer)
+
+
+    implementation(libs.vico.compose)
+    implementation(libs.vico.compose.m3)
 }

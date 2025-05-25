@@ -6,10 +6,12 @@ import esi.roadside.assistance.client.main.domain.models.AssistanceRequestModel
 import esi.roadside.assistance.client.main.domain.models.CompletionResponse
 import esi.roadside.assistance.client.main.domain.models.ServiceModel
 import esi.roadside.assistance.client.main.domain.models.CompletionRequest
+import esi.roadside.assistance.client.main.domain.models.FetchServicesModel
 
 interface MainRepo {
     suspend fun submitRequest(request: AssistanceRequestModel): Result<ServiceModel, DomainError>
     suspend fun rate(serviceId: String, rating: Double?): Result<Any, DomainError>
     suspend fun completionRequest(request: CompletionRequest): Result<CompletionResponse, DomainError>
+    suspend fun fetchServices(id: String): Result<FetchServicesModel, DomainError>
     suspend fun logout()
 }
